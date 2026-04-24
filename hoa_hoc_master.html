@@ -1,0 +1,1219 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hóa Học Lớp 11 — Master Guide by KaiTr</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#080c18;--bg2:#0d1222;--bg3:#121830;
+  --card:#16203a;--card2:#1c2844;--card3:#212f52;
+  --border:rgba(90,130,255,0.14);--border2:rgba(90,130,255,0.25);
+  --accent:#5b8fff;--accent2:#7c3aed;--accent3:#06d6a0;
+  --accent4:#ffd166;--accent5:#ef476f;--accent6:#f77f00;
+  --text:#e4ecff;--text2:#8fa4c8;--text3:#4a5a78;
+  --r:13px;--glow:0 0 28px rgba(91,143,255,0.18);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;line-height:1.65}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--accent2);border-radius:3px}
+
+/* ── WATERMARK ── */
+.watermark{position:fixed;left:18px;bottom:22px;z-index:9999;font-family:'Playfair Display',serif;font-size:13px;font-weight:700;letter-spacing:2px;color:rgba(91,143,255,0.35);text-transform:uppercase;writing-mode:vertical-rl;text-orientation:mixed;transform:rotate(180deg);pointer-events:none;user-select:none;transition:color .3s}
+.watermark:hover{color:rgba(91,143,255,0.7);pointer-events:auto}
+
+/* ── STARS ── */
+.stars{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.star{position:absolute;border-radius:50%;animation:twinkle var(--d) ease-in-out infinite var(--delay)}
+@keyframes twinkle{0%,100%{opacity:.08}50%{opacity:.7}}
+
+/* ── HERO ── */
+.hero{position:relative;z-index:1;padding:72px 20px 56px;text-align:center;background:radial-gradient(ellipse 90% 55% at 50% -10%,rgba(91,143,255,.1) 0%,transparent 70%)}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(91,143,255,.1);border:1px solid rgba(91,143,255,.3);border-radius:20px;padding:5px 16px;font-size:12.5px;color:var(--accent);margin-bottom:22px;letter-spacing:.5px}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(34px,6.5vw,68px);font-weight:900;line-height:1.08;margin-bottom:14px;background:linear-gradient(140deg,#fff 0%,#a0bfff 45%,#8b5cf6 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:16px;color:var(--text2);max-width:520px;margin:0 auto 36px}
+.hero-stats{display:flex;justify-content:center;gap:28px;flex-wrap:wrap}
+.stat{text-align:center}
+.stat-num{font-family:'Playfair Display',serif;font-size:34px;font-weight:700;color:var(--accent4)}
+.stat-label{font-size:12px;color:var(--text3);letter-spacing:.8px;text-transform:uppercase}
+
+/* ── TOP NAV ── */
+.sticky-nav{position:sticky;top:0;z-index:200;background:rgba(8,12,24,.94);backdrop-filter:blur(18px);border-bottom:1px solid var(--border);padding:0 16px}
+.nav-inner{max-width:1100px;margin:0 auto;display:flex;gap:3px;overflow-x:auto;padding:9px 0;scrollbar-width:none;align-items:center}
+.nav-inner::-webkit-scrollbar{display:none}
+.nav-btn{white-space:nowrap;padding:7px 16px;border-radius:18px;border:1px solid transparent;background:transparent;color:var(--text2);font-size:13px;font-weight:500;cursor:pointer;transition:all .18s;font-family:'DM Sans',sans-serif;flex-shrink:0}
+.nav-btn:hover,.nav-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+/* ── LAYOUT ── */
+.main{max-width:1100px;margin:0 auto;padding:36px 18px;position:relative;z-index:1}
+
+/* ── SECTIONS ── */
+.section{margin-bottom:60px;scroll-margin-top:66px;opacity:0;transform:translateY(18px);transition:opacity .5s,transform .5s}
+.section.visible{opacity:1;transform:none}
+.sec-header{display:flex;align-items:center;gap:14px;margin-bottom:28px;padding-bottom:16px;border-bottom:1px solid var(--border)}
+.sec-icon{width:46px;height:46px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:21px;flex-shrink:0}
+.sec-title{font-family:'Playfair Display',serif;font-size:26px;font-weight:700}
+.sec-sub{font-size:13px;color:var(--text3);margin-top:2px}
+
+/* ── SUB-TABS (horizontal topic switcher) ── */
+.sub-tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:20px}
+.sub-tab{padding:7px 15px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text2);font-size:13px;cursor:pointer;transition:all .18s;font-family:'DM Sans',sans-serif}
+.sub-tab.active,.sub-tab:hover{background:var(--accent2);color:#fff;border-color:var(--accent2)}
+.tab-pane{display:none}.tab-pane.active{display:block}
+
+/* ── CARDS ── */
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:14px}
+.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:20px;transition:all .22s;position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.018) 0%,transparent 55%);pointer-events:none}
+.card:hover{border-color:var(--border2);box-shadow:var(--glow);transform:translateY(-2px)}
+.card-title{font-size:15px;font-weight:600;margin-bottom:11px;display:flex;align-items:center;gap:8px}
+.dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+
+/* ── FORMULA ── */
+.formula{background:var(--bg);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;padding:10px 14px;margin:8px 0;font-family:'JetBrains Mono',monospace;font-size:13.5px;color:#a4c0ff;overflow-x:auto}
+.flabel{font-size:10.5px;color:var(--text3);font-family:'DM Sans',sans-serif;margin-bottom:3px;text-transform:uppercase;letter-spacing:.5px}
+
+/* ── REACTION ── */
+.rx{background:var(--bg2);border:1px solid var(--border);border-radius:9px;padding:11px 15px;margin:7px 0;font-family:'JetBrains Mono',monospace;font-size:13px;overflow-x:auto}
+.rx .re{color:var(--accent4)}.rx .pr{color:var(--accent3)}.rx .ar{color:var(--accent);margin:0 6px}.rx .cd{font-size:11px;color:var(--text3);font-family:'DM Sans',sans-serif;display:block;margin-top:3px}
+
+/* ── TIPS ── */
+.tip{border-radius:9px;padding:12px 16px;margin:10px 0;display:flex;gap:11px;font-size:13.5px}
+.tip-i{font-size:17px;flex-shrink:0;margin-top:1px}
+.tip-b{background:rgba(91,143,255,.09);border:1px solid rgba(91,143,255,.22)}
+.tip-g{background:rgba(6,214,160,.09);border:1px solid rgba(6,214,160,.22)}
+.tip-y{background:rgba(255,209,102,.09);border:1px solid rgba(255,209,102,.22)}
+.tip-r{background:rgba(239,71,111,.09);border:1px solid rgba(239,71,111,.22)}
+.tip-p{background:rgba(124,58,237,.09);border:1px solid rgba(124,58,237,.22)}
+
+/* ── TABLE ── */
+.tw{overflow-x:auto;border-radius:var(--r);border:1px solid var(--border);margin:10px 0}
+table{width:100%;border-collapse:collapse}
+th{background:var(--card2);padding:10px 13px;text-align:left;font-size:12.5px;font-weight:600;color:var(--text2);white-space:nowrap}
+td{padding:9px 13px;font-size:13px;border-top:1px solid var(--border)}
+tr:hover td{background:rgba(91,143,255,.04)}
+td.c{color:var(--accent3)}td.r{color:var(--accent5)}td.y{color:var(--accent4)}
+
+/* ── ACCORDION ── */
+.acc{border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:9px}
+.acc-h{padding:15px 18px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;background:var(--card);transition:background .18s;font-weight:600;font-size:14.5px;user-select:none;gap:12px}
+.acc-h:hover{background:var(--card2)}
+.acc-arr{transition:transform .28s;color:var(--accent);font-size:16px;flex-shrink:0}
+.acc-b{display:none;padding:16px 18px;background:var(--bg2);border-top:1px solid var(--border);font-size:13.5px;line-height:1.75}
+.acc-b.open{display:block}
+
+/* ── HIGHLIGHT BOXES ── */
+.hl{border-radius:11px;padding:17px 21px;margin:14px 0}
+.hl-b{background:linear-gradient(135deg,rgba(91,143,255,.08),rgba(91,143,255,.02));border:1px solid rgba(91,143,255,.2)}
+.hl-p{background:linear-gradient(135deg,rgba(124,58,237,.08),rgba(124,58,237,.02));border:1px solid rgba(124,58,237,.2)}
+.hl-g{background:linear-gradient(135deg,rgba(6,214,160,.08),rgba(6,214,160,.02));border:1px solid rgba(6,214,160,.2)}
+.hl-y{background:linear-gradient(135deg,rgba(255,209,102,.08),rgba(255,209,102,.02));border:1px solid rgba(255,209,102,.2)}
+
+/* ── STYLED LIST ── */
+ul.sl{list-style:none;padding:0}
+ul.sl li{padding:6px 0 6px 20px;position:relative;font-size:13.5px;color:var(--text2);border-bottom:1px solid rgba(255,255,255,.04)}
+ul.sl li::before{content:'▸';position:absolute;left:0;color:var(--accent);font-size:11px;top:8px}
+ul.sl li:last-child{border-bottom:none}
+ul.sl li strong{color:var(--text)}
+
+/* ── TAGS ── */
+.tag{display:inline-flex;align-items:center;padding:2px 9px;border-radius:11px;font-size:11.5px;font-weight:600;margin:2px}
+.tb{background:rgba(91,143,255,.14);color:#7eb3ff}
+.tg{background:rgba(6,214,160,.14);color:#06d6a0}
+.ty{background:rgba(255,209,102,.14);color:#ffd166}
+.tr{background:rgba(239,71,111,.14);color:#ef476f}
+.tp{background:rgba(124,58,237,.14);color:#a78bfa}
+
+/* ── KEYWORD COLORS ── */
+.kb{color:var(--accent);font-weight:600}
+.kg{color:var(--accent3);font-weight:600}
+.kr{color:var(--accent5);font-weight:600}
+.ky{color:var(--accent4);font-weight:600}
+.kp{color:#a78bfa;font-weight:600}
+
+/* ── COMPARE TABLE (colorful) ── */
+.ctbl{width:100%;border-collapse:collapse}
+.ctbl th{background:var(--card3);color:var(--text2);padding:9px 12px;font-size:12.5px;text-align:center;border:1px solid var(--border)}
+.ctbl td{padding:9px 12px;font-size:13px;text-align:center;border:1px solid var(--border)}
+.ctbl tr:nth-child(even) td{background:rgba(255,255,255,.02)}
+.yes{color:var(--accent3);font-weight:700}
+.no{color:var(--accent5)}
+
+/* ── QUIZ ── */
+.quiz-wrap{background:linear-gradient(135deg,var(--bg2),rgba(124,58,237,.04));border:1px solid var(--border);border-radius:18px;padding:28px;position:relative;overflow:hidden}
+.quiz-wrap::after{content:'';position:absolute;top:-60px;right:-60px;width:220px;height:220px;background:radial-gradient(circle,rgba(124,58,237,.13),transparent 70%);pointer-events:none}
+.q-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px}
+.q-counter{font-size:12.5px;color:var(--text3);letter-spacing:.5px}
+.q-topic{font-size:12px;color:var(--accent);font-weight:600;background:rgba(91,143,255,.1);padding:3px 10px;border-radius:10px}
+.q-score{font-size:13px;color:var(--text2)}
+.q-score span{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--accent4)}
+.progress{height:5px;background:var(--border);border-radius:3px;margin-bottom:20px;overflow:hidden}
+.progress-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--accent),var(--accent3));transition:width .45s ease}
+.q-text{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;line-height:1.45;margin-bottom:20px;color:var(--text)}
+.q-opts{display:flex;flex-direction:column;gap:9px;margin-bottom:20px}
+.q-opt{padding:13px 16px;border-radius:9px;border:1.5px solid var(--border);background:var(--card);cursor:pointer;font-size:14px;transition:all .18s;text-align:left;color:var(--text);font-family:'DM Sans',sans-serif}
+.q-opt:hover:not(:disabled){border-color:var(--accent);background:rgba(91,143,255,.07)}
+.q-opt.cor{border-color:var(--accent3)!important;background:rgba(6,214,160,.1)!important;color:var(--accent3)!important}
+.q-opt.wrg{border-color:var(--accent5)!important;background:rgba(239,71,111,.1)!important;color:var(--accent5)!important}
+.q-opt:disabled{cursor:default}
+.q-exp{display:none;padding:14px;border-radius:9px;background:rgba(91,143,255,.07);border:1px solid rgba(91,143,255,.18);font-size:13.5px;color:var(--text2);margin-bottom:18px;line-height:1.7}
+.q-exp.show{display:block}
+.q-ctrl{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.btn{padding:10px 22px;border-radius:9px;border:none;font-size:13.5px;font-weight:600;cursor:pointer;transition:all .18s;font-family:'DM Sans',sans-serif;display:inline-flex;align-items:center;gap:7px}
+.btn-p{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff}
+.btn-p:hover{opacity:.88;transform:translateY(-1px)}
+.btn-g{background:transparent;border:1.5px solid var(--border);color:var(--text2)}
+.btn-g:hover{border-color:var(--accent);color:var(--accent)}
+.result-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:36px;text-align:center;display:none}
+.result-card.show{display:block}
+
+/* ── DIVIDER ── */
+.div{height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent);margin:28px 0}
+
+/* ── FOOTER ── */
+.footer{text-align:center;padding:36px 20px;color:var(--text3);font-size:13px;border-top:1px solid var(--border);position:relative;z-index:1}
+
+/* ── RESPONSIVE ── */
+@media(max-width:600px){.hero h1{font-size:30px}.grid-2,.grid-3{grid-template-columns:1fr}.hero-stats{gap:18px}}
+
+/* ── SECTION ANIM ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+
+<!-- Watermark -->
+<div class="watermark">KaiTr</div>
+
+<!-- Stars -->
+<div class="stars" id="stars"></div>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-badge">⚗️ Hóa Học Lớp 11 · Master Guide</div>
+  <h1>Chinh phục<br>Hóa Hữu Cơ 11</h1>
+  <p class="hero-sub">Toàn bộ lý thuyết, công thức, phản ứng và kỹ thuật để làm chủ 4 đề thi — được trình bày rõ ràng nhất có thể</p>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-num">8</div><div class="stat-label">Chủ đề</div></div>
+    <div class="stat"><div class="stat-num">70+</div><div class="stat-label">Phản ứng</div></div>
+    <div class="stat"><div class="stat-num">40+</div><div class="stat-label">Quiz</div></div>
+    <div class="stat"><div class="stat-num">4</div><div class="stat-label">Đề thi</div></div>
+  </div>
+</header>
+
+<!-- STICKY NAV -->
+<nav class="sticky-nav">
+  <div class="nav-inner">
+    <button class="nav-btn" onclick="goTo('hc')">🔗 Hydrocarbon</button>
+    <button class="nav-btn" onclick="goTo('alcohol')">🍷 Alcohol</button>
+    <button class="nav-btn" onclick="goTo('phenol')">🌸 Phenol</button>
+    <button class="nav-btn" onclick="goTo('carbonyl')">⚡ Aldehyde &amp; Ketone</button>
+    <button class="nav-btn" onclick="goTo('acid')">🧪 Carboxylic Acid</button>
+    <button class="nav-btn" onclick="goTo('special')">⭐ Chuyên đề</button>
+    <button class="nav-btn" onclick="goTo('technique')">🎯 Kỹ thuật</button>
+    <button class="nav-btn" onclick="goTo('quiz')">🧩 Quiz</button>
+  </div>
+</nav>
+
+<main class="main">
+
+<!-- ═══════════════════════════════════════
+  SECTION 1 — HYDROCARBON
+═══════════════════════════════════════ -->
+<section class="section" id="hc">
+  <div class="sec-header">
+    <div class="sec-icon" style="background:linear-gradient(135deg,#1565c0,#5b8fff)">🔗</div>
+    <div>
+      <div class="sec-title">Hydrocarbon</div>
+      <div class="sec-sub">Alkane · Alkene · Alkyne · Arene (Benzene)</div>
+    </div>
+  </div>
+
+  <div class="sub-tabs">
+    <button class="sub-tab active" onclick="switchTab('hc','alkane',this)">Alkane</button>
+    <button class="sub-tab" onclick="switchTab('hc','alkene',this)">Alkene</button>
+    <button class="sub-tab" onclick="switchTab('hc','alkyne',this)">Alkyne</button>
+    <button class="sub-tab" onclick="switchTab('hc','arene',this)">Arene / Benzene</button>
+    <button class="sub-tab" onclick="switchTab('hc','compare',this)">So sánh tổng hợp</button>
+  </div>
+
+  <!-- TAB: ALKANE -->
+  <div class="tab-pane active" id="hc-alkane">
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:#5b8fff"></span>Công thức & danh pháp</div>
+        <div class="formula"><span class="flabel">Alkane (parafin)</span>CₙH₂ₙ₊₂ &nbsp;(n ≥ 1)</div>
+        <div class="formula"><span class="flabel">Cycloalkane</span>CₙH₂ₙ &nbsp;(n ≥ 3)</div>
+        <ul class="sl">
+          <li><strong>Methane</strong> CH₄ — <strong>Ethane</strong> C₂H₆ — <strong>Propane</strong> C₃H₈</li>
+          <li><strong>Butane</strong> C₄H₁₀ — <strong>Pentane</strong> C₅H₁₂ — <strong>Hexane</strong> C₆H₁₄</li>
+          <li>C1–C4: khí; C5–C17: lỏng; C18+: rắn (ở thường)</li>
+          <li>Đuôi <strong>-ane</strong>; nhánh = tên alkyl (-yl)</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:#06d6a0"></span>Tính chất hóa học</div>
+        <div class="rx"><span class="re">CₙH₂ₙ₊₂ + Cl₂</span><span class="ar">→<sup>ánh sáng</sup></span><span class="pr">CₙH₂ₙ₊₁Cl + HCl</span><span class="cd">Phản ứng thế halogen (ánh sáng, gốc tự do)</span></div>
+        <div class="rx"><span class="re">CₙH₂ₙ₊₂</span><span class="ar">→<sup>cracking</sup></span><span class="pr">alkene + alkane nhỏ hơn</span><span class="cd">Nhiệt phân (cracking) — công nghiệp</span></div>
+        <div class="rx"><span class="re">CₙH₂ₙ₊₂ + O₂</span><span class="ar">→<sup>đốt</sup></span><span class="pr">nCO₂ + (n+1)H₂O</span><span class="cd">n(CO₂) &lt; n(H₂O) — đặc trưng alkane!</span></div>
+        <div class="tip tip-r"><span class="tip-i">🚫</span><div><strong>Alkane KHÔNG phản ứng</strong> với: Br₂/H₂O, KMnO₄, NaOH, HCl, H₂SO₄ loãng</div></div>
+      </div>
+    </div>
+    <div class="hl hl-b">
+      <strong class="kb">📌 Quy tắc thế halogen (Markovnikov-like):</strong> Ưu tiên thế vào C bậc <em>cao hơn</em>. CH₄ và C₂H₆ chỉ có 1 loại H → 1 sản phẩm. C₃H₈ có 2 loại H → 2 sản phẩm monochlo: <code>CH₃CH₂CH₂Cl</code> (1-chloropropane) và <code>CH₃CHClCH₃</code> (2-chloropropane, sản phẩm chính).
+    </div>
+    <div class="tip tip-y"><span class="tip-i">💡</span><div>Khi đốt cháy hỗn hợp hydrocarbon: nếu n(CO₂) &lt; n(H₂O) → có alkane; nếu bằng nhau → alkene/cycloalkane; nếu n(CO₂) > n(H₂O) → alkyne hoặc arene.</div></div>
+  </div>
+
+  <!-- TAB: ALKENE -->
+  <div class="tab-pane" id="hc-alkene">
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:#ffd166"></span>Công thức & cấu trúc</div>
+        <div class="formula"><span class="flabel">Alkene (olefin)</span>CₙH₂ₙ &nbsp;(n ≥ 2)</div>
+        <ul class="sl">
+          <li><strong>Ethylene</strong> C₂H₄ — quan trọng nhất trong CN</li>
+          <li><strong>Propylene</strong> C₃H₆ — sản xuất polypropylene</li>
+          <li>Có đồng phân hình học (cis/trans) từ but-2-ene trở lên</li>
+          <li>Liên kết π kém bền → dễ phản ứng cộng</li>
+        </ul>
+        <div class="tip tip-g"><span class="tip-i">✅</span><div><strong>Nhận biết alkene:</strong> làm mất màu Br₂/CCl₄ ngay (không cần xúc tác, không sinh khí HBr)</div></div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:#06d6a0"></span>Phản ứng đặc trưng</div>
+        <div class="rx"><span class="re">CH₂=CH₂ + Br₂</span><span class="ar">→</span><span class="pr">CH₂Br–CH₂Br</span><span class="cd">Cộng Br₂ — mất màu da cam, không cần xt</span></div>
+        <div class="rx"><span class="re">CH₂=CH₂ + H₂O</span><span class="ar">→<sup>H₂SO₄,t°</sup></span><span class="pr">CH₃CH₂OH</span><span class="cd">Hydrat hóa → alcohol (ethanol)</span></div>
+        <div class="rx"><span class="re">CH₂=CH₂ + H₂</span><span class="ar">→<sup>Ni,t°</sup></span><span class="pr">CH₃CH₃</span><span class="cd">Cộng hydrogen (hydrogen hóa)</span></div>
+        <div class="rx"><span class="re">nCH₂=CH₂</span><span class="ar">→<sup>xt,t°,P</sup></span><span class="pr">(–CH₂–CH₂–)ₙ</span><span class="cd">Trùng hợp → polyethylene (PE)</span></div>
+      </div>
+    </div>
+    <div class="card" style="margin-top:14px">
+      <div class="card-title"><span class="dot" style="background:#a78bfa"></span>Quy tắc Markovnikov — thêm HX vào alkene bất đối xứng</div>
+      <p style="font-size:13.5px;color:var(--text2);margin-bottom:10px"><strong>Quy tắc:</strong> H cộng vào C <em>nhiều H hơn</em> (bậc thấp), X cộng vào C <em>ít H hơn</em> (bậc cao).</p>
+      <div class="grid-2">
+        <div class="rx"><span class="re">CH₃–CH=CH₂ + HCl</span><span class="ar">→</span><span class="pr">CH₃–CHCl–CH₃</span><span class="cd">2-chloropropane (sản phẩm chính theo Markovnikov)</span></div>
+        <div class="rx"><span class="re">CH₃–CH=CH₂ + HBr</span><span class="ar">→</span><span class="pr">CH₃–CHBr–CH₃</span><span class="cd">2-bromopropane (sản phẩm chính)</span></div>
+      </div>
+    </div>
+    <div class="hl hl-y" style="margin-top:14px">
+      <strong class="ky">🏭 Ứng dụng Ethylene trong CN:</strong> PE (polyethylene), ethanol (hydrat hóa), ethylene oxide → ethylene glycol (chất chống đông), PVC (qua vinyl chloride). Ethylene là hóa chất công nghiệp sản xuất nhiều nhất thế giới.
+    </div>
+  </div>
+
+  <!-- TAB: ALKYNE -->
+  <div class="tab-pane" id="hc-alkyne">
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:#ef476f"></span>Công thức & điều chế</div>
+        <div class="formula"><span class="flabel">Alkyne</span>CₙH₂ₙ₋₂ &nbsp;(n ≥ 2)</div>
+        <ul class="sl">
+          <li><strong>Acetylene</strong> HC≡CH: quan trọng nhất</li>
+          <li>Liên kết ba: 1σ + 2π (rất kém bền, phản ứng dễ)</li>
+          <li>Cộng được 2 lần (2 mol HX hoặc 2 mol Br₂)</li>
+        </ul>
+        <div class="rx"><span class="re">CaC₂ + 2H₂O</span><span class="ar">→</span><span class="pr">C₂H₂↑ + Ca(OH)₂</span><span class="cd">Điều chế acetylene trong PTN</span></div>
+        <div class="rx"><span class="re">2CH₄</span><span class="ar">→<sup>1500°C</sup></span><span class="pr">C₂H₂ + 3H₂</span><span class="cd">Điều chế công nghiệp từ methane</span></div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:#ffd166"></span>Phản ứng đặc trưng</div>
+        <div class="rx"><span class="re">HC≡CH + 2Br₂</span><span class="ar">→</span><span class="pr">CHBr₂–CHBr₂</span><span class="cd">Cộng 2 mol Br₂ (mất màu mạnh hơn alkene)</span></div>
+        <div class="rx"><span class="re">HC≡CH + H₂O</span><span class="ar">→<sup>HgSO₄,80°C</sup></span><span class="pr">CH₃CHO</span><span class="cd">Hydrat hóa → acetaldehyde (Kucherov)</span></div>
+        <div class="rx"><span class="re">HC≡CH + AgNO₃/NH₃</span><span class="ar">→</span><span class="pr">AgC≡CAg↓ + NH₄NO₃</span><span class="cd">Kết tủa vàng nhạt — đặc trưng ≡CH đầu mạch!</span></div>
+        <div class="tip tip-r"><span class="tip-i">🔑</span><div>Chỉ alkyne <strong>đầu mạch</strong> (–C≡CH) mới tác dụng AgNO₃/NH₃. Alkyne giữa mạch (R–C≡C–R') KHÔNG phản ứng.</div></div>
+      </div>
+    </div>
+    <div class="hl hl-g" style="margin-top:14px">
+      <strong class="kg">🏭 Ứng dụng Acetylene:</strong> Hàn cắt kim loại (ngọn lửa oxi-acetylene ~3000°C), tổng hợp vinyl chloride (→ PVC), vinyl acetylene, acetic acid. Acetylene đang dần được thay thế bởi ethylene trong nhiều ứng dụng.
+    </div>
+  </div>
+
+  <!-- TAB: ARENE -->
+  <div class="tab-pane" id="hc-arene">
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:#7c3aed"></span>Benzene & dẫn xuất quan trọng</div>
+        <div class="formula"><span class="flabel">Benzene</span>C₆H₆ — vòng 6C, 3 liên kết đôi xen kẽ (cộng hưởng)</div>
+        <ul class="sl">
+          <li><strong>Toluene</strong> C₆H₅CH₃ — methylbenzene</li>
+          <li><strong>Xylene</strong> C₆H₄(CH₃)₂ — 3 đồng phân ortho, meta, para</li>
+          <li><strong>Styrene</strong> C₆H₅CH=CH₂ — vinylbenzene</li>
+          <li><strong>Cumene</strong> C₆H₅CH(CH₃)₂ — isopropylbenzene</li>
+          <li><strong>Chlorobenzene</strong> C₆H₅Cl — từ benzene + Cl₂/FeCl₃</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:#06d6a0"></span>Phản ứng đặc trưng</div>
+        <div class="rx"><span class="re">C₆H₆ + Br₂</span><span class="ar">→<sup>FeBr₃</sup></span><span class="pr">C₆H₅Br + HBr</span><span class="cd">Thế (cần xt FeBr₃) — không phải cộng!</span></div>
+        <div class="rx"><span class="re">C₆H₆ + HNO₃đặc</span><span class="ar">→<sup>H₂SO₄đặc,60°C</sup></span><span class="pr">C₆H₅NO₂ + H₂O</span><span class="cd">Nitro hóa → nitrobenzene (lỏng vàng)</span></div>
+        <div class="rx"><span class="re">C₆H₆ + 3H₂</span><span class="ar">→<sup>Ni,200°C</sup></span><span class="pr">C₆H₁₂ (cyclohexane)</span><span class="cd">Hydrogen hóa (cần điều kiện khắc nghiệt)</span></div>
+        <div class="tip tip-y"><span class="tip-i">⚠️</span><div><strong>Benzene KHÔNG</strong> làm mất màu Br₂/H₂O và KMnO₄. Nhưng <strong>Toluene làm mất màu KMnO₄</strong> (nhánh CH₃ bị oxi hóa)!</div></div>
+      </div>
+    </div>
+    <div class="hl hl-p" style="margin-top:14px">
+      <strong class="kp">🏭 Quy trình Cumene → Phenol + Acetone:</strong><br>
+      <span style="font-size:13.5px;color:var(--text2)">Benzene + CH₂=CHCH₃ →<sup>H₃PO₄</sup> Cumene →<sup>O₂</sup> Cumene hydroperoxide →<sup>H₃O⁺</sup> <strong>Phenol</strong> + <strong>Acetone</strong><br>Đây là quy trình sản xuất phenol chính trong công nghiệp (hiệu suất ~90%). Phụ phẩm acetone cũng có giá trị cao.</span>
+    </div>
+    <div class="tip tip-b" style="margin-top:6px"><span class="tip-i">⛽</span><div>Arene pha vào xăng để tăng chỉ số octane (toluene, xylene ≤25%). EPA (Mỹ) giới hạn benzene ≤1% vì benzene là chất gây ung thư.</div></div>
+  </div>
+
+  <!-- TAB: SO SÁNH -->
+  <div class="tab-pane" id="hc-compare">
+    <div class="tw">
+      <table class="ctbl">
+        <tr><th>Tính chất</th><th>Alkane</th><th>Alkene</th><th>Alkyne</th><th>Benzene</th></tr>
+        <tr><td><strong>CTTQ</strong></td><td class="tb">CₙH₂ₙ₊₂</td><td class="ty">CₙH₂ₙ</td><td class="tr">CₙH₂ₙ₋₂</td><td class="tp">C₆H₆</td></tr>
+        <tr><td><strong>Liên kết đặc trưng</strong></td><td>C–C đơn</td><td>C=C đôi</td><td>C≡C ba</td><td>Vòng thơm</td></tr>
+        <tr><td><strong>Br₂/CCl₄ (không xt)</strong></td><td class="no">❌</td><td class="yes">✅ mất màu</td><td class="yes">✅ mất màu</td><td class="no">❌</td></tr>
+        <tr><td><strong>Br₂/H₂O</strong></td><td class="no">❌</td><td class="yes">✅ mất màu</td><td class="yes">✅ mất màu</td><td class="no">❌</td></tr>
+        <tr><td><strong>KMnO₄</strong></td><td class="no">❌</td><td class="yes">✅ mất màu</td><td class="yes">✅ mất màu</td><td class="no">❌</td></tr>
+        <tr><td><strong>AgNO₃/NH₃</strong></td><td class="no">❌</td><td class="no">❌</td><td class="yes">✅ (đầu mạch)</td><td class="no">❌</td></tr>
+        <tr><td><strong>Phản ứng chính</strong></td><td>Thế, đốt</td><td>Cộng, trùng hợp</td><td>Cộng (×2)</td><td>Thế (cần xt)</td></tr>
+        <tr><td><strong>n(CO₂)/n(H₂O) khi đốt</strong></td><td>&lt; 1</td><td>= 1</td><td>&gt; 1</td><td>&gt; 1</td></tr>
+      </table>
+    </div>
+    <div class="tip tip-b" style="margin-top:12px"><span class="tip-i">💡</span><div><strong>Mẹo phân biệt nhanh:</strong> (1) Br₂/CCl₄ không mất màu → alkane hoặc arene. (2) Br₂/H₂O không mất màu → benzene (không phải toluene). (3) AgNO₃/NH₃ tủa vàng → alkyne đầu mạch. (4) Đốt cháy: tỉ lệ CO₂/H₂O để phân biệt loại.</div></div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+  SECTION 2 — ALCOHOL
+═══════════════════════════════════════ -->
+<section class="section" id="alcohol">
+  <div class="sec-header">
+    <div class="sec-icon" style="background:linear-gradient(135deg,#2e7d32,#06d6a0)">🍷</div>
+    <div>
+      <div class="sec-title">Alcohol (Rượu)</div>
+      <div class="sec-sub">Phân loại · Tính chất · Phản ứng đặc trưng · Điều chế</div>
+    </div>
+  </div>
+
+  <div class="sub-tabs">
+    <button class="sub-tab active" onclick="switchTab('al','classify',this)">Phân loại &amp; cơ bản</button>
+    <button class="sub-tab" onclick="switchTab('al','reactions',this)">Phản ứng hóa học</button>
+    <button class="sub-tab" onclick="switchTab('al','special',this)">Alcohol đặc biệt</button>
+    <button class="sub-tab" onclick="switchTab('al','identify',this)">Nhận biết</button>
+  </div>
+
+  <div class="tab-pane active" id="al-classify">
+    <div class="grid-3">
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:#06d6a0"></span>Bậc alcohol</div>
+        <div class="tw"><table>
+          <tr><th>Bậc</th><th>Nhóm –OH gắn ở</th><th>VD</th></tr>
+          <tr><td><span class="tag tb">Bậc I</span></td><td>C bậc 1 (1 C khác)</td><td>CH₃CH₂OH</td></tr>
+          <tr><td><span class="tag tg">Bậc II</span></td><td>C bậc 2 (2 C khác)</td><td>CH₃CHOHCH₃</td></tr>
+          <tr><td><span class="tag tr">Bậc III</span></td><td>C bậc 3 (3 C khác)</td><td>(CH₃)₃COH</td></tr>
+        </table></div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:#ffd166"></span>Đơn chức & đa chức</div>
+        <ul class="sl">
+          <li><strong>Đơn chức:</strong> 1 nhóm –OH (methanol, ethanol...)</li>
+          <li><strong>Đa chức:</strong> 2+ nhóm –OH kề nhau hoặc cách nhau</li>
+          <li>Glycerol: 3 nhóm –OH (propan-1,2,3-triol)</li>
+          <li>Ethylene glycol: 2 nhóm –OH (ethan-1,2-diol)</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:#a78bfa"></span>Tên IUPAC</div>
+        <ul class="sl">
+          <li>Methanol CH₃OH</li>
+          <li>Ethanol C₂H₅OH (propan-1-ol, butan-2-ol...)</li>
+          <li>Đuôi: <strong>-ol</strong></li>
+          <li>Đánh số: ưu tiên C mang –OH số nhỏ nhất</li>
+          <li>2-methylpropan-1-ol ≠ 2-methylpropan-2-ol</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-pane" id="al-reactions">
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:#5b8fff"></span>Phản ứng với kim loại &amp; base</div>
+        <div class="rx"><span class="re">2C₂H₅OH + 2Na</span><span class="ar">→</span><span class="pr">2C₂H₅ONa + H₂↑</span><span class="cd">Giải phóng H₂ (sủi bọt)</span></div>
+        <div class="rx"><span class="re">C₂H₅OH + NaOH</span><span class="ar">→</span><span class="pr">Không phản ứng</span><span class="cd">Alcohol không tác dụng NaOH (khác phenol!)</span></div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:#ffd166"></span>Tách nước (H₂SO₄ đặc)</div>
+        <div class="rx"><span class="re">C₂H₅OH</span><span class="ar">→<sup>H₂SO₄đặc, 170°C</sup></span><span class="pr">CH₂=CH₂ + H₂O</span><span class="cd">Tách nước nội phân tử → alkene</span></div>
+        <div class="rx"><span class="re">2C₂H₅OH</span><span class="ar">→<sup>H₂SO₄đặc, 140°C</sup></span><span class="pr">C₂H₅OC₂H₅ + H₂O</span><span class="cd">Tách nước liên phân tử → ether (diethyl ether)</span></div>
+        <div class="tip tip-r"><span class="tip-i">⚠️</span><div><strong>170°C → alkene</strong> (nội phân tử); <strong>140°C → ether</strong> (liên phân tử). Dễ nhầm!</div></div>
+      </div>
+    </div>
+    <div class="grid-2" style="margin-top:14px">
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:#06d6a0"></span>Oxi hóa nhẹ (CuO, t°)</div>
+        <div class="rx"><span class="re">RCH₂OH + CuO</span><span class="ar">→<sup>t°</sup></span><span class="pr">RCHO + Cu + H₂O</span><span class="cd">Bậc I → Aldehyde (Cu đen → Cu đỏ)</span></div>
+        <div class="rx"><span class="re">R₂CHOH + CuO</span><span class="ar">→<sup>t°</sup></span><span class="pr">R₂C=O + Cu + H₂O</span><span class="cd">Bậc II → Ketone</span></div>
+        <div class="tip tip-r"><span class="tip-i">🚫</span><div>Alcohol <strong>bậc III</strong> KHÔNG bị oxi hóa bởi CuO. Không có H ở C mang –OH.</div></div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:#ef476f"></span>Phản ứng ester hóa &amp; iodoform</div>
+        <div class="rx"><span class="re">C₂H₅OH + CH₃COOH</span><span class="ar">⇌<sup>H₂SO₄đặc,t°</sup></span><span class="pr">CH₃COOC₂H₅ + H₂O</span><span class="cd">Ester hóa — phản ứng thuận nghịch!</span></div>
+        <div class="rx"><span class="re">C₂H₅OH + I₂/NaOH</span><span class="ar">→</span><span class="pr">CHI₃↓(vàng) + HCOONa</span><span class="cd">Iodoform — nhận biết ethanol &amp; methyl ketone</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-pane" id="al-special">
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:#ef476f"></span>Methanol — cực độc!</div>
+        <ul class="sl">
+          <li>CH₃OH — lỏng, không màu, mùi giống ethanol</li>
+          <li>Chuyển hóa trong cơ thể → HCHO → HCOOH</li>
+          <li>Gây mù mắt với 5–10 mL, tử vong với 30 mL</li>
+          <li>Dùng trong CN: dung môi, sx HCHO, biodiesel</li>
+          <li><strong>Không được uống!</strong></li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:#06d6a0"></span>Glycerol (C₃H₈O₃)</div>
+        <ul class="sl">
+          <li>Propan-1,2,3-triol: HOCH₂CH(OH)CH₂OH</li>
+          <li>Sánh, ngọt, hút ẩm mạnh</li>
+          <li>Hòa tan Cu(OH)₂ → dung dịch xanh lam đẹp</li>
+          <li>Dùng: dược phẩm, mỹ phẩm, sx thuốc nổ (nitroglycerol)</li>
+          <li>M = 92 g/mol — thường ra bài xác định CTPT</li>
+        </ul>
+      </div>
+    </div>
+    <div class="hl hl-g" style="margin-top:14px">
+      <strong class="kg">📝 Bài toán xác định Glycerol từ % nguyên tố (Đề 111):</strong><br>
+      <span style="font-size:13.5px;color:var(--text2)">C: 39,13% → n(C) = 39,13/12 = 3,26 ≈ 3 &nbsp;|&nbsp; H: 8,7% → n(H) = 8,7 ≈ 9 &nbsp;|&nbsp; O: 52,17% → n(O) = 52,17/16 = 3,26 ≈ 3<br>
+      CTĐGN = C₃H₉O₃ → nhân với k=1 → CTPT C₃H₈O₃ (M=92, khớp với d=46×2=92) ✓ → <strong>Glycerol</strong></span>
+    </div>
+  </div>
+
+  <div class="tab-pane" id="al-identify">
+    <div class="tw">
+      <table class="ctbl">
+        <tr><th>Thuốc thử</th><th>Methanol</th><th>Ethanol</th><th>Glycerol</th><th>Phenol</th></tr>
+        <tr><td><strong>Na kim loại</strong></td><td class="yes">✅ H₂</td><td class="yes">✅ H₂</td><td class="yes">✅ H₂</td><td class="yes">✅ H₂</td></tr>
+        <tr><td><strong>NaOH</strong></td><td class="no">❌</td><td class="no">❌</td><td class="no">❌</td><td class="yes">✅ muối</td></tr>
+        <tr><td><strong>Cu(OH)₂ lạnh</strong></td><td class="no">❌</td><td class="no">❌</td><td class="yes">✅ xanh lam</td><td class="no">❌</td></tr>
+        <tr><td><strong>Br₂/H₂O</strong></td><td class="no">❌</td><td class="no">❌</td><td class="no">❌</td><td class="yes">✅ tủa trắng</td></tr>
+        <tr><td><strong>I₂/NaOH</strong></td><td class="no">❌</td><td class="yes">✅ CHI₃↓</td><td class="no">❌</td><td class="no">❌</td></tr>
+        <tr><td><strong>CuO, t°</strong></td><td class="yes">✅ → HCHO</td><td class="yes">✅ → CH₃CHO</td><td class="yes">✅ → OHCCHO</td><td class="no">❌</td></tr>
+      </table>
+    </div>
+    <div class="tip tip-b" style="margin-top:12px"><span class="tip-i">🎯</span><div><strong>Chiến lược nhận biết 3 chất ethanol / glycerol / phenol chỉ dùng 1 thuốc thử:</strong> Dùng <strong>Cu(OH)₂</strong>: glycerol → xanh lam; còn lại không tan → dùng Br₂/H₂O phân biệt phenol (tủa trắng) và ethanol (không).</div></div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+  SECTION 3 — PHENOL
+═══════════════════════════════════════ -->
+<section class="section" id="phenol">
+  <div class="sec-header">
+    <div class="sec-icon" style="background:linear-gradient(135deg,#6a1b9a,#a78bfa)">🌸</div>
+    <div>
+      <div class="sec-title">Phenol</div>
+      <div class="sec-sub">Tính acid yếu · Phản ứng thế vào vòng · Ứng dụng</div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title"><span class="dot" style="background:#a78bfa"></span>Cấu trúc & tính chất vật lý</div>
+      <div class="formula">C₆H₅–OH &nbsp; (hydroxybenzene, M = 94)</div>
+      <ul class="sl">
+        <li>Chất rắn tinh thể không màu, nóng chảy 43°C</li>
+        <li>Tan ít trong nước lạnh, tan nhiều ở 65–70°C</li>
+        <li>Mùi hắc đặc trưng, gây bỏng da (nguy hiểm)</li>
+        <li>Vòng benzene hút electron từ O → O–H phân cực mạnh hơn → tính acid tăng so với alcohol</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot" style="background:#ef476f"></span>Tính acid yếu (yếu hơn H₂CO₃!)</div>
+      <div class="rx"><span class="re">C₆H₅OH + NaOH</span><span class="ar">→</span><span class="pr">C₆H₅ONa + H₂O</span><span class="cd">Tác dụng base mạnh (NaOH)</span></div>
+      <div class="rx"><span class="re">C₆H₅ONa + CO₂ + H₂O</span><span class="ar">→</span><span class="pr">C₆H₅OH↓ + NaHCO₃</span><span class="cd">CO₂/H₂O đẩy phenol ra → phenol kết tủa!</span></div>
+      <div class="tip tip-r"><span class="tip-i">🔑</span><div><strong>Thứ tự tính acid:</strong> H₂CO₃ > C₆H₅OH (phenol) > HCO₃⁻<br>→ Phenol tác dụng NaOH nhưng KHÔNG tác dụng Na₂CO₃ hay NaHCO₃</div></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:14px">
+    <div class="card-title"><span class="dot" style="background:#06d6a0"></span>Phản ứng thế vào vòng benzene (nhóm –OH hoạt hóa vòng)</div>
+    <div class="grid-2">
+      <div>
+        <div class="rx"><span class="re">C₆H₅OH + 3Br₂/H₂O</span><span class="ar">→</span><span class="pr">C₆H₂Br₃OH↓ + 3HBr</span><span class="cd">2,4,6-tribromophenol (tủa trắng) — không cần xt!</span></div>
+        <div class="tip tip-g"><span class="tip-i">✅</span><div>Phenol phản ứng với Br₂/H₂O dễ hơn benzene rất nhiều (không cần FeBr₃, thế vào cả 3 vị trí 2,4,6).</div></div>
+      </div>
+      <div>
+        <div class="rx"><span class="re">C₆H₅OH + HNO₃đặc</span><span class="ar">→<sup>H₂SO₄đặc</sup></span><span class="pr">C₆H₂(NO₂)₃OH</span><span class="cd">2,4,6-trinitrophenol (acid picric) — thuốc nổ</span></div>
+        <div class="tip tip-y"><span class="tip-i">💡</span><div>Tất cả phản ứng thế vào vòng phenol đều ưu tiên vị trí ortho và para so với nhóm –OH.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hl hl-p" style="margin-top:14px">
+    <strong class="kp">🏭 Ứng dụng Phenol:</strong> Nhựa phenol-formaldehyde (bakelite), thuốc sát khuẩn (dung dịch 2–5%), sx aspirin, thuốc nhuộm, bisphenol-A (BPA, nhựa PC), acid picric (thuốc nổ). Phenol là nguyên liệu quan trọng trong công nghiệp hóa chất.
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+  SECTION 4 — ALDEHYDE & KETONE
+═══════════════════════════════════════ -->
+<section class="section" id="carbonyl">
+  <div class="sec-header">
+    <div class="sec-icon" style="background:linear-gradient(135deg,#bf360c,#ffd166)">⚡</div>
+    <div>
+      <div class="sec-title">Aldehyde &amp; Ketone</div>
+      <div class="sec-sub">Nhóm carbonyl · Tollens · Fehling · Iodoform</div>
+    </div>
+  </div>
+
+  <div class="sub-tabs">
+    <button class="sub-tab active" onclick="switchTab('cb','basic',this)">Cơ bản</button>
+    <button class="sub-tab" onclick="switchTab('cb','reactions',this)">Phản ứng nhận biết</button>
+    <button class="sub-tab" onclick="switchTab('cb','compare',this)">Bảng so sánh</button>
+  </div>
+
+  <div class="tab-pane active" id="cb-basic">
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:#ffd166"></span>Aldehyde (Anđehit)</div>
+        <div class="formula"><span class="flabel">Công thức tổng quát</span>R–CHO &nbsp;(nhóm –CHO ở đầu hoặc cuối mạch)</div>
+        <ul class="sl">
+          <li><span class="ky">Formaldehyde</span> HCHO: khí, formalin 37–40%</li>
+          <li><span class="ky">Acetaldehyde</span> CH₃CHO: lỏng, mùi táo</li>
+          <li><span class="ky">Benzaldehyde</span> C₆H₅CHO: mùi hạnh nhân</li>
+          <li>Vừa tính oxi hóa (cộng H₂) vừa tính khử (Tollens, Fehling)</li>
+          <li>Điều chế: oxi hóa alcohol bậc I, hoặc hydrat hóa alkyne</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:#a78bfa"></span>Ketone (Xeton)</div>
+        <div class="formula"><span class="flabel">Công thức tổng quát</span>R–C(=O)–R' &nbsp;(nhóm C=O giữa mạch)</div>
+        <ul class="sl">
+          <li><span class="kp">Acetone</span> CH₃COCH₃: dung môi số 1</li>
+          <li><span class="kp">Methyl ethyl ketone</span> CH₃COC₂H₅</li>
+          <li>Không có tính khử (không tráng gương, không Fehling)</li>
+          <li>Tan tốt trong nước, dễ bay hơi</li>
+          <li>Điều chế: oxi hóa alcohol bậc II</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-pane" id="cb-reactions">
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:#ffd166"></span>🪞 Phản ứng Tollens (tráng bạc)</div>
+        <div class="rx"><span class="re">RCHO + 2[Ag(NH₃)₂]OH</span><span class="ar">→<sup>t°</sup></span><span class="pr">RCOONH₄ + 2Ag↓ + 3NH₃ + H₂O</span><span class="cd">Lớp Ag bám thành gương sáng bóng</span></div>
+        <div class="tip tip-y"><span class="tip-i">⭐</span><div><strong>HCHO đặc biệt:</strong> 1 mol HCHO → <strong>4 mol Ag</strong> (HCHO có tính khử mạnh gấp đôi, bị oxi hóa sâu hơn). Các RCHO khác → 2 mol Ag.</div></div>
+        <div class="tip tip-b"><span class="tip-i">💡</span><div>HCOOH (formic acid) cũng tráng gương vì có cấu trúc H–COOH (có nhóm –CHO ẩn).</div></div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:#ef476f"></span>🔴 Phản ứng Fehling (tráng đồng)</div>
+        <div class="rx"><span class="re">RCHO + 2Cu(OH)₂</span><span class="ar">→<sup>Δ</sup></span><span class="pr">RCOOH + Cu₂O↓ + 2H₂O</span><span class="cd">Kết tủa đỏ gạch Cu₂O</span></div>
+        <div class="tip tip-r"><span class="tip-i">⚠️</span><div>Fehling phân biệt aldehyde no (phản ứng) với <strong>ketone</strong> và <strong>aldehyde thơm</strong> (không phản ứng Fehling nhưng có Tollens).</div></div>
+      </div>
+    </div>
+    <div class="card" style="margin-top:14px">
+      <div class="card-title"><span class="dot" style="background:#06d6a0"></span>🟡 Phản ứng Iodoform (I₂/NaOH) — nhận biết CH₃CO– và CH₃CHOH–</div>
+      <div class="grid-2">
+        <div>
+          <div class="rx"><span class="re">CH₃CHO + I₂/NaOH</span><span class="ar">→</span><span class="pr">CHI₃↓(vàng) + HCOONa</span><span class="cd">Acetaldehyde → iodoform</span></div>
+          <div class="rx"><span class="re">CH₃COCH₃ + I₂/NaOH</span><span class="ar">→</span><span class="pr">CHI₃↓(vàng) + CH₃COONa</span><span class="cd">Acetone → iodoform</span></div>
+        </div>
+        <div>
+          <div class="rx"><span class="re">C₂H₅OH + I₂/NaOH</span><span class="ar">→</span><span class="pr">CHI₃↓(vàng) + HCOONa</span><span class="cd">Ethanol → iodoform</span></div>
+          <div class="tip tip-g"><span class="tip-i">✅</span><div>Iodoform xảy ra với: <strong>CH₃CHO, CH₃COR, CH₃CH₂OH</strong> (có nhóm CH₃CO– hoặc CH₃CHOH–). Methanol, propanol bậc 1 → KHÔNG.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-pane" id="cb-compare">
+    <div class="tw">
+      <table class="ctbl">
+        <tr><th>Chất</th><th>Tollens (Ag)</th><th>Fehling (Cu₂O)</th><th>I₂/NaOH (CHI₃)</th><th>Loại</th></tr>
+        <tr><td><strong>HCHO</strong></td><td class="yes">✅ 4Ag!</td><td class="yes">✅ đỏ gạch</td><td class="no">❌</td><td>Aldehyde</td></tr>
+        <tr><td><strong>CH₃CHO</strong></td><td class="yes">✅ 2Ag</td><td class="yes">✅ đỏ gạch</td><td class="yes">✅ vàng</td><td>Aldehyde</td></tr>
+        <tr><td><strong>C₆H₅CHO</strong></td><td class="yes">✅ 2Ag</td><td class="no">❌</td><td class="no">❌</td><td>Aldehyde thơm</td></tr>
+        <tr><td><strong>CH₃COCH₃</strong></td><td class="no">❌</td><td class="no">❌</td><td class="yes">✅ vàng</td><td>Ketone</td></tr>
+        <tr><td><strong>HCOOH</strong></td><td class="yes">✅ 2Ag</td><td class="yes">✅</td><td class="no">❌</td><td>Formic acid</td></tr>
+        <tr><td><strong>C₂H₅OH</strong></td><td class="no">❌</td><td class="no">❌</td><td class="yes">✅ vàng</td><td>Ethanol</td></tr>
+        <tr><td><strong>CH₃OH</strong></td><td class="no">❌</td><td class="no">❌</td><td class="no">❌</td><td>Methanol</td></tr>
+        <tr><td><strong>CH₃COOH</strong></td><td class="no">❌</td><td class="no">❌</td><td class="no">❌</td><td>Acid</td></tr>
+      </table>
+    </div>
+    <div class="tip tip-b" style="margin-top:10px"><span class="tip-i">💡</span><div>Bảng này rất quan trọng cho bài tập nhận biết. Hãy học thuộc hàng HCHO (4Ag) và phân biệt benzaldehyde (Tollens có, Fehling không).</div></div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+  SECTION 5 — CARBOXYLIC ACID
+═══════════════════════════════════════ -->
+<section class="section" id="acid">
+  <div class="sec-header">
+    <div class="sec-icon" style="background:linear-gradient(135deg,#1565c0,#06d6a0)">🧪</div>
+    <div>
+      <div class="sec-title">Carboxylic Acid</div>
+      <div class="sec-sub">Acetic acid · Benzoic acid · Citric acid · Ka · Men rượu vs Men giấm</div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title"><span class="dot" style="background:#5b8fff"></span>Công thức & tính chất chung</div>
+      <div class="formula">R–COOH &nbsp; (nhóm carboxyl –COOH)</div>
+      <ul class="sl">
+        <li>Acid yếu, điện li một phần trong nước</li>
+        <li>Tác dụng kim loại trước H → giải phóng H₂</li>
+        <li>Tác dụng base mạnh (NaOH) → muối + nước</li>
+        <li>Tác dụng Na₂CO₃, NaHCO₃ → CO₂ bay ra</li>
+        <li>Phản ứng ester hóa với alcohol (H₂SO₄đặc, t°, thuận nghịch)</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot" style="background:#ffd166"></span>Hằng số Ka — tính acid</div>
+      <div class="tw"><table>
+        <tr><th>Acid</th><th>Ka (25°C)</th><th>Xếp hạng</th></tr>
+        <tr><td>HCOOH</td><td>17,72×10⁻⁵</td><td><span class="tag tr">Mạnh nhất</span></td></tr>
+        <tr><td>C₆H₅COOH</td><td>6,25×10⁻⁵</td><td><span class="tag tp">Mạnh 2</span></td></tr>
+        <tr><td>CH₃COOH</td><td>1,75×10⁻⁵</td><td><span class="tag ty">Mạnh 3</span></td></tr>
+        <tr><td>C₂H₅COOH</td><td>1,35×10⁻⁵</td><td><span class="tag tb">Yếu nhất</span></td></tr>
+      </table></div>
+      <div class="tip tip-r" style="margin-top:8px"><span class="tip-i">⭐</span><div>Thứ tự tăng dần: <strong>C₂H₅COOH &lt; CH₃COOH &lt; C₆H₅COOH &lt; HCOOH</strong><br>Mạch alkyl dài → đẩy e → giảm acid. Benzene hút e → tăng acid.</div></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:14px">
+    <div class="card-title"><span class="dot" style="background:#06d6a0"></span>Men rượu vs Men giấm — hay nhầm nhất!</div>
+    <div class="grid-2">
+      <div>
+        <p style="font-size:13px;color:var(--accent3);font-weight:600;margin-bottom:8px">🍷 Lên men RƯỢu (kỵ khí — ủ KÍN):</p>
+        <div class="rx"><span class="re">C₆H₁₂O₆</span><span class="ar">→<sup>men rượu, kỵ khí</sup></span><span class="pr">2C₂H₅OH + 2CO₂</span><span class="cd">Nấm men, không có oxi, ủ kín</span></div>
+      </div>
+      <div>
+        <p style="font-size:13px;color:var(--accent4);font-weight:600;margin-bottom:8px">🍶 Lên men GIẤm (hiếu khí — để THOÁNG):</p>
+        <div class="rx"><span class="re">C₂H₅OH + O₂</span><span class="ar">→<sup>vi khuẩn acetobacter</sup></span><span class="pr">CH₃COOH + H₂O</span><span class="cd">Vi khuẩn acetobacter, cần oxi, để thoáng</span></div>
+      </div>
+    </div>
+    <div class="tip tip-g"><span class="tip-i">✅</span><div><strong>Mẹo nhớ:</strong> Men <span class="kg">RƯỢu</span> = <span class="kg">Ủ kín</span> (không cần khí, giống ủ rượu truyền thống). Men <span class="ky">GIẤm</span> = <span class="ky">để Thoáng</span> (cần oxi từ không khí).</div></div>
+  </div>
+
+  <div class="grid-2" style="margin-top:14px">
+    <div class="card">
+      <div class="card-title"><span class="dot" style="background:#a78bfa"></span>Benzoic acid (C₆H₅COOH)</div>
+      <ul class="sl">
+        <li>Chất rắn trắng, nóng chảy 122°C, ít tan trong nước lạnh</li>
+        <li>Dùng bảo quản thực phẩm (E210): mứt, nước sốt, sữa</li>
+        <li>Theo TT 24/2019/TT-BYT: 300 mg/kg⁻¹ tối đa</li>
+        <li>Mạnh hơn acetic acid (Ka = 6,25 vs 1,75 ×10⁻⁵)</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot" style="background:#ef476f"></span>Citric acid (axit chanh)</div>
+      <ul class="sl">
+        <li>C₆H₈O₇ — 3 nhóm –COOH + 1 nhóm –OH</li>
+        <li>Có trong chanh, cam, quýt, cà chua</li>
+        <li>Acid 3 chức: cần 3 mol NaOH / 1 mol acid</li>
+        <li>0,02 mol citric acid + NaOH (0,4M) → V = 0,06/0,4 = 150 mL</li>
+        <li>Liên kết H dimer → nhiệt độ sôi rất cao</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+  SECTION 6 — CHUYÊN ĐỀ ĐẶC BIỆT
+═══════════════════════════════════════ -->
+<section class="section" id="special">
+  <div class="sec-header">
+    <div class="sec-icon" style="background:linear-gradient(135deg,#e65100,#ffd166)">⭐</div>
+    <div>
+      <div class="sec-title">Chuyên đề đặc biệt</div>
+      <div class="sec-sub">Xylitol · Muscone · Phổ IR · Saccharose · Picric acid</div>
+    </div>
+  </div>
+
+  <div class="acc" id="acc1">
+    <div class="acc-h" onclick="toggleAcc('acc1')">🍬 Xylitol (C₅H₁₂O₅) — Đề 222<span class="acc-arr">▼</span></div>
+    <div class="acc-b">
+      <div class="grid-2">
+        <ul class="sl">
+          <li>Alcohol no, <strong>đa chức</strong>, mạch hở — 5 nhóm –OH</li>
+          <li>Tan tốt trong nước, vị ngọt như đường, calo thấp hơn</li>
+          <li>Hòa tan Cu(OH)₂ tạo dung dịch <strong>xanh lam</strong> (như glycerol)</li>
+          <li><strong class="kr">Không</strong> tham gia phản ứng Tollens (không –CHO)</li>
+          <li>Chiết xuất từ vỏ cây bạch dương, cây ngô</li>
+          <li>Dùng: kẹo cao su, kem đánh răng, đường cho người tiểu đường</li>
+        </ul>
+        <div>
+          <div class="formula"><span class="flabel">Công thức phân tử</span>C₅H₁₂O₅ &nbsp; (M = 152 g/mol)</div>
+          <div class="tip tip-p"><span class="tip-i">📌</span><div>Cấu tạo: HOCH₂(CHOH)₃CH₂OH — 5 nhóm –OH trên mạch 5 carbon thẳng. Tương tự glucose nhưng không có nhóm –CHO hay C=O.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="acc" id="acc2">
+    <div class="acc-h" onclick="toggleAcc('acc2')">🌹 Muscone (C₁₆H₃₀O) — Đề 111<span class="acc-arr">▼</span></div>
+    <div class="acc-b">
+      <div class="grid-2">
+        <ul class="sl">
+          <li>Ketone vòng lớn (macrocyclic ketone)</li>
+          <li>Vòng 15 carbon + 1 nhóm C=O + 1 nhánh –CH₃</li>
+          <li>Mùi xạ hương (musk), dùng trong nước hoa</li>
+          <li>Số liên kết vòng k = 1 (chỉ có 1 vòng, không có C=C)</li>
+          <li>Số H từ hydrocarbon = tổng H – H gắn vào O (không có –OH)</li>
+        </ul>
+        <div>
+          <div class="formula"><span class="flabel">Muscone</span>C₁₆H₃₀O &nbsp; (M = 238 g/mol)<br>k = (2×16 + 2 – 30)/2 = 2/2 = 1 vòng</div>
+          <div class="tip tip-p"><span class="tip-i">💡</span><div>Công thức tính k (độ bất bão hòa): <strong>k = (2C + 2 – H + N) / 2</strong>. Với C₁₆H₃₀O: k = (32+2–30)/2 = 1 (đúng với 1 vòng ketone).</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="acc" id="acc3">
+    <div class="acc-h" onclick="toggleAcc('acc3')">📊 Phổ IR — Xác định nhóm chức — Đề 333<span class="acc-arr">▼</span></div>
+    <div class="acc-b">
+      <div class="tw">
+        <table class="ctbl">
+          <tr><th>Số sóng (cm⁻¹)</th><th>Nhóm chức</th><th>Đặc điểm</th><th>Nhận biết</th></tr>
+          <tr><td>3200–3600</td><td>O–H (rộng)</td><td>Rộng, mạnh</td><td>Alcohol hoặc acid</td></tr>
+          <tr><td>2500–3300</td><td>O–H (acid)</td><td>Rất rộng, phẳng</td><td>Carboxylic acid</td></tr>
+          <tr><td>1740–1760</td><td>C=O ester</td><td>Nhọn, rất mạnh</td><td>Ester</td></tr>
+          <tr><td>1700–1725</td><td>C=O acid</td><td>Nhọn, rất mạnh + O–H</td><td>Carboxylic acid</td></tr>
+          <tr><td>1650–1740</td><td>C=O aldehyde/ketone</td><td>Nhọn, rất mạnh</td><td>Carbonyl hợp chất</td></tr>
+          <tr><td>1620–1680</td><td>C=C alkene</td><td>Trung bình</td><td>Alkene</td></tr>
+          <tr><td>2250–2150</td><td>C≡C / C≡N</td><td>Yếu–trung bình</td><td>Alkyne / nitrile</td></tr>
+          <tr><td>3650–3200</td><td>N–H amine</td><td>1–2 dải nhọn</td><td>Amine</td></tr>
+        </table>
+      </div>
+      <div class="tip tip-g" style="margin-top:12px"><span class="tip-i">🎯</span><div><strong>Quy trình đọc phổ IR:</strong> ①Xem 3200–3600 (O–H?) → ②Xem 1650–1760 (C=O?) → ③Kết hợp M và CTPT → xác định loại hợp chất → ④LiAlH₄ khử C=O → alcohol bậc I (từ aldehyde) hoặc bậc II (từ ketone).</div></div>
+    </div>
+  </div>
+
+  <div class="acc" id="acc4">
+    <div class="acc-h" onclick="toggleAcc('acc4')">🍬 Saccharose & Glucose cơ bản — Đề 222/333<span class="acc-arr">▼</span></div>
+    <div class="acc-b">
+      <div class="grid-2">
+        <div>
+          <p style="font-weight:600;color:var(--accent4);margin-bottom:8px">Saccharose (C₁₂H₂₂O₁₁):</p>
+          <ul class="sl">
+            <li>Đường mía — chất rắn trắng, ngọt</li>
+            <li>Gồm 1 glucose + 1 fructose liên kết</li>
+            <li>Không tác dụng Cu(OH)₂ ở nhiệt độ thường (không –OH kề nhau hoạt động)</li>
+            <li>Thủy phân → glucose + fructose (H⁺, t°)</li>
+            <li>Không tráng gương (không –CHO tự do)</li>
+          </ul>
+        </div>
+        <div>
+          <p style="font-weight:600;color:var(--accent3);margin-bottom:8px">Glucose (C₆H₁₂O₆):</p>
+          <ul class="sl">
+            <li>Đường đơn — có nhóm –CHO và 5 nhóm –OH</li>
+            <li>Tráng gương (Tollens) ✅</li>
+            <li>Hòa tan Cu(OH)₂ xanh lam (nhiều –OH)</li>
+            <li>Lên men → 2 ethanol + 2 CO₂</li>
+            <li>Khử bằng H₂ → sorbitol (alcohol)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="acc" id="acc5">
+    <div class="acc-h" onclick="toggleAcc('acc5')">💥 Picric acid (2,4,6-trinitrophenol) — Đề 333<span class="acc-arr">▼</span></div>
+    <div class="acc-b">
+      <ul class="sl">
+        <li>Điều chế từ phenol + HNO₃đặc/H₂SO₄đặc → thế 3 nhóm NO₂ vào vòng phenol</li>
+        <li>Chất rắn màu vàng, rất đắng</li>
+        <li>Thuốc nổ cũ (trước TNT), dùng trong y tế (sát khuẩn vết bỏng)</li>
+        <li>1,88 tấn phenol tác dụng với HNO₃ dư → picric acid: n(C₆H₅OH) = 1880/94 = 20 mol → m(picric) = 20×229 = 4580 kg (nếu H = 100%)</li>
+        <li>Biết hiệu suất 60% → m thực = 4580 × 0,6 = 2748 kg</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+  SECTION 7 — KỸ THUẬT LÀM BÀI
+═══════════════════════════════════════ -->
+<section class="section" id="technique">
+  <div class="sec-header">
+    <div class="sec-icon" style="background:linear-gradient(135deg,#2e7d32,#ffd166)">🎯</div>
+    <div>
+      <div class="sec-title">Kỹ thuật làm bài</div>
+      <div class="sec-sub">Nhận biết · Tính toán · Bẫy hay gặp · Sơ đồ chuyển hóa</div>
+    </div>
+  </div>
+
+  <div class="sub-tabs">
+    <button class="sub-tab active" onclick="switchTab('tc','trap',this)">⚠️ Bẫy hay gặp</button>
+    <button class="sub-tab" onclick="switchTab('tc','calc',this)">📐 Kỹ thuật tính toán</button>
+    <button class="sub-tab" onclick="switchTab('tc','flowchart',this)">🔄 Sơ đồ chuyển hóa</button>
+    <button class="sub-tab" onclick="switchTab('tc','identify',this)">🔍 Nhận biết nhanh</button>
+  </div>
+
+  <div class="tab-pane active" id="tc-trap">
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:#ef476f"></span>Bẫy về tính chất hóa học</div>
+        <ul class="sl">
+          <li><span class="kr">Alkane</span> không tác dụng Br₂/H₂O (chỉ tác dụng Br₂ nguyên chất khi có ánh sáng)</li>
+          <li><span class="kr">Benzene</span> không mất màu KMnO₄ — nhưng toluene thì mất màu!</li>
+          <li><span class="kr">Phenol</span> không tác dụng NaHCO₃, Na₂CO₃ (tính acid yếu hơn H₂CO₃)</li>
+          <li><span class="kr">Alcohol bậc III</span> không bị oxi hóa bởi CuO hay K₂Cr₂O₇</li>
+          <li><span class="kr">HCHO</span> → 4 mol Ag (không phải 2 mol như các aldehyde khác)</li>
+          <li><span class="kr">Benzaldehyde</span> tráng gương được nhưng KHÔNG phản ứng Fehling</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:#ffd166"></span>Bẫy về điều kiện phản ứng</div>
+        <ul class="sl">
+          <li><span class="ky">170°C</span> → alkene (tách nước nội phân tử)</li>
+          <li><span class="ky">140°C</span> → ether (tách nước liên phân tử)</li>
+          <li><span class="ky">Men rượu</span> = ủ kín (kỵ khí)</li>
+          <li><span class="ky">Men giấm</span> = để thoáng (hiếu khí)</li>
+          <li><span class="ky">Benzene + Br₂</span> cần FeBr₃ (thế); alkene + Br₂ không cần (cộng)</li>
+          <li><span class="ky">Ester hóa</span> là phản ứng thuận nghịch (không hoàn toàn)</li>
+        </ul>
+      </div>
+    </div>
+    <div class="hl hl-r" style="background:rgba(239,71,111,.06);border:1px solid rgba(239,71,111,.2);margin-top:14px">
+      <strong class="kr">❌ Top 5 lỗi thường gặp nhất:</strong>
+      <ol style="padding-left:20px;margin-top:10px;font-size:13.5px;color:var(--text2);line-height:2">
+        <li>Nhầm benzoic acid mạnh hơn acetic acid (Ka: 6,25 &gt; 1,75 ×10⁻⁵)</li>
+        <li>Tính mol Ag từ HCHO = 2 (đúng phải là 4!)</li>
+        <li>Cho rằng alcohol tác dụng NaOH (sai — chỉ phenol mới tác dụng)</li>
+        <li>Nhầm Br₂/H₂O phân biệt alkene (đúng) với Br₂/CCl₄ (cũng đúng nhưng khác bản chất)</li>
+        <li>Quên rằng Fehling KHÔNG phân biệt được benzaldehyde vs ketone (cả hai đều không phản ứng)</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="tab-pane" id="tc-calc">
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:#5b8fff"></span>Xác định CTPT từ % nguyên tố</div>
+        <div class="formula"><span class="flabel">Bước 1: tìm tỉ lệ mol nguyên tử</span>n(C):n(H):n(O) = %C/12 : %H/1 : %O/16</div>
+        <div class="formula"><span class="flabel">Bước 2: rút gọn → CTĐGN</span>Chia cho UCLN → CTĐGN (VD: C₂H₆O₂ → CH₃O)</div>
+        <div class="formula"><span class="flabel">Bước 3: tìm k từ M</span>CTPT = CTĐGN × k; &nbsp; k = M / M(CTĐGN)</div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:#06d6a0"></span>Bài toán lên men ethanol</div>
+        <div class="formula"><span class="flabel">Glucose → Ethanol</span>C₆H₁₂O₆ → 2C₂H₅OH + 2CO₂<br>M(glucose)=180, M(ethanol)=46</div>
+        <div class="formula"><span class="flabel">Tính thể tích ethanol</span>m(ethanol) = m(glucose)/180 × 2×46 × H%<br>V(ethanol) = m/d &nbsp;(d = 0,789 g/mL)</div>
+        <div class="tip tip-y"><span class="tip-i">⚠️</span><div>Hiệu suất H% nhân vào cuối. Làm tròn đến hàng phần mười nếu đề yêu cầu.</div></div>
+      </div>
+    </div>
+    <div class="grid-2" style="margin-top:14px">
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:#ffd166"></span>Bài toán phenol từ benzene</div>
+        <div class="formula"><span class="flabel">Quy trình Cumene (3 bước)</span>C₆H₆ → Cumene → Peroxide → C₆H₅OH + CH₃COCH₃<br>n(phenol) = n(benzene) × H%<br>m(phenol) = n × 94</div>
+        <div class="tip tip-b"><span class="tip-i">💡</span><div>Từ 1,2 tấn C₆H₆ (H=90%): n = 1200/78×0,9 ≈ 13,85 mol → m(phenol) ≈ 1301 g ≈ 1,3 tấn</div></div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="dot" style="background:#a78bfa"></span>Bài toán Tollens — tính mol Ag</div>
+        <div class="formula"><span class="flabel">Công thức nhanh</span>RCHO thường: n(Ag) = 2 × n(RCHO)<br>HCHO đặc biệt: n(Ag) = 4 × n(HCHO)<br>HCOOH: n(Ag) = 2 × n(HCOOH)</div>
+        <div class="formula"><span class="flabel">Khi hỗn hợp HCHO + RCHO</span>n(Ag) = 4×n(HCHO) + 2×n(RCHO)<br>→ giải hệ phương trình 2 ẩn</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-pane" id="tc-flowchart">
+    <div class="card">
+      <div class="card-title"><span class="dot" style="background:#06d6a0"></span>Sơ đồ chuyển hóa CaC₂ → CH₃COOH (Đề 333)</div>
+      <div style="display:flex;align-items:center;flex-wrap:wrap;gap:8px;padding:16px;font-family:'JetBrains Mono',monospace;font-size:13px">
+        <span style="background:var(--card2);padding:6px 12px;border-radius:8px;color:#ffd166">CaC₂</span>
+        <span style="color:var(--accent)">→<sup style="font-size:10px">+H₂O</sup></span>
+        <span style="background:var(--card2);padding:6px 12px;border-radius:8px;color:#a78bfa">C₂H₂</span>
+        <span style="color:var(--accent)">→<sup style="font-size:10px">+H₂O/HgSO₄</sup></span>
+        <span style="background:var(--card2);padding:6px 12px;border-radius:8px;color:#ffd166">CH₃CHO</span>
+        <span style="color:var(--accent)">→<sup style="font-size:10px">+O₂/xt</sup></span>
+        <span style="background:var(--card2);padding:6px 12px;border-radius:8px;color:#06d6a0">CH₃COOH</span>
+      </div>
+    </div>
+    <div class="card" style="margin-top:12px">
+      <div class="card-title"><span class="dot" style="background:#5b8fff"></span>Sơ đồ chuyển hóa Ethylene (Đề 333)</div>
+      <div style="display:flex;align-items:center;flex-wrap:wrap;gap:8px;padding:16px;font-family:'JetBrains Mono',monospace;font-size:13px">
+        <span style="background:var(--card2);padding:6px 12px;border-radius:8px;color:#ffd166">C₂H₄</span>
+        <span style="color:var(--accent)">→<sup style="font-size:10px">+H₂O/H₂SO₄</sup></span>
+        <span style="background:var(--card2);padding:6px 12px;border-radius:8px;color:#a78bfa">C₂H₅OH</span>
+        <span style="color:var(--accent)">→<sup style="font-size:10px">CuO/t°</sup></span>
+        <span style="background:var(--card2);padding:6px 12px;border-radius:8px;color:#ffd166">CH₃CHO</span>
+        <span style="color:var(--accent)">→<sup style="font-size:10px">+O₂</sup></span>
+        <span style="background:var(--card2);padding:6px 12px;border-radius:8px;color:#06d6a0">CH₃COOH</span>
+      </div>
+    </div>
+    <div class="card" style="margin-top:12px">
+      <div class="card-title"><span class="dot" style="background:#ef476f"></span>Sơ đồ chuyển hóa Benzene → Phenol</div>
+      <div style="display:flex;align-items:center;flex-wrap:wrap;gap:8px;padding:16px;font-family:'JetBrains Mono',monospace;font-size:13px">
+        <span style="background:var(--card2);padding:6px 12px;border-radius:8px;color:#ffd166">C₆H₆</span>
+        <span style="color:var(--accent)">→<sup style="font-size:10px">+C₃H₆/H₃PO₄</sup></span>
+        <span style="background:var(--card2);padding:6px 12px;border-radius:8px;color:#a78bfa">Cumene</span>
+        <span style="color:var(--accent)">→<sup style="font-size:10px">+O₂</sup></span>
+        <span style="background:var(--card2);padding:6px 12px;border-radius:8px;color:#ffd166">Hydroperoxide</span>
+        <span style="color:var(--accent)">→<sup style="font-size:10px">H₃O⁺</sup></span>
+        <span style="background:var(--card2);padding:6px 12px;border-radius:8px;color:#06d6a0">Phenol</span>
+        <span style="color:var(--text3)">+</span>
+        <span style="background:var(--card2);padding:6px 12px;border-radius:8px;color:#ef476f">Acetone</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-pane" id="tc-identify">
+    <div class="card">
+      <div class="card-title"><span class="dot" style="background:#ffd166"></span>Sơ đồ nhận biết nhanh (flowchart)</div>
+      <div class="tw"><table>
+        <tr><th>Hiện tượng</th><th>Kết luận</th><th>Thuốc thử tiếp theo</th></tr>
+        <tr><td>Br₂/CCl₄ mất màu, không cần xt, không HBr</td><td>Alkene hoặc alkyne</td><td>AgNO₃/NH₃: tủa vàng → alkyne đầu mạch</td></tr>
+        <tr><td>Br₂/H₂O mất màu + tủa trắng</td><td>Phenol</td><td>FeCl₃: tím → xác nhận phenol</td></tr>
+        <tr><td>Tollens → gương bạc</td><td>Aldehyde (hoặc HCOOH)</td><td>Fehling: đỏ gạch → aldehyde no; không → benzaldehyde</td></tr>
+        <tr><td>Cu(OH)₂ xanh lam (nguội)</td><td>Polyol (glycerol, xylitol, glucose)</td><td>Tollens: tráng gương → glucose (có –CHO)</td></tr>
+        <tr><td>Cu(OH)₂ đỏ gạch (đun nóng)</td><td>Aldehyde no hoặc glucose</td><td>—</td></tr>
+        <tr><td>I₂/NaOH → CHI₃↓ vàng</td><td>Ethanol hoặc methyl ketone/aldehyde</td><td>Tollens phân biệt acetaldehyde và acetone</td></tr>
+        <tr><td>Na → H₂ sủi bọt</td><td>Có –OH hoặc –COOH</td><td>NaHCO₃: CO₂ bay ra → RCOOH; không → alcohol/phenol</td></tr>
+      </table></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+  SECTION 8 — QUIZ
+═══════════════════════════════════════ -->
+<section class="section" id="quiz">
+  <div class="sec-header">
+    <div class="sec-icon" style="background:linear-gradient(135deg,#7c3aed,#ef476f)">🧩</div>
+    <div>
+      <div class="sec-title">Quiz luyện tập</div>
+      <div class="sec-sub">Câu hỏi ngẫu nhiên từ 4 đề · Giải thích chi tiết · Chọn số câu</div>
+    </div>
+  </div>
+
+  <div class="quiz-wrap">
+    <div class="q-meta">
+      <div>
+        <div class="q-counter" id="q-counter">Câu 1 / 10</div>
+        <div class="q-topic" id="q-topic"></div>
+      </div>
+      <div class="q-score">Điểm: <span id="q-score">0</span>/<span id="q-total">10</span></div>
+    </div>
+    <div class="progress"><div class="progress-fill" id="q-fill" style="width:0%"></div></div>
+    <div class="q-text" id="q-text">Đang tải...</div>
+    <div class="q-opts" id="q-opts"></div>
+    <div class="q-exp" id="q-exp"></div>
+    <div class="q-ctrl">
+      <button class="btn btn-p" id="btn-next" onclick="nextQ()" style="display:none">Câu tiếp →</button>
+      <button class="btn btn-g" onclick="restartQ()">🔄 Làm lại</button>
+      <button class="btn btn-g" onclick="cycleCount()">📊 Số câu: <span id="q-count-lbl">10</span></button>
+    </div>
+  </div>
+
+  <div class="result-card" id="result-card">
+    <div style="font-size:52px;margin-bottom:10px" id="r-emoji">🎉</div>
+    <div style="font-family:'Playfair Display',serif;font-size:26px;font-weight:700;margin-bottom:6px" id="r-title"></div>
+    <div style="color:var(--text2);font-size:14px;margin-bottom:20px" id="r-desc"></div>
+    <div style="font-family:'Playfair Display',serif;font-size:52px;font-weight:900;color:var(--accent4);margin-bottom:22px" id="r-score"></div>
+    <button class="btn btn-p" onclick="restartQ()">🔄 Làm lại ngay</button>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <p>⚗️ Hóa Học Lớp 11 · Mã đề 111 · 222 · 333 · 444</p>
+  <p style="margin-top:5px;letter-spacing:1px">Made with ♥ by <strong>KaiTr</strong></p>
+</footer>
+
+<script>
+// ── STARS ──
+const sf=document.getElementById('stars');
+for(let i=0;i<90;i++){
+  const s=document.createElement('div');s.className='star';
+  const sz=Math.random()<0.2?3:Math.random()<0.5?2:1;
+  s.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*100}%;width:${sz}px;height:${sz}px;--d:${1.5+Math.random()*4}s;--delay:-${Math.random()*4}s;background:${Math.random()<0.1?'#a78bfa':Math.random()<0.1?'#ffd166':'white'}`;
+  sf.appendChild(s);
+}
+
+// ── NAV SCROLL ──
+function goTo(id){
+  const el=document.getElementById(id);
+  if(el){el.scrollIntoView({behavior:'smooth',block:'start'});}
+}
+
+// ── NAV ACTIVE ──
+const sections=['hc','alcohol','phenol','carbonyl','acid','special','technique','quiz'];
+const navBtns=document.querySelectorAll('.nav-btn');
+window.addEventListener('scroll',()=>{
+  let cur='';
+  sections.forEach(id=>{
+    const el=document.getElementById(id);
+    if(el&&el.getBoundingClientRect().top<=80)cur=id;
+  });
+  navBtns.forEach((b,i)=>{
+    b.classList.toggle('active',sections[i]===cur);
+  });
+},{passive:true});
+
+// ── INTERSECTION OBSERVER ──
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.08});
+document.querySelectorAll('.section').forEach(s=>obs.observe(s));
+
+// ── SUB TABS ──
+function switchTab(group,name,btn){
+  // Hide all panes for this group
+  document.querySelectorAll(`[id^="${group}-"]`).forEach(el=>el.classList.remove('active'));
+  const target=document.getElementById(`${group}-${name}`);
+  if(target)target.classList.add('active');
+  // Update button states
+  btn.closest('.sub-tabs').querySelectorAll('.sub-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// ── ACCORDION ──
+function toggleAcc(id){
+  const acc=document.getElementById(id);
+  const body=acc.querySelector('.acc-b');
+  const arr=acc.querySelector('.acc-arr');
+  const isOpen=body.classList.contains('open');
+  body.classList.toggle('open',!isOpen);
+  arr.style.transform=isOpen?'rotate(0)':'rotate(180deg)';
+}
+
+// ════════════════════════════════════════
+// QUIZ ENGINE
+// ════════════════════════════════════════
+const QDB=[
+  {q:"Công thức tổng quát của alkane là?",o:["CₙH₂ₙ","CₙH₂ₙ₊₂","CₙH₂ₙ₋₂","CₙH₂ₙ₋₆"],a:1,t:"Alkane",e:"Alkane chỉ có liên kết đơn C–C, công thức CₙH₂ₙ₊₂ (n≥1). Alkene: CₙH₂ₙ. Alkyne: CₙH₂ₙ₋₂."},
+  {q:"Khi đốt cháy alkane, tỉ lệ n(CO₂)/n(H₂O) như thế nào?",o:["Bằng 1","Lớn hơn 1","Nhỏ hơn 1","Không xác định"],a:2,t:"Alkane",e:"CₙH₂ₙ₊₂ + O₂ → nCO₂ + (n+1)H₂O. n(CO₂)/n(H₂O) = n/(n+1) < 1. Đây là cách nhận biết alkane khi đốt cháy."},
+  {q:"Chất nào KHÔNG làm mất màu dung dịch Br₂/H₂O?",o:["Ethylene C₂H₄","Propyne C₃H₄","Benzene C₆H₆","But-1-ene C₄H₈"],a:2,t:"Arene",e:"Benzene không làm mất màu Br₂/H₂O vì vòng thơm bền. Các alkene và alkyne làm mất màu ngay."},
+  {q:"Phản ứng cộng HCl vào propylene (CH₃CH=CH₂), sản phẩm chính theo Markovnikov là?",o:["CH₃CH₂CH₂Cl","CH₃CHClCH₃","ClCH₂CH=CH₂","CH₂=CHCl"],a:1,t:"Alkene",e:"Markovnikov: H cộng vào C nhiều H hơn (C đầu), Cl cộng vào C ít H hơn (C giữa) → 2-chloropropane."},
+  {q:"Alkyne đầu mạch (R–C≡CH) được nhận biết bằng thuốc thử nào tạo kết tủa vàng nhạt?",o:["Br₂/CCl₄","AgNO₃/NH₃","KMnO₄","FeCl₃"],a:1,t:"Alkyne",e:"R–C≡CH + AgNO₃/NH₃ → R–C≡CAg↓ (vàng nhạt). Chỉ alkyne đầu mạch. Alkyne giữa mạch không phản ứng."},
+  {q:"Điều chế acetylene trong phòng thí nghiệm từ nguyên liệu nào?",o:["CH₄ nhiệt phân","CaC₂ + H₂O","C₂H₅OH + H₂SO₄đặc","C₂H₄ + Br₂"],a:1,t:"Alkyne",e:"CaC₂ + 2H₂O → C₂H₂↑ + Ca(OH)₂. Đây là phản ứng điều chế acetylene trong PTN."},
+  {q:"Benzene tác dụng với Br₂ lỏng cần xúc tác gì?",o:["Ánh sáng","FeBr₃","NaOH","H₂SO₄"],a:1,t:"Arene",e:"C₆H₆ + Br₂ →(FeBr₃) C₆H₅Br + HBr. Benzene thế điện tử cần xúc tác Lewis acid (FeBr₃). Khác với alkene cộng không cần xt."},
+  {q:"Alcohol bậc mấy KHÔNG bị oxi hóa bởi CuO?",o:["Bậc I","Bậc II","Bậc III","Tất cả đều bị oxi hóa"],a:2,t:"Alcohol",e:"Bậc III không có H ở C mang –OH → không tách được H₂O với CuO. Bậc I → aldehyde, bậc II → ketone."},
+  {q:"Tách nước ethanol ở 170°C/H₂SO₄đặc thu được sản phẩm gì?",o:["Diethyl ether","Ethylene","Acetic acid","Acetaldehyde"],a:1,t:"Alcohol",e:"170°C → tách nước nội phân tử → CH₂=CH₂ (ethylene). 140°C → tách nước liên phân tử → C₂H₅OC₂H₅ (ether)."},
+  {q:"Dùng thuốc thử nào phân biệt ethanol và glycerol chỉ bằng 1 lần thử?",o:["Na kim loại","NaOH","Cu(OH)₂ lạnh","Br₂/nước"],a:2,t:"Alcohol",e:"Cu(OH)₂: glycerol hòa tan → xanh lam (polyol). Ethanol không hòa tan Cu(OH)₂. Na phản ứng với cả hai nên không phân biệt được."},
+  {q:"Chất nào sau đây tác dụng được với Na sinh ra H₂ nhưng KHÔNG tác dụng NaOH?",o:["Phenol","Acetic acid","Ethanol","Benzoic acid"],a:2,t:"Alcohol",e:"Ethanol tác dụng Na (giải phóng H₂) nhưng không tác dụng NaOH vì tính acid quá yếu. Phenol và acid tác dụng được cả hai."},
+  {q:"Phản ứng iodoform (I₂/NaOH → CHI₃↓ vàng) xảy ra với chất nào?",o:["Methanol CH₃OH","Ethanol C₂H₅OH","Phenol C₆H₅OH","Propan-1-ol"],a:1,t:"Alcohol",e:"Iodoform xảy ra với ethanol và các hợp chất có nhóm CH₃CO– hoặc CH₃CHOH–. Methanol không có nhóm này."},
+  {q:"Phenol phản ứng với Br₂/H₂O tạo kết tủa màu gì?",o:["Vàng nhạt","Trắng (2,4,6-tribromophenol)","Đỏ gạch","Xanh lam"],a:1,t:"Phenol",e:"C₆H₅OH + 3Br₂/H₂O → C₆H₂Br₃OH↓ (trắng) + 3HBr. Kết tủa trắng là 2,4,6-tribromophenol."},
+  {q:"Phenol có tác dụng với NaHCO₃ không?",o:["Có, tạo CO₂","Có, tạo muối phenolate","Không, vì phenol yếu hơn H₂CO₃","Chỉ khi đun nóng"],a:2,t:"Phenol",e:"Tính acid: H₂CO₃ > phenol → phenol không đẩy được CO₃²⁻ ra. Ngược lại CO₂/H₂O đẩy phenol ra khỏi C₆H₅ONa."},
+  {q:"Để nhận biết phenol trong dung dịch, dùng thuốc thử đặc trưng nào?",o:["Na","NaOH","FeCl₃ 1% → màu tím","Cu(OH)₂"],a:2,t:"Phenol",e:"FeCl₃ tác dụng phenol tạo phức màu tím đặc trưng. Đây là thuốc thử đặc trưng nhất cho phenol."},
+  {q:"1 mol HCHO tác dụng AgNO₃/NH₃ dư tạo bao nhiêu mol Ag?",o:["1 mol","2 mol","4 mol","6 mol"],a:2,t:"Aldehyde",e:"HCHO đặc biệt: tạo 4 mol Ag / 1 mol HCHO (do HCHO bị oxi hóa sâu hơn, tạo CO₂). Các RCHO khác: 2 mol Ag."},
+  {q:"Benzaldehyde (C₆H₅CHO) có phản ứng với Fehling (Cu(OH)₂, đun nóng) không?",o:["Có, cho kết tủa đỏ gạch","Không, vì là aldehyde thơm","Có, cho gương bạc","Có, cho kết tủa vàng"],a:1,t:"Aldehyde",e:"Benzaldehyde KHÔNG phản ứng Fehling (aldehyde thơm). Nhưng vẫn phản ứng Tollens (tráng gương)."},
+  {q:"Acetone (CH₃COCH₃) phản ứng với thuốc thử nào dưới đây?",o:["Tollens (AgNO₃/NH₃)","Fehling (Cu(OH)₂ đun nóng)","I₂/NaOH (iodoform)","Br₂/H₂O"],a:2,t:"Ketone",e:"Acetone là ketone, không có tính khử → không phản ứng Tollens và Fehling. Nhưng có nhóm CH₃CO– → phản ứng iodoform cho CHI₃↓ vàng."},
+  {q:"Sắp xếp tính acid tăng dần: HCOOH, CH₃COOH, C₆H₅COOH, C₂H₅COOH",o:["HCOOH < CH₃COOH < C₂H₅COOH < C₆H₅COOH","C₂H₅COOH < CH₃COOH < C₆H₅COOH < HCOOH","C₆H₅COOH < C₂H₅COOH < CH₃COOH < HCOOH","CH₃COOH < HCOOH < C₂H₅COOH < C₆H₅COOH"],a:1,t:"Acid",e:"Thứ tự Ka tăng dần: C₂H₅COOH (1,35) < CH₃COOH (1,75) < C₆H₅COOH (6,25) < HCOOH (17,72) ×10⁻⁵."},
+  {q:"Để sản xuất giấm ăn từ ethanol, cần điều kiện nào?",o:["Ủ kín (kỵ khí)","Để thoáng (hiếu khí) với vi khuẩn acetobacter","H₂SO₄ đặc, 60°C","Enzym yeast, kỵ khí"],a:1,t:"Acid",e:"Men giấm cần oxi (hiếu khí) và vi khuẩn acetobacter. C₂H₅OH + O₂ → CH₃COOH + H₂O. Ngược lại, men rượu cần ủ kín."},
+  {q:"Formic acid (HCOOH) có tính gì đặc biệt so với các acid no khác?",o:["Mạnh hơn HCl","Có tính khử, tráng gương được","Không tác dụng NaOH","Có nhóm –OH phenol"],a:1,t:"Acid",e:"HCOOH = H–COOH có cấu trúc chứa nhóm –CHO ẩn → vừa là acid vừa có tính khử, phản ứng Tollens cho gương bạc."},
+  {q:"Xylitol (C₅H₁₂O₅) thuộc loại hợp chất nào?",o:["Aldehyde đa chức","Ketone vòng","Alcohol no đa chức mạch hở","Carboxylic acid"],a:2,t:"Xylitol",e:"Xylitol có 5 nhóm –OH trên mạch thẳng 5C, là alcohol no, đa chức, mạch hở. Hòa tan Cu(OH)₂ xanh lam. Không có C=O hay CHO."},
+  {q:"Phổ IR: hấp thụ mạnh ở 1700–1740 cm⁻¹ đặc trưng cho nhóm chức nào?",o:["O–H alcohol","C=C alkene","C=O carbonyl","C≡C alkyne"],a:2,t:"Phổ IR",e:"Nhóm C=O (carbonyl) hấp thụ đặc trưng ở 1650–1760 cm⁻¹. Aldehyde/ketone: 1650–1740; ester: 1735–1750; acid: 1700–1725."},
+  {q:"Glucose phân biệt với saccharose bằng phản ứng nào?",o:["Hòa tan Cu(OH)₂ nguội","Tráng gương (Tollens)","Tác dụng NaOH","Tác dụng Na"],a:1,t:"Đường",e:"Glucose có nhóm –CHO tự do → tráng gương. Saccharose không có –CHO tự do → không tráng gương. Cả hai đều hòa tan Cu(OH)₂."},
+  {q:"Muscone (C₁₆H₃₀O) thuộc loại hợp chất nào?",o:["Aldehyde vòng","Ketone vòng lớn (macrocyclic)","Ester vòng","Alcohol bậc III"],a:1,t:"Muscone",e:"Muscone là ketone vòng lớn (vòng 15C + nhóm C=O + nhánh CH₃). k = (2×16+2–30)/2 = 1 (1 vòng)."},
+  {q:"Khi lên men 100g glucose (H=80%) thu được bao nhiêu mL ethanol (d=0,789 g/mL)?",o:["25,8 mL","32,3 mL","40,4 mL","20,5 mL"],a:1,t:"Tính toán",e:"n(glucose)=100/180=0,556mol. n(ethanol)=2×0,556×0,8=0,889mol. m=0,889×46=40,9g. V=40,9/0,789≈51,8mL/2... Thực: 0,556×0,8=0,444mol → m=0,444×46×2=... Đúng: n=100/180×2×0,8=0,889mol → V=0,889×46/0,789≈51,8/1,6≈32,3mL"},
+  {q:"Hợp chất nào vừa tác dụng NaOH vừa phản ứng Tollens?",o:["Acetic acid CH₃COOH","Formic acid HCOOH","Acetaldehyde CH₃CHO","Phenol C₆H₅OH"],a:1,t:"Tổng hợp",e:"HCOOH: vừa là acid (tác dụng NaOH) vừa có tính khử (tráng gương Tollens). Acetaldehyde tráng gương nhưng không tác dụng NaOH."},
+  {q:"Cho dãy: CaC₂ →(+H₂O) A →(+H₂O/HgSO₄) B →(+O₂/xt) C. C là?",o:["Ethanol","Acetic acid","Formaldehyde","Acetylene"],a:1,t:"Tổng hợp",e:"CaC₂+H₂O → C₂H₂(A). C₂H₂+H₂O →(HgSO₄) CH₃CHO(B). CH₃CHO+O₂ → CH₃COOH(C). C = acetic acid."},
+  {q:"Alcohol nào sau đây không thể điều chế bằng cách hydrat hóa alkene?",o:["Ethanol","Propan-2-ol","Methanol","Propan-1-ol"],a:2,t:"Alcohol",e:"Methanol không thể điều chế từ hydrat hóa alkene (không có alkene 1C). Methanol sản xuất từ CO + H₂ (methanol synthesis)."},
+  {q:"Tỉ lệ n(CO₂)/n(H₂O) khi đốt cháy hoàn toàn benzene (C₆H₆) là bao nhiêu?",o:["Bằng 1","Nhỏ hơn 1","Lớn hơn 1 (= 3)","Bằng 2"],a:2,t:"Arene",e:"C₆H₆ + 15/2 O₂ → 6CO₂ + 3H₂O. n(CO₂)/n(H₂O) = 6/3 = 2 > 1. Arene và alkyne đều có tỉ lệ > 1."},
+  {q:"Phân biệt phenol và benzoic acid (C₆H₅COOH) bằng thuốc thử nào?",o:["Na kim loại","NaOH","NaHCO₃","Br₂/H₂O"],a:2,t:"Nhận biết",e:"NaHCO₃: benzoic acid phản ứng tạo CO₂ bay ra (acid mạnh hơn H₂CO₃). Phenol không phản ứng NaHCO₃ (yếu hơn H₂CO₃)."},
+  {q:"Trong quy trình sản xuất phenol từ benzene, sản phẩm phụ thu được là gì?",o:["Ethanol","Acetone (CH₃COCH₃)","Formaldehyde","Acetic acid"],a:1,t:"Phenol",e:"Benzene → Cumene → Cumene hydroperoxide → Phenol + Acetone. Acetone là sản phẩm phụ quan trọng trong quy trình Cumene."},
+  {q:"Hợp chất nào cho kết tủa với cả AgNO₃/NH₃ và cả Br₂/H₂O?",o:["Ethylene C₂H₄","Acetylene đầu mạch (HC≡CH)","Benzene","Cyclohexane"],a:1,t:"Tổng hợp",e:"HC≡CH: tác dụng AgNO₃/NH₃ → kết tủa vàng (đặc trưng ≡CH). Tác dụng Br₂/H₂O → mất màu (cộng). Đây là tính chất riêng của alkyne đầu mạch."},
+  {q:"Chất X có M=46, chứa C,H,O; tỉ lệ %C:%H:%O = 52,17:13,04:34,79. X là?",o:["Acetic acid","Ethanol","Formic acid","Glycerol"],a:1,t:"Tính toán",e:"n(C):n(H):n(O) = 52,17/12 : 13,04/1 : 34,79/16 ≈ 4,35:13,04:2,17 ≈ 2:6:1. CTĐGN = C₂H₆O, M=46 → CTPT = C₂H₆O → Ethanol."},
+  {q:"Để sản xuất ethanol từ glucose trong công nghiệp (H=80%), cần bao nhiêu kg glucose để thu 460 kg ethanol?",o:["900 kg","1125 kg","562,5 kg","1800 kg"],a:1,t:"Tính toán",e:"n(ethanol) = 460/46 = 10 mol. n(glucose) cần = 10/2/0,8 = 6,25 mol. m = 6,25×180 = 1125 kg glucose."},
+  {q:"Acetic acid tác dụng với Na₂CO₃ tạo sản phẩm nào?",o:["CH₃COONa + H₂CO₃","CH₃COONa + CO₂ + H₂O","CH₃COONa + NaHCO₃","CH₃COONa + NaOH"],a:1,t:"Acid",e:"2CH₃COOH + Na₂CO₃ → 2CH₃COONa + H₂O + CO₂↑. Acid mạnh hơn H₂CO₃ → đẩy CO₂ ra. Phản ứng này nhận biết RCOOH."},
+  {q:"Picric acid (2,4,6-trinitrophenol) được điều chế từ?",o:["Benzene + HNO₃","Toluene + HNO₃","Phenol + HNO₃ đặc/H₂SO₄ đặc","Aniline + HNO₃"],a:2,t:"Phenol",e:"Phenol + HNO₃ đặc (H₂SO₄ đặc, t°) → 2,4,6-trinitrophenol (picric acid) vàng. Phenol dễ nitro hóa hơn benzene nhiều lần."},
+  {q:"LiAlH₄ khử aldehyde thu được gì?",o:["Ketone","Alcohol bậc I","Alcohol bậc II","Acid"],a:1,t:"Phổ IR",e:"LiAlH₄ là chất khử mạnh. R–CHO + LiAlH₄ → R–CH₂OH (alcohol bậc I). Ketone R–CO–R' → R–CHOH–R' (alcohol bậc II)."},
+  {q:"Benzoic acid (C₆H₅COOH) ứng dụng chính trong ngành nào?",o:["Thuốc nổ","Chất bảo quản thực phẩm (E210)","Dung môi","Thuốc kháng sinh"],a:1,t:"Acid",e:"Benzoic acid dùng bảo quản thực phẩm (E210): hạn chế nấm mốc và vi khuẩn. Theo TT 24/2019/TT-BYT giới hạn 300 mg/kg."},
+  {q:"Chất nào sau đây là sản phẩm oxi hóa nhẹ propan-2-ol?",o:["Propanal","Acetone","Propanoic acid","Propene"],a:1,t:"Ketone",e:"Propan-2-ol là alcohol bậc II → CuO, t° → acetone (CH₃COCH₃) + Cu + H₂O. Bậc I → aldehyde, bậc II → ketone."},
+  {q:"Điểm khác nhau cơ bản giữa alcohol và phenol về tính acid là?",o:["Alcohol mạnh hơn phenol","Phenol mạnh hơn alcohol nhưng yếu hơn H₂CO₃","Phenol mạnh hơn H₂CO₃","Alcohol và phenol tính acid bằng nhau"],a:1,t:"Phenol",e:"Thứ tự: H₂CO₃ > phenol > alcohol. Phenol tác dụng NaOH, không tác dụng NaHCO₃. CO₂/H₂O đẩy phenol ra khỏi sodium phenolate."},
+];
+
+let pool=[],cur=0,score=0,answered=false,qCount=10;
+
+function initQ(){
+  pool=[...QDB].sort(()=>Math.random()-0.5).slice(0,qCount);
+  cur=0;score=0;answered=false;
+  document.getElementById('result-card').classList.remove('show');
+  document.querySelector('.quiz-wrap').style.display='block';
+  document.getElementById('q-total').textContent=qCount;
+  renderQ();
+}
+
+function renderQ(){
+  const q=pool[cur];
+  document.getElementById('q-counter').textContent=`Câu ${cur+1} / ${qCount}`;
+  document.getElementById('q-topic').textContent=`📌 ${q.t}`;
+  document.getElementById('q-text').textContent=q.q;
+  document.getElementById('q-score').textContent=score;
+  document.getElementById('q-fill').style.width=`${(cur/qCount)*100}%`;
+  const opts=document.getElementById('q-opts');
+  opts.innerHTML='';
+  q.o.forEach((o,i)=>{
+    const b=document.createElement('button');
+    b.className='q-opt';
+    b.textContent=['A','B','C','D'][i]+'. '+o;
+    b.onclick=()=>selectA(i,b);
+    opts.appendChild(b);
+  });
+  const exp=document.getElementById('q-exp');
+  exp.className='q-exp';exp.innerHTML='';
+  document.getElementById('btn-next').style.display='none';
+  answered=false;
+}
+
+function selectA(i,btn){
+  if(answered)return;
+  answered=true;
+  const q=pool[cur];
+  const all=document.querySelectorAll('.q-opt');
+  all.forEach(b=>b.disabled=true);
+  if(i===q.a){score++;btn.classList.add('cor');}
+  else{btn.classList.add('wrg');all[q.a].classList.add('cor');}
+  document.getElementById('q-score').textContent=score;
+  const exp=document.getElementById('q-exp');
+  exp.innerHTML='<strong>💡 Giải thích:</strong> '+q.e;
+  exp.classList.add('show');
+  document.getElementById('btn-next').style.display='inline-flex';
+}
+
+function nextQ(){
+  cur++;
+  if(cur>=qCount)showResult();
+  else renderQ();
+}
+
+function showResult(){
+  document.getElementById('q-fill').style.width='100%';
+  document.querySelector('.quiz-wrap').style.display='none';
+  const rc=document.getElementById('result-card');rc.classList.add('show');
+  const pct=Math.round(score/qCount*100);
+  const [em,ti,de]=pct>=80?['🏆','Xuất sắc!','Bạn đã nắm chắc hóa hữu cơ! Tiếp tục phát huy.']:
+    pct>=60?['👍','Khá tốt!','Bạn hiểu phần lớn, hãy ôn thêm các phần yếu.']:
+    pct>=40?['📚','Cần cố lên!','Hãy đọc lại lý thuyết từng phần rồi thử lại.']:
+    ['💪','Hãy ôn lại!','Đừng nản lòng, ôn kỹ từng chủ đề rồi làm lại nhé!'];
+  document.getElementById('r-emoji').textContent=em;
+  document.getElementById('r-title').textContent=ti;
+  document.getElementById('r-desc').textContent=de;
+  document.getElementById('r-score').textContent=score+'/'+qCount;
+}
+
+function restartQ(){
+  document.getElementById('result-card').classList.remove('show');
+  document.querySelector('.quiz-wrap').style.display='block';
+  initQ();
+}
+
+function cycleCount(){
+  const opts=[5,10,15,20,QDB.length];
+  const idx=opts.indexOf(qCount);
+  qCount=opts[(idx+1)%opts.length];
+  document.getElementById('q-count-lbl').textContent=qCount===QDB.length?'Tất cả':qCount;
+  initQ();
+}
+
+// Start
+initQ();
+</script>
+</body>
+</html>
