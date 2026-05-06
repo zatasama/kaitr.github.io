@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kiểm tra Sinh học 11 HK2 – KaiTr</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a1a0f;--bg2:#0f2415;
+  --card:#162e1c;--card2:#1e3a24;
+  --border:rgba(46,204,113,0.18);--border2:rgba(46,204,113,0.35);
+  --accent:#2ecc71;--accent2:#27ae60;--accent3:#1abc9c;
+  --accent4:#f1c40f;--accent5:#e74c3c;--accent6:#e67e22;
+  --text:#e0f0e4;--text2:#9abba4;--text3:#4d6b56;
+  --r:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:var(--accent2);border-radius:2px}
+
+/* Header */
+.hdr{background:linear-gradient(135deg,rgba(14,33,20,0.98),rgba(20,44,28,0.98));border-bottom:1px solid var(--border);padding:18px 24px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:500;backdrop-filter:blur(16px)}
+.hdr-icon{width:42px;height:42px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.hdr-title{font-family:'Playfair Display',serif;font-size:18px;font-weight:700}
+.hdr-sub{font-size:12px;color:var(--text3);margin-top:1px}
+.hdr-right{margin-left:auto;display:flex;gap:10px;align-items:center}
+.btn{padding:8px 18px;border-radius:8px;border:none;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;display:inline-flex;align-items:center;gap:5px}
+.btn-ghost{background:transparent;border:1.5px solid var(--border);color:var(--text2)}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent)}
+.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;box-shadow:0 2px 10px rgba(46,204,113,.25)}
+.btn-primary:hover{transform:translateY(-1px);opacity:.9}
+.btn-danger{background:linear-gradient(135deg,#e74c3c,#c0392b);color:#fff}
+
+/* Views */
+.view{display:none}
+.view.active{display:block}
+
+/* Home */
+.home-wrap{max-width:700px;margin:0 auto;padding:48px 20px}
+.home-hero{text-align:center;margin-bottom:36px}
+.home-badge{display:inline-flex;align-items:center;gap:7px;background:rgba(46,204,113,.1);border:1px solid rgba(46,204,113,.28);border-radius:20px;padding:5px 16px;font-size:12px;color:var(--accent);margin-bottom:20px;letter-spacing:.8px;text-transform:uppercase}
+.home-title{font-family:'Playfair Display',serif;font-size:clamp(26px,5vw,46px);font-weight:900;line-height:1.1;margin-bottom:12px;background:linear-gradient(140deg,#fff 0%,#b7e4c4 50%,#2ecc71 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.mode-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin:28px 0}
+.mode-card{background:var(--card);border:2px solid var(--border);border-radius:14px;padding:20px;cursor:pointer;transition:all .2s;text-align:center}
+.mode-card:hover{border-color:var(--accent);transform:translateY(-3px);box-shadow:0 10px 25px rgba(46,204,113,.15)}
+.mode-card.selected{border-color:var(--accent);background:rgba(46,204,113,.05);box-shadow:0 4px 15px rgba(46,204,113,.25)}
+.mode-icon{font-size:32px;margin-bottom:8px}
+.mode-name{font-size:15px;font-weight:700;margin-bottom:4px}
+.start-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;max-width:320px;margin:0 auto;padding:15px;border-radius:50px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-size:16px;font-weight:700;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .25s;box-shadow:0 4px 24px rgba(46,204,113,.35)}
+.start-btn:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(46,204,113,.5)}
+
+/* Exam */
+.exam-wrap{max-width:900px;margin:0 auto;padding:28px 20px 60px}
+.section-title{font-size:18px;font-weight:700;margin:28px 0 14px;color:var(--accent);border-left:3px solid var(--accent);padding-left:12px}
+.q-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:26px;margin-bottom:16px}
+.q-card.ds-card{border-left:3px solid var(--accent2)}
+.q-meta{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.q-num{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;color:var(--accent);background:rgba(46,204,113,.1);border:1px solid rgba(46,204,113,.2);padding:3px 10px;border-radius:8px}
+.q-topic{font-size:11px;color:var(--text3);border:1px solid var(--border);padding:3px 10px;border-radius:8px}
+.q-text{font-size:15.5px;font-weight:600;line-height:1.6;color:var(--text);margin-bottom:18px}
+.opts{display:flex;flex-direction:column;gap:9px}
+.opt{display:flex;align-items:flex-start;gap:12px;padding:13px 16px;border-radius:10px;border:1.5px solid var(--border);background:rgba(255,255,255,.02);cursor:pointer;transition:all .18s;text-align:left;font-family:'DM Sans',sans-serif;color:var(--text);font-size:14px;line-height:1.5}
+.opt:hover:not(.disabled){border-color:var(--accent);background:rgba(46,204,113,.06)}
+.opt-key{width:28px;height:28px;border-radius:7px;background:rgba(255,255,255,.06);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:11.5px;font-weight:700;font-family:'JetBrains Mono',monospace;flex-shrink:0;margin-top:1px;transition:all .18s;color:var(--text2)}
+.opt.selected{border-color:var(--accent);background:rgba(46,204,113,.08)}
+.opt.selected .opt-key{background:var(--accent);border-color:var(--accent);color:#fff}
+.opt.disabled{cursor:default}
+.opt.correct{border-color:var(--accent3)!important;background:rgba(26,188,156,.08)!important}
+.opt.correct .opt-key{background:var(--accent3)!important;border-color:var(--accent3)!important;color:#fff!important}
+.opt.wrong{border-color:var(--accent5)!important;background:rgba(231,76,60,.08)!important}
+.opt.wrong .opt-key{background:var(--accent5)!important;border-color:var(--accent5)!important;color:#fff!important}
+.opt.show-correct{border-color:var(--accent3)!important;background:rgba(26,188,156,.04)!important}
+.opt.show-correct .opt-key{background:rgba(26,188,156,.2)!important;border-color:var(--accent3)!important;color:var(--accent3)!important}
+.explain{font-size:13px;color:var(--text2);margin-top:12px;padding:12px;background:rgba(255,255,255,.03);border-radius:8px;display:none}
+.explain.show{display:block}
+
+/* TF */
+.tf-item{margin-bottom:10px;padding:12px 14px;background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:9px}
+.tf-text{font-size:13.5px;color:var(--text);margin-bottom:8px;line-height:1.6}
+.tf-opts{display:flex;gap:8px}
+.tf-btn{padding:6px 18px;border-radius:8px;border:1.5px solid var(--border);background:transparent;color:var(--text2);font-size:13px;font-weight:600;cursor:pointer;transition:all .18s;font-family:'DM Sans',sans-serif}
+.tf-btn:hover:not(.disabled){border-color:var(--accent);color:var(--accent)}
+.tf-btn.selected-true{border-color:var(--accent3);background:rgba(26,188,156,.12);color:var(--accent3)}
+.tf-btn.selected-false{border-color:var(--accent5);background:rgba(231,76,60,.1);color:var(--accent5)}
+.tf-btn.disabled{cursor:default}
+.tf-btn.reveal-correct{border-color:var(--accent3)!important;background:rgba(26,188,156,.15)!important;color:var(--accent3)!important}
+.tf-btn.reveal-wrong{border-color:var(--accent5)!important;background:rgba(231,76,60,.1)!important;color:var(--accent5)!important}
+
+/* Short answer */
+.short-input{padding:10px 14px;border-radius:8px;border:1.5px solid var(--border);background:var(--card2);color:var(--text);font-size:15px;width:120px;font-family:'JetBrains Mono',monospace;text-align:center}
+.short-input:focus{outline:none;border-color:var(--accent)}
+.short-input.correct{border-color:var(--accent3)!important;background:rgba(26,188,156,.1)!important;color:var(--accent3)!important}
+.short-input.wrong{border-color:var(--accent5)!important;background:rgba(231,76,60,.1)!important;color:var(--accent5)!important}
+
+/* Essay */
+.essay-area{width:100%;min-height:100px;padding:12px;border-radius:8px;border:1.5px solid var(--border);background:var(--card2);color:var(--text);font-size:14px;resize:vertical;font-family:'DM Sans',sans-serif}
+.essay-area:focus{outline:none;border-color:var(--accent)}
+
+/* Submit */
+.submit-zone{margin-top:28px;padding:20px;background:var(--card);border:2px solid rgba(46,204,113,.2);border-radius:14px;text-align:center}
+.submit-btn{display:inline-flex;align-items:center;gap:10px;padding:14px 40px;border-radius:50px;background:linear-gradient(135deg,#e74c3c,#c0392b);color:#fff;font-size:15px;font-weight:700;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .25s;box-shadow:0 4px 20px rgba(231,76,60,.35)}
+.submit-btn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(231,76,60,.5)}
+
+/* Result */
+.result-wrap{max-width:900px;margin:0 auto;padding:40px 20px}
+.result-hero{text-align:center;margin-bottom:40px}
+.result-emoji{font-size:72px;margin-bottom:16px}
+.result-title{font-family:'Playfair Display',serif;font-size:36px;font-weight:900}
+.score-circle{width:140px;height:140px;border-radius:50%;margin:24px auto;display:flex;flex-direction:column;align-items:center;justify-content:center;border:4px solid;position:relative}
+.score-circle::before{content:'';position:absolute;inset:-6px;border-radius:50%;background:conic-gradient(var(--sc-color) var(--sc-pct),rgba(255,255,255,.05) 0);z-index:-1}
+.score-num{font-family:'Playfair Display',serif;font-size:38px;font-weight:900;line-height:1}
+.score-den{font-size:13px;color:var(--text3);margin-top:2px}
+.review-container{margin-top:24px}
+.review-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:10px}
+.review-card .status{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:8px;vertical-align:middle}
+.review-card .correct-dot{background:var(--accent3)}
+.review-card .incorrect-dot{background:var(--accent5)}
+.wm{position:fixed;left:14px;bottom:18px;z-index:9997;font-family:'Playfair Display',serif;font-size:11px;font-weight:700;letter-spacing:2px;color:rgba(46,204,113,.25);text-transform:uppercase;writing-mode:vertical-rl;transform:rotate(180deg);pointer-events:none;user-select:none}
+@media(max-width:600px){.hdr-title{font-size:15px}}
+</style>
+</head>
+<body>
+<div class="wm">KaiTr</div>
+
+<!-- HEADER -->
+<div class="hdr">
+  <div class="hdr-icon">🧬</div>
+  <div>
+    <div class="hdr-title">Sinh học 11 HK2 – Ngân hàng câu hỏi</div>
+    <div class="hdr-sub">KaiTr Study Hub</div>
+  </div>
+  <div class="hdr-right">
+    <button class="btn btn-ghost" onclick="goHome()">← Trang chính</button>
+  </div>
+</div>
+
+<!-- HOME VIEW (chọn chế độ) -->
+<div class="view active" id="view-home">
+  <div class="home-wrap">
+    <div class="home-hero">
+      <div class="home-badge">🧬 Sinh học · Lớp 11 · HK2</div>
+      <div class="home-title">Ngân hàng câu hỏi<br>Sinh học 11</div>
+    </div>
+    <p style="text-align:center;margin-bottom:10px;color:var(--text2)">Chọn chế độ làm bài:</p>
+    <div class="mode-cards" id="mode-selector">
+      <div class="mode-card selected" data-mode="all">
+        <div class="mode-icon">📋</div>
+        <div class="mode-name">Toàn bộ đề</div>
+        <small style="color:var(--text2)">30 TN + 6 Đ/S + 12 TLN + 9 TL</small>
+      </div>
+      <div class="mode-card" data-mode="mc">
+        <div class="mode-icon">🔤</div>
+        <div class="mode-name">Chỉ trắc nghiệm</div>
+        <small style="color:var(--text2)">30 câu TN</small>
+      </div>
+      <div class="mode-card" data-mode="tf">
+        <div class="mode-icon">✅</div>
+        <div class="mode-name">Chỉ Đúng/Sai</div>
+        <small style="color:var(--text2)">6 câu (24 ý)</small>
+      </div>
+      <div class="mode-card" data-mode="essay">
+        <div class="mode-icon">📝</div>
+        <div class="mode-name">Chỉ Tự luận</div>
+        <small style="color:var(--text2)">9 bài tự luận</small>
+      </div>
+    </div>
+    <button class="start-btn" onclick="startExam()">Bắt đầu làm bài <span>→</span></button>
+  </div>
+</div>
+
+<!-- EXAM VIEW -->
+<div class="view" id="view-exam">
+  <div class="exam-wrap">
+    <div id="exam-content"></div>
+    <div class="submit-zone">
+      <p style="margin-bottom:14px;color:var(--text2)">Hãy kiểm tra lại trước khi nộp bài.</p>
+      <button class="submit-btn" onclick="submitExam()">📨 Nộp bài & Xem kết quả</button>
+    </div>
+  </div>
+</div>
+
+<!-- RESULT VIEW -->
+<div class="view" id="view-result">
+  <div class="result-wrap">
+    <div class="result-hero">
+      <div class="result-emoji" id="r-emoji">🎉</div>
+      <div class="result-title" id="r-title"></div>
+      <div class="score-circle" id="score-circle" style="--sc-color:var(--accent3);--sc-pct:0%;border-color:var(--accent3)">
+        <div class="score-num" id="r-score">0</div>
+        <div class="score-den">/ điểm</div>
+      </div>
+    </div>
+    <div class="review-container" id="review-list"></div>
+    <div style="text-align:center;margin-top:28px">
+      <button class="btn btn-primary" onclick="retakeExam()">🔄 Làm lại</button>
+      <button class="btn btn-ghost" style="margin-left:12px" onclick="goHome()">← Chọn chế độ khác</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══ TOÀN BỘ DỮ LIỆU CÂU HỎI ═══
+
+// ---------- PHẦN 1: TRẮC NGHIỆM NHIỀU LỰA CHỌN (30 câu) ----------
+const MULTI_CHOICE = [
+  {id:'mc1',topic:'Sinh trưởng',q:'Sinh trưởng sơ cấp ở thực vật chủ yếu do hoạt động của loại mô phân sinh nào?',opts:['Mô phân sinh bên.','Mô phân sinh đỉnh.','Tầng sinh mạch.','Tầng sinh bần.'],ans:1,exp:'Sinh trưởng sơ cấp làm cây dài ra, do mô phân sinh đỉnh rễ và đỉnh chồi.'},
+  {id:'mc2',topic:'Sinh trưởng',q:'Kết quả trực tiếp của sinh trưởng thứ cấp ở cây thân gỗ là gì?',opts:['Tăng chiều dài thân và rễ.','Tăng đường kính thân và rễ.','Tạo hoa và quả sớm hơn.','Làm lá chuyển sang màu vàng.'],ans:1,exp:'Sinh trưởng thứ cấp do mô phân sinh bên, làm thân/rễ to ra.'},
+  {id:'mc3',topic:'Sinh trưởng',q:'Một cây non tăng nhanh chiều cao nhờ các tế bào ở đỉnh chồi phân chia mạnh. Hiện tượng này thuộc dạng sinh trưởng nào?',opts:['Sinh trưởng sơ cấp.','Sinh trưởng thứ cấp.','Phát triển qua biến thái.','Sinh sản vô tính.'],ans:0,exp:'Dấu hiệu "tăng chiều cao ở đỉnh chồi" là sinh trưởng sơ cấp.'},
+  {id:'mc4',topic:'Hormone thực vật',q:'Nhóm hormone nào sau đây chủ yếu có tác dụng kích thích sinh trưởng ở thực vật?',opts:['Auxin, gibberellin, cytokinin.','Ethylene, abscisic acid, auxin.','Abscisic acid, ethylene, jasmonate.','Cytokinin, abscisic acid, ethylene.'],ans:0,exp:'Auxin, gibberellin và cytokinin thường được xếp vào nhóm kích thích sinh trưởng.'},
+  {id:'mc5',topic:'Hormone thực vật',q:'Hormone nào sau đây thường liên quan đến ức chế sinh trưởng và duy trì trạng thái ngủ của hạt?',opts:['Gibberellin.','Auxin.','Abscisic acid.','Cytokinin.'],ans:2,exp:'ABA liên quan đến ức chế sinh trưởng, đóng khí khổng và ngủ nghỉ.'},
+  {id:'mc6',topic:'Hormone thực vật',q:'Một quả chín nhanh hơn khi được xử lí bằng hormone khí. Hormone đó nhiều khả năng là gì?',opts:['Cytokinin.','Ethylene.','Auxin.','Gibberellin.'],ans:1,exp:'Ethylene là hormone dạng khí, kích thích chín quả.'},
+  {id:'mc7',topic:'Phát triển qua biến thái',q:'Động vật nào sau đây phát triển qua biến thái hoàn toàn?',opts:['Châu chấu.','Bướm.','Gà.','Người.'],ans:1,exp:'Bướm có các giai đoạn trứng, sâu non, nhộng, trưởng thành.'},
+  {id:'mc8',topic:'Phát triển qua biến thái',q:'Đặc điểm nào phân biệt biến thái không hoàn toàn với biến thái hoàn toàn?',opts:['Có giai đoạn nhộng.','Con non gần giống con trưởng thành và không có nhộng.','Không có giai đoạn trứng.','Không chịu tác động của hormone.'],ans:1,exp:'Biến thái không hoàn toàn thường không có nhộng; con non tương đối giống trưởng thành.'},
+  {id:'mc9',topic:'Phát triển qua biến thái',q:'Sơ đồ trứng → nòng nọc → ếch trưởng thành biểu thị hình thức phát triển nào?',opts:['Không qua biến thái.','Qua biến thái.','Sinh sản vô tính.','Nảy chồi.'],ans:1,exp:'Nòng nọc khác rõ ếch trưởng thành về hình thái và sinh lí.'},
+  {id:'mc10',topic:'Hormone động vật',q:'Hormone thyroxine ở động vật có xương sống được tiết chủ yếu từ tuyến nào?',opts:['Tuyến giáp.','Tuyến tụy.','Tuyến yên sau.','Tuyến trên thận.'],ans:0,exp:'Thyroxine là hormone tuyến giáp.'},
+  {id:'mc11',topic:'Hormone động vật',q:'Ở côn trùng, hormone nào kích thích lột xác?',opts:['Juvenile hormone.','Ecdysone.','Insulin.','Testosterone.'],ans:1,exp:'Ecdysone kích thích quá trình lột xác ở côn trùng.'},
+  {id:'mc12',topic:'Hormone động vật',q:'Nếu nồng độ juvenile hormone còn cao trong các lần lột xác ở sâu bướm, kết quả thường là gì?',opts:['Ấu trùng tiếp tục giữ đặc điểm non.','Chuyển ngay thành con trưởng thành.','Ngừng hoàn toàn phân bào.','Mất khả năng lột xác.'],ans:0,exp:'Juvenile hormone duy trì tính trạng ấu trùng; khi giảm mới thuận lợi cho biến thái.'},
+  {id:'mc13',topic:'Dấu hiệu sinh sản',q:'Dấu hiệu cốt lõi của sinh sản ở sinh vật là gì?',opts:['Tạo ra cá thể mới.','Tăng kích thước tế bào.','Tăng khối lượng cơ thể.','Tăng cường trao đổi chất.'],ans:0,exp:'Sinh sản là quá trình tạo cá thể mới, duy trì nòi giống.'},
+  {id:'mc14',topic:'Dấu hiệu sinh sản',q:'Phát biểu nào đúng nhất về ý nghĩa của sinh sản?',opts:['Chỉ làm cá thể lớn lên.','Duy trì sự tồn tại của loài qua các thế hệ.','Luôn tạo đời con giống hệt bố mẹ.','Luôn cần sự kết hợp giao tử.'],ans:1,exp:'Sinh sản giúp duy trì loài; không phải mọi sinh sản đều hữu tính.'},
+  {id:'mc15',topic:'Dấu hiệu sinh sản',q:'Một tế bào vi khuẩn phân đôi tạo hai tế bào con. Hiện tượng này thể hiện dấu hiệu nào của sinh sản?',opts:['Tạo cá thể mới từ một cá thể ban đầu.','Tạo giao tử đực và cái.','Thụ tinh kép.','Hình thành phôi trong hạt.'],ans:0,exp:'Phân đôi là hình thức sinh sản vô tính ở sinh vật đơn bào.'},
+  {id:'mc16',topic:'Hình thức sinh sản',q:'Cơ sở tế bào học chủ yếu của sinh sản vô tính ở sinh vật nhân thực là gì?',opts:['Nguyên phân.','Giảm phân.','Thụ tinh.','Trao đổi chéo.'],ans:0,exp:'Sinh sản vô tính chủ yếu dựa trên nguyên phân.'},
+  {id:'mc17',topic:'Hình thức sinh sản',q:'So với sinh sản vô tính, sinh sản hữu tính thường tạo đời con có đặc điểm nào?',opts:['Ít biến dị tổ hợp hơn.','Đa dạng di truyền cao hơn.','Luôn giống hệt bố mẹ.','Không cần giao tử.'],ans:1,exp:'Giảm phân và thụ tinh làm tăng biến dị tổ hợp.'},
+  {id:'mc18',topic:'Hình thức sinh sản',q:'Một loài sinh vật tạo đời con từ hợp tử hình thành do sự kết hợp giao tử. Đây là hình thức sinh sản nào?',opts:['Sinh sản vô tính.','Sinh sản hữu tính.','Nảy chồi.','Phân đôi.'],ans:1,exp:'Kết hợp giao tử tạo hợp tử là dấu hiệu của sinh sản hữu tính.'},
+  {id:'mc19',topic:'Sinh sản thực vật',q:'Hình thức nào sau đây là sinh sản vô tính tự nhiên ở thực vật?',opts:['Thụ phấn chéo.','Sinh sản bằng thân rễ.','Thụ tinh kép.','Tạo hạt sau thụ tinh.'],ans:1,exp:'Thân rễ có thể tạo cây mới mà không cần thụ tinh.'},
+  {id:'mc20',topic:'Sinh sản thực vật',q:'Phương pháp nhân giống vô tính nào thường dùng để tạo nhanh nhiều cây sạch bệnh từ mô phân sinh?',opts:['Nuôi cấy mô tế bào.','Thụ phấn nhân tạo.','Lai hữu tính.','Gây đột biến hạt.'],ans:0,exp:'Nuôi cấy mô giúp nhân nhanh cây đồng nhất, có thể tạo cây sạch bệnh.'},
+  {id:'mc21',topic:'Sinh sản thực vật',q:'Chiết cành phù hợp khi muốn tạo cây con có đặc điểm di truyền như cây mẹ vì cơ sở của phương pháp này là gì?',opts:['Giảm phân và tái tổ hợp.','Nguyên phân của tế bào sinh dưỡng.','Thụ tinh kép.','Tạo hợp tử mới.'],ans:1,exp:'Nhân giống vô tính dựa trên nguyên phân nên giữ kiểu gen cây mẹ.'},
+  {id:'mc22',topic:'Sinh sản thực vật',q:'Sự kiện nào chỉ có trong sinh sản hữu tính ở thực vật có hoa?',opts:['Hình thành hợp tử.','Nguyên phân tế bào sinh dưỡng.','Tái sinh từ mô sẹo.','Tạo cây con từ củ.'],ans:0,exp:'Hợp tử hình thành sau thụ tinh, đặc trưng cho sinh sản hữu tính.'},
+  {id:'mc23',topic:'Sinh sản thực vật',q:'Ưu điểm nổi bật của sinh sản vô tính trong sản xuất giống cây trồng là gì?',opts:['Tạo biến dị tổ hợp rất lớn.','Duy trì nhanh kiểu gen mong muốn.','Luôn tạo hạt có phôi nhũ.','Bắt buộc có thụ phấn.'],ans:1,exp:'Vô tính giúp nhân nhanh dòng có đặc tính tốt.'},
+  {id:'mc24',topic:'Sinh sản thực vật',q:'Nhược điểm chính của việc lạm dụng nhân giống vô tính trên diện rộng là gì?',opts:['Đời con quá đa dạng nên khó đồng nhất.','Quần thể giống nhau di truyền, dễ bị rủi ro khi dịch bệnh thay đổi.','Không thể tạo số lượng cây lớn.','Luôn làm cây mất khả năng sinh trưởng.'],ans:1,exp:'Đồng nhất di truyền làm giảm khả năng chống chịu khi môi trường thay đổi.'},
+  {id:'mc25',topic:'Sinh sản động vật',q:'Thủy tức thường sinh sản vô tính bằng hình thức nào?',opts:['Nảy chồi.','Phân đôi.','Trinh sinh.','Phân mảnh.'],ans:0,exp:'Thủy tức tạo chồi trên cơ thể mẹ.'},
+  {id:'mc26',topic:'Sinh sản động vật',q:'Ong đực phát triển từ trứng không được thụ tinh là ví dụ của hình thức nào?',opts:['Nảy chồi.','Trinh sinh.','Tái sinh.','Thụ tinh trong.'],ans:1,exp:'Trinh sinh là sự phát triển cá thể từ trứng không thụ tinh.'},
+  {id:'mc27',topic:'Sinh sản động vật',q:'Giun dẹp bị tách thành nhiều đoạn, mỗi đoạn tái sinh thành cá thể mới. Đây là hình thức nào?',opts:['Phân mảnh kết hợp tái sinh.','Thụ tinh ngoài.','Đẻ con.','Biến thái hoàn toàn.'],ans:0,exp:'Cơ thể bị phân mảnh và mỗi mảnh tái sinh thành cá thể mới.'},
+  {id:'mc28',topic:'Hormone sinh sản',q:'Hormone nào do vùng dưới đồi tiết ra để kích thích tuyến yên tiết FSH và LH?',opts:['GnRH.','Progesterone.','Testosterone.','Oxytocin.'],ans:0,exp:'GnRH điều hòa tiết FSH và LH từ tuyến yên.'},
+  {id:'mc29',topic:'Hormone sinh sản',q:'Ở nữ, hormone nào do nang trứng tiết ra nhiều trong pha nang trứng?',opts:['Estrogen.','Insulin.','Adrenaline.','Ecdysone.'],ans:0,exp:'Estrogen tăng trong pha nang trứng.'},
+  {id:'mc30',topic:'Hormone sinh sản',q:'LH tăng vọt giữa chu kì kinh nguyệt có vai trò trực tiếp nào?',opts:['Kích thích rụng trứng.','Ức chế hoàn toàn tuyến giáp.','Làm tinh hoàn sinh tinh.','Tạo nhộng ở côn trùng.'],ans:0,exp:'Đỉnh LH là tín hiệu trực tiếp gây rụng trứng.'},
+];
+
+// ---------- PHẦN 2: TRẮC NGHIỆM ĐÚNG - SAI (6 câu, mỗi câu 4 ý) ----------
+const TRUE_FALSE = [
+  {id:'ds1',topic:'Sinh sản hữu tính ở TV',context:'Một nhóm HS theo dõi quá trình sinh sản ở cây đậu. Các mốc chính: (1) Bao phấn chín, hạt phấn được phát tán; (2) Hạt phấn rơi lên đầu nhụy cùng loài; (3) Hai giao tử đực đi vào túi phôi; (4) Sau thụ tinh. Kết quả: Noãn → hạt; Bầu nhụy → quả.',
+   subs:[
+     {q:'a) Hạt phấn được hình thành trong bao phấn của nhị.', ans:true},
+     {q:'b) Mốc 2 là thụ phấn, còn mốc 3 là thụ tinh kép.', ans:true},
+     {q:'c) Sau mốc 4, phần phát triển thành hạt có nguồn gốc từ noãn.', ans:true},
+     {q:'d) Phôi nhũ ở cây có hoa được hình thành trực tiếp từ hợp tử.', ans:false}
+   ]},
+  {id:'ds2',topic:'Sinh sản hữu tính ở TV',context:'Một noãn của TV có hoa sau GP và NP tạo túi phôi điển hình. Tế bào mẹ đại bào tử (2n) → 4 đại bào tử → 1 đại bào tử n → túi phôi chín (7 tế bào, 8 nhân). Sau thụ tinh kép: Hợp tử 2n và nhân nội nhũ 3n.',
+   subs:[
+     {q:'a) Túi phôi chín điển hình của thực vật có hoa gồm 7 tế bào và 8 nhân.', ans:true},
+     {q:'b) Hợp tử hình thành do một giao tử đực kết hợp với tế bào trứng.', ans:true},
+     {q:'c) Nhân phôi nhũ sơ cấp thường có bộ NST 3n vì có sự kết hợp của một giao tử đực với hai nhân cực.', ans:true},
+     {q:'d) Toàn bộ quả của cây có hoa có nguồn gốc trực tiếp từ hợp tử 2n.', ans:false}
+   ]},
+  {id:'ds3',topic:'Sinh sản hữu tính ở TV',context:'Thí nghiệm thụ phấn trên cây cà chua: Nhóm A không thụ phấn (2% tạo quả); B tự thụ phấn (64%); C thụ phấn chéo (78%); D thụ phấn loài khác (0%).',
+   subs:[
+     {q:'a) Thụ phấn là quá trình hạt phấn được chuyển đến đầu nhụy.', ans:true},
+     {q:'b) Nhóm B và C đều có thể dẫn tới thụ tinh nếu hạt phấn tương thích và ống phấn phát triển tới túi phôi.', ans:true},
+     {q:'c) Trong thí nghiệm này, thụ phấn chéo cho tỉ lệ tạo quả cao hơn tự thụ phấn 14 điểm phần trăm.', ans:true},
+     {q:'d) Từ bảng có thể kết luận mọi loài thực vật có hoa đều không tự thụ phấn được.', ans:false}
+   ]},
+  {id:'ds4',topic:'Sinh sản hữu tính ở ĐV',context:'Loài cá xương: Tinh hoàn tạo giao tử đực; Buồng trứng tạo giao tử cái; Thụ tinh ngoài trong nước; Đẻ ~3000 trứng/lứa; Tỉ lệ nở ~18%.',
+   subs:[
+     {q:'a) Tinh trùng và trứng là hai loại giao tử tham gia sinh sản hữu tính ở động vật.', ans:true},
+     {q:'b) Thụ tinh ngoài thường cần môi trường nước để giao tử dễ gặp nhau.', ans:true},
+     {q:'c) Nếu cá đẻ 3000 trứng và tỉ lệ nở là 18%, số trứng nở xấp xỉ 540.', ans:true},
+     {q:'d) Từ bảng có thể khẳng định loài cá này có mức chăm sóc con non cao hơn thú.', ans:false}
+   ]},
+  {id:'ds5',topic:'Sinh sản hữu tính ở ĐV',context:'Loài bò sát: Có giao phối; Thụ tinh trong cơ quan sinh dục con cái; Đẻ trứng; Tỉ lệ nở khi nhiệt độ ấp phù hợp 72%; khi nhiệt độ quá thấp 25%.',
+   subs:[
+     {q:'a) Thụ tinh trong là sự kết hợp giao tử đực và giao tử cái bên trong cơ thể con cái.', ans:true},
+     {q:'b) Loài trong bảng đẻ trứng nhưng vẫn thụ tinh trong.', ans:true},
+     {q:'c) Nhiệt độ ấp không phù hợp có thể làm giảm tỉ lệ trứng nở trong dữ liệu này.', ans:true},
+     {q:'d) Cứ là động vật thụ tinh trong thì phôi bắt buộc phát triển trong tử cung mẹ.', ans:false}
+   ]},
+  {id:'ds6',topic:'Sinh sản hữu tính ở ĐV',context:'Ba loài: Ếch (thụ tinh ngoài, phôi trong trứng ngoài môi trường, noãn hoàng); Gà (thụ tinh trong, phôi trong trứng ngoài cơ thể mẹ, noãn hoàng); Người (thụ tinh trong, phôi trong tử cung, trao đổi qua nhau thai).',
+   subs:[
+     {q:'a) Ếch trong bảng có thụ tinh ngoài.', ans:true},
+     {q:'b) Gà và người đều thụ tinh trong nhưng khác nhau về nơi phôi phát triển chủ yếu.', ans:true},
+     {q:'c) Điểm chung của gà và ếch trong bảng là phôi đều phát triển ngoài cơ thể mẹ.', ans:true},
+     {q:'d) Từ bảng có thể kết luận thụ tinh ngoài luôn tạo ít hợp tử hơn thụ tinh trong.', ans:false}
+   ]},
+];
+
+// ---------- PHẦN 3: TRẢ LỜI NGẮN (12 câu) ----------
+const SHORT_ANSWER = [
+  {id:'s1',q:'Nòng nọc nhóm A nuôi ở 18°C, nhóm B ở 28°C. Nhóm B hoàn thành biến thái sau 24 ngày, nhóm A sau 36 ngày. Nhóm nào biến thái nhanh hơn? (A=1, B=2)',ans:2},
+  {id:'s2',q:'Gà được bổ sung đủ protein tăng 18 g/ngày; thiếu protein tăng 9 g/ngày. Tốc độ tăng khối lượng của nhóm đủ protein gấp mấy lần nhóm thiếu protein?',ans:2},
+  {id:'s3',q:'Bể nuôi 200 cá con, với điều kiện phù hợp 85% sống đến trưởng thành. Số cá trưởng thành là bao nhiêu?',ans:170},
+  {id:'s4',q:'Cây ngày ngắn ra hoa khi thời gian chiếu sáng ≤ 10 giờ/ngày. Nếu chiếu sáng 8 giờ/ngày, cây có thuộc điều kiện cảm ứng ra hoa không? (Có=1, Không=0)',ans:1},
+  {id:'s5',q:'Một giống cây cần tối thiểu 30 ngày nhiệt độ thấp để xuân hóa. Nếu chỉ được xử lí lạnh 18 ngày, còn thiếu bao nhiêu ngày?',ans:12},
+  {id:'s6',q:'Vườn hoa có 120 cây, sau xử lí quang chu kì phù hợp 75% cây ra hoa. Số cây ra hoa là bao nhiêu?',ans:90},
+  {id:'s7',q:'Mã hóa: đẻ trứng = 1, đẻ con = 2. Gà thuộc hình thức nào?',ans:1},
+  {id:'s8',q:'Loài cá cái đẻ 500 trứng ra nước, cá đực phóng tinh trùng vào nước. Mã hóa: thụ tinh ngoài = 1, thụ tinh trong = 2. Hình thức thụ tinh là gì?',ans:1},
+  {id:'s9',q:'Một loài thụ tinh trong, mỗi lứa sinh 8 con non sống. Sau 3 lứa, tối đa có bao nhiêu con non nếu tất cả đều sống?',ans:24},
+  {id:'s10',q:'Thí nghiệm nuôi nòng nọc ở 18°C, 24°C, 30°C; tỉ lệ biến thái lần lượt 35%, 72%, 58%. Nhiệt độ tối ưu là bao nhiêu °C?',ans:24},
+  {id:'s11',q:'Ấu trùng ở 25°C: đủ thức ăn nặng 120 mg, thiếu thức ăn nặng 70 mg. Thiếu thức ăn làm khối lượng giảm bao nhiêu mg?',ans:50},
+  {id:'s12',q:'Thí nghiệm ánh sáng: nhóm chiếu sáng 16h/ngày cần 13 ngày để chuyển từ sâu non sang nhộng. Nhóm phát triển nhanh nhất cần bao nhiêu ngày?',ans:13},
+];
+
+// ---------- PHẦN 4: TỰ LUẬN (9 bài) ----------
+const ESSAYS = [
+  {id:'essay1',title:'Bài 1: Ảnh hưởng của thyroxine đến biến thái',q:'Quan sát bảng số liệu (nhóm A: không bổ sung hormone, 32 ngày, sống 88%; nhóm B: thyroxine liều thấp, 25 ngày, 84%; nhóm C: thyroxine liều cao, 18 ngày, 52%).\n\nYêu cầu: Giải thích vai trò của thyroxine đối với phát triển ở động vật có xương sống và phân tích vì sao không nên lạm dụng hormone liều cao trong sản xuất.\n\n(Gợi ý đáp án: Thyroxine kích thích quá trình biến thái, giúp rút ngắn thời gian nhưng liều cao làm giảm tỉ lệ sống, gây rối loạn sinh lý.)'},
+  {id:'essay2',title:'Bài 2: Hormone GH và tăng trưởng chiều cao',q:'Bảng theo dõi: TH1 (GH thấp) tăng 1,0 cm/6 tháng; TH2 (GH bình thường) tăng 3,2 cm; TH3 (GH rất cao kéo dài) gây bất thường xương/mô mềm.\n\nYêu cầu: Giải thích vai trò của GH và nêu vì sao việc dùng GH phải theo chỉ định y khoa.\n\n(Gợi ý: GH kích thích phân bào, tăng tổng hợp protein; thiếu gây lùn, thừa gây khổng lồ hoặc to đầu chi.)'},
+  {id:'essay3',title:'Bài 3: Iodine và hormone tuyến giáp ở bê',q:'Bảng: Nhóm A đủ iodine tăng trưởng bình thường; Nhóm B thiếu iodine chậm lớn, lông xơ, giảm hoạt động.\n\nYêu cầu: Giải thích mối liên hệ giữa iodine, hormone tuyến giáp và sinh trưởng/phát triển; đề xuất biện pháp thực tiễn.\n\n(Gợi ý: Iodine là thành phần của thyroxine; thiếu → giảm thyroxine → chậm lớn. Bổ sung iodine vào thức ăn/nước uống.)'},
+  {id:'essay4',title:'Bài 4: Nhân giống vô tính cây chuối',q:'Bảng so sánh 3 phương pháp: giâm cành, chiết cành, nuôi cấy mô.\n\nYêu cầu: Chọn phương pháp phù hợp nhất để nhân nhanh 10.000 cây chuối sạch bệnh và giải thích.\n\n(Gợi ý: Nuôi cấy mô là tốt nhất vì tốc độ nhân rất cao, cây đồng nhất, có thể kiểm soát bệnh nếu chọn mô sạch.)'},
+  {id:'essay5',title:'Bài 5: Nhân giống cây ăn quả thân gỗ',q:'Mục tiêu: giữ nguyên phẩm chất quả, rút ngắn thời gian cho quả, không ưu tiên tạo biến dị mới.\n\nYêu cầu: Đề xuất phương pháp nhân giống vô tính phù hợp, giải thích vì sao tốt hơn gieo hạt.\n\n(Gợi ý: Chiết cành hoặc ghép cành – giữ nguyên đặc tính cây mẹ, mau cho quả hơn cây gieo từ hạt.)'},
+  {id:'essay6',title:'Bài 6: Nhân giống theo cơ quan sinh dưỡng',q:'Bảng: Dâu tây (thân bò) → tách cây con; Khoai tây (thân củ) → nhân bằng củ; Mía (thân mang mắt ngủ) → giâm hom thân.\n\nYêu cầu: Phân tích cách chọn phương pháp nhân giống vô tính theo cơ quan sinh dưỡng của từng loài.\n\n(Gợi ý: Mỗi loài có cơ quan sinh dưỡng đặc trưng phù hợp với 1 kiểu nhân giống vô tính nhất định, dựa trên khả năng tái sinh của cơ quan đó.)'},
+  {id:'essay7',title:'Bài 7: Điều khiển sinh sản nhân tạo ở cá',q:'Bảng 3 bước: chọn cá bố mẹ thành thục, kích thích sinh sản bằng hormone, ấp trứng ở nhiệt độ/oxygen phù hợp.\n\nYêu cầu: Trình bày nguyên lí điều khiển sinh sản ở động vật nuôi và các điều kiện cần kiểm soát để tránh giảm tỉ lệ nở.\n\n(Gợi ý: Nguyên lí: can thiệp hormone + kiểm soát môi trường để đồng bộ hóa sinh sản, tăng hiệu quả thụ tinh và tỉ lệ sống của ấu trùng.)'},
+  {id:'essay8',title:'Bài 8: Phối hợp biện pháp cải thiện đàn bò',q:'Bảng: Thụ tinh nhân tạo, điều chỉnh khẩu phần, chọn lọc con giống – mỗi biện pháp đều có ưu và hạn chế.\n\nYêu cầu: Phân tích cách phối hợp các biện pháp để nâng cao năng suất nhưng vẫn đảm bảo phúc lợi vật nuôi.\n\n(Gợi ý: Phối hợp cả 3: chọn giống tốt để tạo phôi, thụ tinh nhân tạo nâng cao chất lượng đời con, khẩu phần đầy đủ giúp bò mẹ khỏe mạnh – đồng thời tránh khai thác quá mức.)'},
+  {id:'essay9',title:'Bài 9: Sinh đẻ có kế hoạch ở người',q:'Bảng: Bao cao su (ngăn tinh trùng, giảm bệnh LTQĐTD); Viên uống tránh thai (ức chế rụng trứng); Dụng cụ tử cung (cản trở thụ tinh/làm tổ).\n\nYêu cầu: Trình bày cơ sở sinh học của sinh đẻ có kế hoạch và phân tích vì sao cần chọn biện pháp tránh thai phù hợp từng người.\n\n(Gợi ý: Cơ sở: can thiệp vào cơ chế thụ tinh hoặc làm tổ của phôi. Mỗi biện pháp có ưu/nhược riêng, cần cân nhắc sức khỏe, khả năng, nhu cầu.)'},
+];
+
+// ═══ STATE & HELPERS ═══
+let mode = 'all';
+let questions = [];
+let answers = {};
+let submitted = false;
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+}
+
+function selectMode(m) {
+  mode = m;
+  document.querySelectorAll('.mode-card').forEach(c => c.classList.remove('selected'));
+  document.querySelector(`.mode-card[data-mode="${m}"]`).classList.add('selected');
+}
+document.querySelectorAll('.mode-card').forEach(c => {
+  c.addEventListener('click', () => selectMode(c.dataset.mode));
+});
+
+// ═══ BUILD EXAM ═══
+function buildExam() {
+  let html = '';
+  if (questions.some(q => q.type === 'mc')) {
+    html += '<div class="section-title">PHẦN 1. TRẮC NGHIỆM NHIỀU LỰA CHỌN</div>';
+    questions.filter(q => q.type === 'mc').forEach((q, i) => {
+      html += `<div class="q-card" id="qcard-${q.id}">
+        <div class="q-meta"><span class="q-num">Câu ${i+1}</span><span class="q-topic">${q.topic}</span></div>
+        <div class="q-text">${q.q}</div><div class="opts">`;
+      q.opts.forEach((o, oi) => {
+        html += `<button class="opt" id="opt-${q.id}-${oi}" onclick="selectOpt('${q.id}',${oi})"><span class="opt-key">${['A','B','C','D'][oi]}</span><span>${o}</span></button>`;
+      });
+      html += `</div><div class="explain" id="exp-${q.id}">${q.exp}</div></div>`;
+    });
+  }
+  if (questions.some(q => q.type === 'tf')) {
+    html += '<div class="section-title">PHẦN 2. TRẮC NGHIỆM ĐÚNG - SAI</div>';
+    questions.filter(q => q.type === 'tf').forEach((q, i) => {
+      html += `<div class="q-card ds-card" id="qcard-${q.id}">
+        <div class="q-meta"><span class="q-num">Đ/S ${i+1}</span><span class="q-topic">${q.topic}</span></div>
+        <div style="font-size:14px;color:var(--text2);margin-bottom:14px;line-height:1.7">${q.context}</div>`;
+      q.subs.forEach((sub, si) => {
+        html += `<div class="tf-item" id="tfi-${q.id}-${si}">
+          <div class="tf-text">${sub.q}</div>
+          <div class="tf-opts">
+            <button class="tf-btn" id="tfb-${q.id}-${si}-true" onclick="selectTF('${q.id}',${si},true)">✔ Đúng</button>
+            <button class="tf-btn" id="tfb-${q.id}-${si}-false" onclick="selectTF('${q.id}',${si},false)">✗ Sai</button>
+          </div></div>`;
+      });
+      html += '</div>';
+    });
+  }
+  if (questions.some(q => q.type === 'sa')) {
+    html += '<div class="section-title">PHẦN 3. TRẢ LỜI NGẮN</div>';
+    questions.filter(q => q.type === 'sa').forEach((q, i) => {
+      html += `<div class="q-card" id="qcard-${q.id}">
+        <div class="q-meta"><span class="q-num">TLN ${i+1}</span></div>
+        <div class="q-text">${q.q}</div>
+        <input class="short-input" id="inp-${q.id}" type="number" placeholder="Nhập số...">
+        <div class="explain" id="exp-${q.id}">Đáp án: ${q.ans}</div></div>`;
+    });
+  }
+  if (questions.some(q => q.type === 'essay')) {
+    html += '<div class="section-title">PHẦN 4. TỰ LUẬN</div>';
+    questions.filter(q => q.type === 'essay').forEach((q, i) => {
+      html += `<div class="q-card" id="qcard-${q.id}">
+        <div class="q-meta"><span class="q-num">Bài ${i+1}</span></div>
+        <div class="q-text">${q.title}</div>
+        <pre style="font-size:13px;color:var(--text2);white-space:pre-wrap;margin-bottom:12px;line-height:1.7">${q.q}</pre>
+        <textarea class="essay-area" id="essay-${q.id}" placeholder="Nhập câu trả lời của bạn..."></textarea>
+        <div class="explain" id="exp-${q.id}" style="margin-top:10px">${q.exp || ''}</div></div>`;
+    });
+  }
+  document.getElementById('exam-content').innerHTML = html;
+}
+
+// ═══ HANDLE ANSWERS ═══
+function selectOpt(qid, oi) {
+  if (submitted) return;
+  answers[qid] = oi;
+  document.querySelectorAll(`#qcard-${qid} .opt`).forEach(b => b.classList.remove('selected'));
+  document.getElementById(`opt-${qid}-${oi}`).classList.add('selected');
+}
+
+function selectTF(qid, si, val) {
+  if (submitted) return;
+  const key = `${qid}_${si}`;
+  answers[key] = val;
+  document.getElementById(`tfb-${qid}-${si}-true`).className = 'tf-btn' + (val === true ? ' selected-true' : '');
+  document.getElementById(`tfb-${qid}-${si}-false`).className = 'tf-btn' + (val === false ? ' selected-false' : '');
+}
+
+// ═══ SUBMIT ═══
+function submitExam() {
+  if (submitted) return;
+  submitted = true;
+  // Disable inputs
+  document.querySelectorAll('.opt, .tf-btn, .short-input, .essay-area').forEach(el => el.disabled = true);
+  let totalCorrect = 0, totalQues = 0;
+  // Chấm trắc nghiệm
+  questions.filter(q => q.type === 'mc').forEach(q => {
+    totalQues++;
+    const user = answers[q.id];
+    const isCorrect = (user === q.ans);
+    if (isCorrect) totalCorrect++;
+    document.getElementById(`exp-${q.id}`).classList.add('show');
+    q.opts.forEach((_, oi) => {
+      const btn = document.getElementById(`opt-${q.id}-${oi}`);
+      btn.classList.add('disabled');
+      if (oi === q.ans) btn.classList.add('correct');
+      if (oi === user && user !== q.ans) btn.classList.add('wrong');
+      if (user === undefined && oi === q.ans) btn.classList.add('show-correct');
+    });
+  });
+  // Chấm Đ/S
+  questions.filter(q => q.type === 'tf').forEach(q => {
+    q.subs.forEach((sub, si) => {
+      totalQues++;
+      const key = `${q.id}_${si}`;
+      const user = answers[key];
+      const isCorrect = (user === sub.ans);
+      if (isCorrect) totalCorrect++;
+      const tBtn = document.getElementById(`tfb-${q.id}-${si}-true`);
+      const fBtn = document.getElementById(`tfb-${q.id}-${si}-false`);
+      tBtn.classList.add('disabled'); fBtn.classList.add('disabled');
+      if (sub.ans === true) tBtn.classList.add('reveal-correct'); else fBtn.classList.add('reveal-correct');
+      if (user !== undefined && user !== sub.ans) {
+        (user === true ? tBtn : fBtn).classList.add('reveal-wrong');
+      }
+    });
+  });
+  // Chấm trả lời ngắn
+  questions.filter(q => q.type === 'sa').forEach(q => {
+    totalQues++;
+    const inp = document.getElementById(`inp-${q.id}`);
+    const val = parseFloat(inp.value);
+    const isCorrect = (!isNaN(val) && val === q.ans);
+    if (isCorrect) totalCorrect++;
+    inp.classList.add(isCorrect ? 'correct' : 'wrong');
+    document.getElementById(`exp-${q.id}`).classList.add('show');
+  });
+  // Hiển thị gợi ý tự luận
+  questions.filter(q => q.type === 'essay').forEach(q => {
+    document.getElementById(`exp-${q.id}`).classList.add('show');
+  });
+  // Hiển thị kết quả tổng
+  const pct = Math.round((totalCorrect / totalQues) * 100);
+  document.getElementById('r-score').textContent = `${totalCorrect}/${totalQues}`;
+  document.getElementById('score-circle').style.setProperty('--sc-pct', pct + '%');
+  document.getElementById('score-circle').style.borderColor = pct >= 80 ? 'var(--accent3)' : pct >= 50 ? 'var(--accent4)' : 'var(--accent5)';
+  document.getElementById('r-title').textContent = pct >= 80 ? 'Xuất sắc!' : pct >= 50 ? 'Khá!' : 'Cần ôn thêm!';
+  document.getElementById('r-emoji').textContent = pct >= 80 ? '🎉' : pct >= 50 ? '📚' : '💪';
+  // Tạo review list
+  let reviewHTML = '';
+  questions.forEach((q, i) => {
+    if (q.type === 'mc') {
+      const user = answers[q.id];
+      const correct = (user === q.ans);
+      reviewHTML += `<div class="review-card"><span class="status ${correct ? 'correct-dot' : 'incorrect-dot'}"></span>
+        <strong>Câu ${i+1}:</strong> ${q.q} <br><small>Đáp án đúng: ${q.opts[q.ans]} | Bạn chọn: ${user !== undefined ? q.opts[user] : 'Chưa chọn'}</small>
+        <br><small style="color:var(--text3)">${q.exp}</small></div>`;
+    } else if (q.type === 'tf') {
+      let detail = '';
+      q.subs.forEach((sub, si) => {
+        const key = `${q.id}_${si}`;
+        const user = answers[key];
+        const correct = (user === sub.ans);
+        detail += `<span class="status ${correct ? 'correct-dot' : 'incorrect-dot'}"></span> ${sub.q} → Bạn: ${user === undefined ? 'Chưa chọn' : (user?'Đúng':'Sai')} | Đúng: ${sub.ans?'Đúng':'Sai'}<br>`;
+      });
+      reviewHTML += `<div class="review-card"><strong>Đ/S ${i+1}:</strong> ${q.context}<br>${detail}</div>`;
+    } else if (q.type === 'sa') {
+      const inp = document.getElementById(`inp-${q.id}`);
+      const userVal = inp.value;
+      const correct = (parseFloat(userVal) === q.ans);
+      reviewHTML += `<div class="review-card"><span class="status ${correct ? 'correct-dot' : 'incorrect-dot'}"></span>
+        <strong>TLN ${i+1}:</strong> ${q.q} <br>Đáp án: ${q.ans} | Bạn nhập: ${userVal || 'Chưa nhập'}</div>`;
+    } else if (q.type === 'essay') {
+      reviewHTML += `<div class="review-card"><strong>Bài ${i+1}:</strong> ${q.title}<br><small style="color:var(--text3)">${q.exp || 'Gợi ý: Xem đáp án trong file gốc.'}</small></div>`;
+    }
+  });
+  document.getElementById('review-list').innerHTML = reviewHTML;
+  showView('result');
+}
+
+// ═══ NAVIGATION ═══
+function showView(v) {
+  document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
+  document.getElementById('view-' + v).classList.add('active');
+  window.scrollTo(0, 0);
+}
+function goHome() { showView('home'); submitted = false; }
+function retakeExam() {
+  submitted = false;
+  answers = {};
+  startExam();
+}
+
+function startExam() {
+  submitted = false;
+  answers = {};
+  let pool = [];
+  if (mode === 'all') {
+    pool = [
+      ...MULTI_CHOICE.map(q => ({...q, type:'mc'})),
+      ...TRUE_FALSE.map(q => ({...q, type:'tf'})),
+      ...SHORT_ANSWER.map(q => ({...q, type:'sa'})),
+      ...ESSAYS.map(q => ({...q, type:'essay'}))
+    ];
+  } else if (mode === 'mc') {
+    pool = MULTI_CHOICE.map(q => ({...q, type:'mc'}));
+  } else if (mode === 'tf') {
+    pool = TRUE_FALSE.map(q => ({...q, type:'tf'}));
+  } else if (mode === 'essay') {
+    pool = ESSAYS.map(q => ({...q, type:'essay'}));
+  }
+  shuffle(pool);
+  questions = pool;
+  buildExam();
+  showView('exam');
+}
+</script>
+</body>
+</html>

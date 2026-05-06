@@ -155,6 +155,14 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
         <div class="sc-name">Lịch sử</div>
         <div class="sc-desc">Việt Nam · Thế giới<br>Đang cập nhật</div>
       </div>
+      <div class="subject-card"
+        style="--sc-c:rgba(46,204,113,.55);--sc-sh:rgba(46,204,113,.22);--sc-bg:linear-gradient(135deg,rgba(46,204,113,.18),rgba(39,174,96,.12))"
+        onclick="openSubject('sinh')">
+        <span class="sc-badge ready">Sẵn sàng</span>
+        <div class="sc-icon-wrap">🧬</div>
+        <div class="sc-name">Sinh học</div>
+        <div class="sc-desc">Ôn tập HK2<br>30 TN + 6 Đ/S + TL</div>
+      </div>
     </div>
     <button class="enter-btn" onclick="openSubject('hoa')">
       Vào học Hóa ngay &nbsp;<span class="arr">→</span>
@@ -199,6 +207,17 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
     <div class="cs-title">Lịch sử</div>
     <p class="cs-desc">Nội dung đang được xây dựng kỹ lưỡng. Sẽ có sớm — hãy quay lại sau nhé!</p>
     <button class="back-btn" onclick="goHome()" style="margin-top:8px">← Quay về trang chủ</button>
+  </div>
+</div>
+
+<div class="subject-page" id="page-sinh">
+  <div class="back-bar">
+    <button class="back-btn" onclick="goHome()">← Trang chủ</button>
+    <div class="back-bar-title">🧬 &nbsp;Sinh Học 11 HK2 — Ngân hàng câu hỏi</div>
+  </div>
+  <div id="sinh-content">
+    <div class="loader-spinner"></div>
+    <div class="loader-text">Đang tải nội dung Sinh học...</div>
   </div>
 </div>
 
