@@ -504,7 +504,15 @@ function showView(v) {
   document.getElementById('view-' + v).classList.add('active');
   window.scrollTo(0, 0);
 }
-function goHome() { showView('home'); submitted = false; }
+function goToLanding() {
+  // Gọi hàm quay về landing của index.html
+  if (typeof window._goLanding === 'function') {
+    window._goLanding();
+  } else {
+    // fallback nếu index.html chưa định nghĩa _goLanding
+    history.back();
+  }
+}
 function retakeExam() {
   submitted = false;
   answers = {};
