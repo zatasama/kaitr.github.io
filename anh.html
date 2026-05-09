@@ -179,7 +179,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   </div>
   <div class="hdr-right">
     <div class="timer-badge" id="timer" style="display:none">00:00</div>
-    <button class="btn btn-ghost" id="back-home-btn" onclick="goHome()" style="display:none;font-size:13px;padding:7px 14px">← Trang chủ</button>
   </div>
 </div>
 
@@ -295,7 +294,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 
     <div class="result-actions">
       <button class="btn btn-primary" onclick="retakeExam()">🔄 Làm lại</button>
-      <button class="btn btn-ghost" onclick="goHome()">← Về trang chủ</button>
     </div>
   </div>
 </div>
@@ -650,4 +648,25 @@ window.addEventListener('scroll', () => {
   const btt = document.getElementById('btt');
   if (btt) btt.classList.toggle('show', st > 300);
 }, {passive:true});
+// === ĐỒNG BỘ NÚT "TRỞ LẠI" VỚI INDEX ===
+window._subjectView = 'home';   // mặc định đang ở home
+
+// Hàm này index.html gọi khi nhấn "Trở lại" và đang ở exam
+window.backToSubjectHome = function() {
+  clearInterval(timerInt);
+  document.getElementById('timer').style.display = 'none';
+  submitted = false;
+  answers = {};
+  elapsed = 0;
+  showView('home');
+  window._subjectView = 'home';
+  window.scrollTo({top: 0, behavior: 'smooth'});
+};
+
+// Ghi đè startExam để mỗi khi vào làm bài, set trạng thái exam
+const _startExam = startExam;
+startExam = function() {
+  _startExam();
+  window._subjectView = 'exam';
+};
 </script>

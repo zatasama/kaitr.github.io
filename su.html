@@ -1,0 +1,820 @@
+<style>
+:root{
+  --bg:#06090f;--bg2:#0d1222;--bg3:#121830;
+  --card:#14203a;--card2:#1a2848;
+  --border:rgba(100,140,255,0.15);--border2:rgba(100,140,255,0.3);
+  --accent:#5b8fff;--accent2:#7c3aed;--accent3:#06d6a0;
+  --accent4:#ffd166;--accent5:#ef476f;--accent6:#f77f00;
+  --text:#e4ecff;--text2:#8fa4c8;--text3:#3d4f6e;
+  --r:12px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:var(--accent2);border-radius:2px}
+
+#sp{position:fixed;top:0;left:0;z-index:9999;height:3px;width:0%;background:linear-gradient(90deg,var(--accent),var(--accent2),var(--accent3));transition:width .1s linear}
+#btt{position:fixed;bottom:24px;right:24px;z-index:9998;width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;color:#fff;box-shadow:0 4px 16px rgba(91,143,255,.4);opacity:0;transform:translateY(10px);transition:all .3s;pointer-events:none}
+#btt.show{opacity:1;transform:translateY(0);pointer-events:auto}
+#btt:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(91,143,255,.5)}
+
+.hdr{background:linear-gradient(135deg,rgba(14,22,50,0.98),rgba(20,32,64,0.98));border-bottom:1px solid var(--border);padding:18px 24px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:500;backdrop-filter:blur(16px)}
+.hdr-icon{width:42px;height:42px;border-radius:10px;background:linear-gradient(135deg,var(--accent4),var(--accent5));display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.hdr-title{font-family:'Playfair Display',serif;font-size:18px;font-weight:700}
+.hdr-sub{font-size:12px;color:var(--text3);margin-top:1px}
+.hdr-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.timer-badge{font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600;color:var(--accent4);background:rgba(255,209,102,.1);border:1px solid rgba(255,209,102,.25);padding:5px 14px;border-radius:20px;min-width:80px;text-align:center}
+.timer-badge.warning{color:var(--accent5);background:rgba(239,71,111,.1);border-color:rgba(239,71,111,.3);animation:pulse .8s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
+
+.view{display:none}
+.view.active{display:block}
+
+/* ── HOME VIEW ── */
+.home-wrap{max-width:760px;margin:0 auto;padding:48px 20px}
+.home-hero{text-align:center;margin-bottom:40px}
+.home-badge{display:inline-flex;align-items:center;gap:7px;background:rgba(255,209,102,.1);border:1px solid rgba(255,209,102,.28);border-radius:20px;padding:5px 16px;font-size:12px;color:var(--accent4);margin-bottom:20px;letter-spacing:.8px;text-transform:uppercase}
+.home-title{font-family:'Playfair Display',serif;font-size:clamp(26px,5vw,46px);font-weight:900;line-height:1.1;margin-bottom:10px;background:linear-gradient(140deg,#fff 0%,#ffd166 50%,#f77f00 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.home-desc{font-size:14.5px;color:var(--text2);line-height:1.7;max-width:500px;margin:0 auto 32px}
+
+.info-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:32px}
+.info-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:18px 16px;text-align:center}
+.info-card .ic-n{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:var(--accent4);line-height:1}
+.info-card .ic-l{font-size:11px;color:var(--text3);letter-spacing:.6px;text-transform:uppercase;margin-top:5px}
+
+.topic-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-bottom:32px}
+.topic-item{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;display:flex;align-items:center;gap:10px;font-size:13.5px}
+.topic-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.topic-n{font-size:11px;color:var(--text3);margin-left:auto;font-family:'JetBrains Mono',monospace}
+
+.mode-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-bottom:28px}
+.mode-card{background:var(--card);border:2px solid var(--border);border-radius:14px;padding:22px 18px;cursor:pointer;transition:all .25s;text-align:center}
+.mode-card:hover{border-color:var(--mc-c);transform:translateY(-3px);box-shadow:0 10px 30px var(--mc-sh)}
+.mode-card.selected{border-color:var(--mc-c);background:rgba(255,209,102,.05);box-shadow:0 4px 20px var(--mc-sh)}
+.mode-icon{font-size:32px;margin-bottom:10px}
+.mode-name{font-size:15px;font-weight:700;margin-bottom:5px}
+.mode-desc{font-size:12px;color:var(--text2);line-height:1.5}
+
+.start-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:15px;border-radius:50px;background:linear-gradient(135deg,var(--accent4),var(--accent2));color:#fff;font-size:16px;font-weight:700;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .25s;box-shadow:0 4px 24px rgba(255,209,102,.35)}
+.start-btn:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(255,209,102,.5)}
+.start-btn .arr{transition:transform .25s}
+.start-btn:hover .arr{transform:translateX(5px)}
+
+/* ── EXAM VIEW ── */
+.exam-wrap{max-width:860px;margin:0 auto;padding:28px 20px 60px}
+.exam-progress{margin-bottom:24px}
+.ep-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:13px;color:var(--text2)}
+.ep-bar{height:6px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden}
+.ep-fill{height:100%;background:linear-gradient(90deg,var(--accent4),var(--accent5));border-radius:3px;transition:width .4s ease}
+.q-dots{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:20px;padding:14px;background:var(--card);border:1px solid var(--border);border-radius:var(--r)}
+.q-dot{width:28px;height:28px;border-radius:6px;border:1.5px solid var(--border);background:transparent;color:var(--text3);font-size:11px;font-weight:600;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace}
+.q-dot:hover{border-color:var(--accent4);color:var(--accent4)}
+.q-dot.answered{background:rgba(6,214,160,.15);border-color:var(--accent3);color:var(--accent3)}
+.q-dot.current{background:var(--accent4);border-color:var(--accent4);color:#fff}
+.q-dot.skipped{background:rgba(255,209,102,.1);border-color:var(--accent4);color:var(--accent4)}
+.dots-label{font-size:11px;color:var(--text3);margin-bottom:8px;width:100%;letter-spacing:.5px}
+.q-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:26px;margin-bottom:16px;transition:border-color .2s}
+.q-card.ds-card{border-left:3px solid var(--accent4)}
+.q-meta{display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.q-num{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;color:var(--accent4);background:rgba(255,209,102,.1);border:1px solid rgba(255,209,102,.2);padding:3px 10px;border-radius:8px}
+.q-topic{font-size:11px;color:var(--text3);background:rgba(255,255,255,.04);padding:3px 10px;border-radius:8px;border:1px solid var(--border)}
+.q-type{font-size:11px;font-weight:700;padding:3px 10px;border-radius:8px}
+.q-type.mc{background:rgba(255,209,102,.12);color:var(--accent4)}
+.q-type.ds{background:rgba(124,58,237,.12);color:#a78bfa}
+.q-text{font-size:15.5px;font-weight:600;line-height:1.6;color:var(--text);margin-bottom:20px}
+.q-context{font-size:13.5px;color:var(--text2);background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:8px;padding:12px 14px;margin-bottom:16px;line-height:1.7;font-style:italic}
+.opts{display:flex;flex-direction:column;gap:9px}
+.opt{display:flex;align-items:flex-start;gap:12px;padding:13px 16px;border-radius:10px;border:1.5px solid var(--border);background:rgba(255,255,255,.02);cursor:pointer;transition:all .18s;text-align:left;font-family:'DM Sans',sans-serif;color:var(--text);font-size:14px;line-height:1.5;position:relative}
+.opt:hover:not(.disabled){border-color:var(--accent4);background:rgba(255,209,102,.06)}
+.opt-key{width:28px;height:28px;border-radius:7px;background:rgba(255,255,255,.06);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:11.5px;font-weight:700;font-family:'JetBrains Mono',monospace;flex-shrink:0;margin-top:1px;transition:all .18s;color:var(--text2)}
+.opt:hover:not(.disabled) .opt-key{background:var(--accent4);border-color:var(--accent4);color:#fff}
+.opt.selected{border-color:var(--accent4);background:rgba(255,209,102,.08)}
+.opt.selected .opt-key{background:var(--accent4);border-color:var(--accent4);color:#fff}
+.opt.disabled{cursor:default}
+.opt.correct{border-color:var(--accent3)!important;background:rgba(6,214,160,.08)!important}
+.opt.correct .opt-key{background:var(--accent3)!important;border-color:var(--accent3)!important;color:#fff!important}
+.opt.wrong{border-color:var(--accent5)!important;background:rgba(239,71,111,.08)!important}
+.opt.wrong .opt-key{background:var(--accent5)!important;border-color:var(--accent5)!important;color:#fff!important}
+.opt.show-correct{border-color:var(--accent3)!important;background:rgba(6,214,160,.04)!important}
+.opt.show-correct .opt-key{background:rgba(6,214,160,.2)!important;border-color:var(--accent3)!important;color:var(--accent3)!important}
+
+/* True/False */
+.tf-item{margin-bottom:10px;padding:12px 14px;background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:9px}
+.tf-text{font-size:13.5px;color:var(--text);margin-bottom:10px;line-height:1.6}
+.tf-label{font-size:11px;font-weight:700;color:var(--text3);margin-bottom:6px;letter-spacing:.4px}
+.tf-opts{display:flex;gap:8px}
+.tf-btn{padding:6px 18px;border-radius:8px;border:1.5px solid var(--border);background:transparent;color:var(--text2);font-size:13px;font-weight:600;cursor:pointer;transition:all .18s;font-family:'DM Sans',sans-serif}
+.tf-btn:hover:not(.disabled){border-color:var(--accent4);color:var(--accent4)}
+.tf-btn.selected-true{border-color:var(--accent3);background:rgba(6,214,160,.12);color:var(--accent3)}
+.tf-btn.selected-false{border-color:var(--accent5);background:rgba(239,71,111,.1);color:var(--accent5)}
+.tf-btn.disabled{cursor:default}
+.tf-btn.reveal-correct{border-color:var(--accent3)!important;background:rgba(6,214,160,.15)!important;color:var(--accent3)!important}
+.tf-btn.reveal-wrong{border-color:var(--accent5)!important;background:rgba(239,71,111,.1)!important;color:var(--accent5)!important}
+
+.q-nav{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+.btn{padding:10px 22px;border-radius:9px;border:none;font-size:13.5px;font-weight:600;cursor:pointer;transition:all .18s;font-family:'DM Sans',sans-serif;display:inline-flex;align-items:center;gap:7px}
+.btn-primary{background:linear-gradient(135deg,var(--accent4),var(--accent5));color:#fff}
+.btn-primary:hover{opacity:.9;transform:translateY(-1px)}
+.btn-ghost{background:transparent;border:1.5px solid var(--border);color:var(--text2)}
+.btn-ghost:hover{border-color:var(--accent4);color:var(--accent4)}
+.submit-zone{margin-top:32px;padding:24px;background:var(--card);border:2px solid rgba(255,209,102,.2);border-radius:14px;text-align:center}
+.submit-zone p{font-size:13.5px;color:var(--text2);margin-bottom:16px;line-height:1.6}
+.submit-btn{display:inline-flex;align-items:center;gap:10px;padding:14px 40px;border-radius:50px;background:linear-gradient(135deg,var(--accent4),var(--accent5));color:#fff;font-size:15px;font-weight:700;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .25s;box-shadow:0 4px 20px rgba(255,209,102,.35)}
+.submit-btn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(255,209,102,.5)}
+
+/* ── RESULT VIEW ── */
+.result-wrap{max-width:860px;margin:0 auto;padding:40px 20px}
+.result-hero{text-align:center;margin-bottom:40px}
+.result-emoji{font-size:72px;margin-bottom:16px;animation:pop .5s cubic-bezier(.34,1.56,.64,1)}
+@keyframes pop{from{transform:scale(0)}to{transform:scale(1)}}
+.result-title{font-family:'Playfair Display',serif;font-size:36px;font-weight:900;margin-bottom:8px}
+.result-sub{font-size:15px;color:var(--text2)}
+.score-circle{width:140px;height:140px;border-radius:50%;margin:24px auto;display:flex;flex-direction:column;align-items:center;justify-content:center;border:4px solid;position:relative}
+.score-circle::before{content:'';position:absolute;inset:-6px;border-radius:50%;background:conic-gradient(var(--sc-color) var(--sc-pct),rgba(255,255,255,.05) 0);z-index:-1}
+.score-num{font-family:'Playfair Display',serif;font-size:38px;font-weight:900;line-height:1}
+.score-den{font-size:13px;color:var(--text3);margin-top:2px}
+.result-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-bottom:32px}
+.rs-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:16px;text-align:center}
+.rs-n{font-family:'Playfair Display',serif;font-size:26px;font-weight:700;line-height:1}
+.rs-l{font-size:11px;color:var(--text3);letter-spacing:.5px;margin-top:4px}
+.review-section{margin-bottom:28px}
+.review-title{font-size:16px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.review-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);margin-bottom:10px;overflow:hidden}
+.review-header{padding:12px 16px;display:flex;align-items:flex-start;gap:10px;cursor:pointer;transition:background .18s}
+.review-header:hover{background:rgba(255,255,255,.02)}
+.rv-badge{font-size:11px;font-weight:700;padding:2px 9px;border-radius:7px;flex-shrink:0;margin-top:1px}
+.rv-badge.ok{background:rgba(6,214,160,.15);color:var(--accent3)}
+.rv-badge.wrong{background:rgba(239,71,111,.15);color:var(--accent5)}
+.rv-badge.partial{background:rgba(255,209,102,.15);color:var(--accent4)}
+.rv-badge.skip{background:rgba(255,255,255,.07);color:var(--text3)}
+.rv-q{font-size:13.5px;color:var(--text);flex:1;line-height:1.5}
+.rv-arrow{color:var(--text3);font-size:14px;margin-left:auto;flex-shrink:0;transition:transform .25s}
+.review-body{display:none;padding:14px 16px;border-top:1px solid var(--border);font-size:13px;color:var(--text2);line-height:1.75}
+.review-body.open{display:block}
+.rv-answer{margin:4px 0;display:flex;align-items:flex-start;gap:6px}
+.rv-answer .dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:6px}
+.result-actions{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:32px}
+
+.wm{position:fixed;left:14px;bottom:18px;z-index:9997;font-family:'Playfair Display',serif;font-size:11px;font-weight:700;letter-spacing:2px;color:rgba(255,209,102,.25);text-transform:uppercase;writing-mode:vertical-rl;transform:rotate(180deg);pointer-events:none;user-select:none}
+@media(max-width:600px){
+  .mode-cards{grid-template-columns:1fr}
+  .info-cards{grid-template-columns:repeat(2,1fr)}
+  .result-stats{grid-template-columns:repeat(2,1fr)}
+  .hdr-title{font-size:15px}
+}
+</style>
+
+<div id="sp"></div>
+<div class="wm">KaiTr</div>
+<button id="btt" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<!-- HEADER -->
+<div class="hdr">
+  <div class="hdr-icon">📜</div>
+  <div>
+    <div class="hdr-title">Luyện đề Lịch Sử 11</div>
+    <div class="hdr-sub">Đề cương ôn tập HK2 · KaiTr Study Hub</div>
+  </div>
+  <div class="hdr-right">
+    <div class="timer-badge" id="timer" style="display:none">00:00</div>
+    <button class="btn btn-ghost" id="back-home-btn" onclick="goHome()" style="display:none;font-size:13px;padding:7px 14px">← Trang chủ</button>
+  </div>
+</div>
+
+<!-- HOME VIEW -->
+<div class="view active" id="view-home">
+  <div class="home-wrap">
+    <div class="home-hero">
+      <div class="home-badge">📜 Lịch Sử · Lớp 11 · HK2</div>
+      <div class="home-title">Luyện đề<br>Lịch Sử</div>
+      <p class="home-desc">Ôn tập toàn bộ đề cương HK2 với hệ thống làm bài như Azota – 44 câu trắc nghiệm & 6 câu Đúng/Sai (24 ý).</p>
+    </div>
+
+    <div class="info-cards">
+      <div class="info-card"><div class="ic-n">44</div><div class="ic-l">Câu TN</div></div>
+      <div class="info-card"><div class="ic-n">6</div><div class="ic-l">Câu Đ/S</div></div>
+      <div class="info-card"><div class="ic-n">3</div><div class="ic-l">Chế độ</div></div>
+      <div class="info-card"><div class="ic-n">50</div><div class="ic-l">Phút (chế độ đầy đủ)</div></div>
+    </div>
+
+    <div class="topic-list">
+      <div class="topic-item"><span class="topic-dot" style="background:#ffd166"></span><span>Cải cách Hồ Quý Ly, Lê Thánh Tông, Minh Mạng</span><span class="topic-n">24 câu</span></div>
+      <div class="topic-item"><span class="topic-dot" style="background:#06d6a0"></span><span>Biển Đông & Chủ quyền biển đảo</span><span class="topic-n">20 câu</span></div>
+      <div class="topic-item"><span class="topic-dot" style="background:#a78bfa"></span><span>Phần II: Đúng/Sai tình huống</span><span class="topic-n">6 câu · 4 ý</span></div>
+    </div>
+
+    <p style="font-size:13px;color:var(--text3);margin-bottom:14px;font-weight:600;letter-spacing:.5px;text-transform:uppercase">Chọn chế độ làm bài:</p>
+    <div class="mode-cards">
+      <div class="mode-card selected" id="mode-full" style="--mc-c:rgba(255,209,102,.6);--mc-sh:rgba(255,209,102,.2)" onclick="selectMode('full')">
+        <div class="mode-icon">📝</div>
+        <div class="mode-name">Luyện đề đầy đủ</div>
+        <div class="mode-desc">44 TN + 6 Đ/S · Tính giờ 50 phút · Nộp bài · Xem điểm chi tiết</div>
+      </div>
+      <div class="mode-card" id="mode-tn" style="--mc-c:rgba(6,214,160,.6);--mc-sh:rgba(6,214,160,.15)" onclick="selectMode('tn')">
+        <div class="mode-icon">✅</div>
+        <div class="mode-name">Chỉ trắc nghiệm</div>
+        <div class="mode-desc">44 câu TN · Không giới hạn giờ · Xem đáp án ngay khi chọn</div>
+      </div>
+      <div class="mode-card" id="mode-ds" style="--mc-c:rgba(124,58,237,.6);--mc-sh:rgba(124,58,237,.15)" onclick="selectMode('ds')">
+        <div class="mode-icon">✔️</div>
+        <div class="mode-name">Chỉ Đúng/Sai</div>
+        <div class="mode-desc">6 câu tình huống · Luyện kỹ năng phân tích tư liệu</div>
+      </div>
+    </div>
+
+    <button class="start-btn" onclick="startExam()">
+      Bắt đầu làm bài <span class="arr">→</span>
+    </button>
+  </div>
+</div>
+
+<!-- EXAM VIEW -->
+<div class="view" id="view-exam">
+  <div class="exam-wrap">
+    <div class="exam-progress">
+      <div class="ep-row">
+        <span id="ep-text">Câu 1 / 50</span>
+        <span id="ep-ans">Đã trả lời: 0</span>
+      </div>
+      <div class="ep-bar"><div class="ep-fill" id="ep-fill" style="width:0%"></div></div>
+    </div>
+
+    <div class="q-dots" id="q-dots">
+      <div class="dots-label">ĐIỀU HƯỚNG NHANH – Click vào số câu để nhảy đến:</div>
+    </div>
+
+    <div id="questions-container"></div>
+
+    <div class="submit-zone" id="submit-zone">
+      <p id="submit-msg">Bạn đã trả lời <strong id="ans-count">0</strong> / <strong id="total-count">0</strong> câu hỏi.<br>Hãy kiểm tra lại trước khi nộp bài!</p>
+      <button class="submit-btn" onclick="submitExam()">📨 Nộp bài &amp; Xem kết quả</button>
+    </div>
+  </div>
+</div>
+
+<!-- RESULT VIEW -->
+<div class="view" id="view-result">
+  <div class="result-wrap">
+    <div class="result-hero">
+      <div class="result-emoji" id="r-emoji">🎉</div>
+      <div class="result-title" id="r-title">Hoàn thành!</div>
+      <div class="result-sub" id="r-sub"></div>
+      <div class="score-circle" id="score-circle" style="--sc-color:var(--accent3);--sc-pct:0%;border-color:var(--accent3)">
+        <div class="score-num" id="r-score">0</div>
+        <div class="score-den" id="r-den">/ 10</div>
+      </div>
+    </div>
+
+    <div class="result-stats" id="r-stats"></div>
+
+    <div class="review-section">
+      <div class="review-title">📋 Chi tiết từng câu</div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;font-size:12px">
+        <span style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:3px;background:rgba(6,214,160,.3);display:inline-block"></span>Đúng</span>
+        <span style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:3px;background:rgba(239,71,111,.3);display:inline-block"></span>Sai</span>
+        <span style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:3px;background:rgba(255,209,102,.2);display:inline-block"></span>Đúng 1 phần</span>
+        <span style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:3px;background:rgba(255,255,255,.07);display:inline-block"></span>Bỏ qua</span>
+      </div>
+      <div id="review-list"></div>
+    </div>
+
+    <div class="result-actions">
+      <button class="btn btn-primary" onclick="retakeExam()">🔄 Làm lại</button>
+      <button class="btn btn-ghost" onclick="goHome()">← Về trang chủ</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══ DATA ═══
+const TOPICS = {
+  caiCach: {label:'Cải cách', color:'#ffd166'},
+  bienDao: {label:'Biển Đông', color:'#06d6a0'},
+  ds: {label:'Đúng/Sai tình huống', color:'#a78bfa'},
+};
+
+// Trắc nghiệm 44 câu
+const TN = [
+  {id:1,topic:'caiCach',q:'Nội dung nào dưới đây không phản ánh đúng bối cảnh lịch sử cuộc cải cách của Hồ Quý Ly và triều Hồ cuối thế kỉ XIV, đầu thế kỉ XV?',opts:['Kinh tế phát triển, đất nước thái bình, thịnh trị.','Nhà Trần khủng hoảng, suy yếu nghiêm trọng.','Kinh tế trì trệ, nạn mất mùa xảy ra liên tiếp.','Các cuộc khởi nghĩa của nông dân nổ ra khắp nơi.'],ans:0},
+  {id:2,topic:'caiCach',q:'Nội dung nào sau đây phản ánh đúng bối cảnh lịch sử cuộc cải cách của Hồ Quý Ly và triều Hồ cuối thế kỉ XIV, đầu thế kỉ XV?',opts:['Nhà Trần lâm vào tình trạng khủng hoảng, suy yếu trên nhiều lĩnh vực.','Hàng loạt cuộc khởi nghĩa chống giặc Minh bùng lên ở khắp mọi nơi.','Đất nước độc lập, tự chủ, kinh tế phát triển hơn so với giai đoạn trước','Đất nước có nhiều biến động song nền kinh tế vẫn tiếp tục phát triển.'],ans:0},
+  {id:3,topic:'caiCach',q:'Nội dung nào sau đây là một trong những cải cách về chính trị của Hồ Quý Ly và triều Hồ cuối thế kỉ XIV, đầu thế kỉ XV?',opts:['Hạn chế gia nô, chủ gia nô chỉ được có một số nô tì nhất định','Hạn chế sự phát triển thái quá của Phật giáo và Đạo giáo.','Xóa bỏ tình trạng che giấu, gian dối về ruộng đất.','Thành lập nhiều cơ quan, đặt ra nhiều chức quan mới.'],ans:3},
+  {id:4,topic:'caiCach',q:'Nội dung nào sau đây là một trong những cải cách về xã hội của Hồ Quý Ly và triều Hồ cuối thế kỉ XIV, đầu thế kỉ XV?',opts:['Sửa đổi nội dung các khoa thi.','Ban hành quy chế và hình luật mới.','Kiểm soát hộ tịch trên cả nước.','Khuyến khích sử dụng chữ Nôm.'],ans:2},
+  {id:5,topic:'caiCach',q:'Ý nào sau đây không là nội dung cải cách trên lĩnh vực chính trị - hành chính của Hồ Quý Ly và triều Hồ cuối thế kỉ XIV, đầu thế kỉ XV?',opts:['Thông qua thi cử để tuyển chọn người đỗ đạt, bổ nhiệm quan lại.','Thống nhất bộ máy hành chính từ trung ương đến địa phương.','Dời đô từ thành Thăng Long về thành Tây Đô (Thanh Hóa).','Đặt chức Hà đê sứ ở các lộ để quản mọi việc trong phủ, châu.'],ans:3},
+  {id:6,topic:'caiCach',q:'Ý nào sau đây không là nội dung cải cách trên lĩnh vực văn hóa - giáo dục của Hồ Quý Ly và triều Hồ cuối thế kỉ XIV, đầu thế kỉ XV?',opts:['Dịch sách chữ Nôm sang chữ Hán.','Chấn chỉnh lại chế độ thi cử, mở rộng việc học.','Đề cao Nho giáo thực dụng, chống giáo điều.','Dùng chữ Nôm để chấn hưng văn hóa dân tộc.'],ans:0},
+  {id:7,topic:'caiCach',q:'Nội dung nào sau đây là cải cách trên lĩnh vực quân sự - quốc phòng của Hồ Quý Ly và triều Hồ cuối thế kỉ XIV, đầu thế kỉ XV?',opts:['Xây dựng phòng tuyến chống giặc trên sông Như Nguyệt.','Ban hành quy chế và hình luật mới của quốc gia.','Cải tiến vũ khí, chế tạo súng thần cơ, đóng thuyền chiến.','Bố trí mai phục và đóng cọc gỗ trên sông Bạch Đằng.'],ans:2},
+  {id:8,topic:'caiCach',q:'Tăng cường kiểm tra giám sát quan lại đặc biệt là ở các cấp địa phương là nội dung cải cách của Hồ Quý Ly và triều Hồ trên lĩnh vực',opts:['tổ chức chính quyền, luật pháp','quân đội, quốc phòng.','kinh tế, xã hội.','văn hóa, giáo dục.'],ans:0},
+  {id:9,topic:'caiCach',q:'Cải cách hành chính của Lê Thánh Tông diễn ra trong bối cảnh chính trị như thế nào?',opts:['Nội bộ triều đình có nhiều mâu thuẫn biến động.','Nạn đói diễn ra trầm trọng, đời sống khổ cực.','Chế độ ruộng đất bất cập, tình trạng mất mùa tăng.','Nạn cường hào lộng hành và quan lại tham ô.'],ans:0},
+  {id:10,topic:'caiCach',q:'Vua Lê Thánh Tông tập trung tiến hành cuộc cải cách trong lĩnh vực nào?',opts:['Kinh tế.','Giáo dục.','Hành chính.','Văn hóa.'],ans:2},
+  {id:11,topic:'caiCach',q:'Cuộc cải cách hành chính lớn nhất nước ta từ thế kỉ X – XV do ai thực hiện?',opts:['Khúc Hạo.','Lý Thánh Tông.','Trần Thánh Tông.','Lê Thánh Tông.'],ans:3},
+  {id:12,topic:'caiCach',q:'Mô hình tổ chức hành chính nào sau đây thuộc thời Lê sơ sau cải cách hành chính của vua Lê Thánh Tông?',opts:['Đạo, lộ, phủ, châu, hương, giáp, xã.','Đạo thừa tuyên, phủ, huyện, châu, xã.','Lộ, trấn, đạo, phủ, châu, giáp, xã.','Lộ, hương, đạo, phủ, châu, huyện, xã.'],ans:1},
+  {id:13,topic:'caiCach',q:'Chế độ phong kiến Việt Nam phát triển đỉnh cao ở triều đại nào?',opts:['Nhà Lý.','Nhà Trần.','Nhà Lê sơ.','Nhà Tiền Lê.'],ans:2},
+  {id:14,topic:'caiCach',q:'Bộ luật được biên soạn dưới thời Lê sơ?',opts:['Hình thư','Quốc triều hình luật.','Hình luật.','Hoàng Việt luật lệ.'],ans:1},
+  {id:15,topic:'caiCach',q:'Bộ máy nhà nước phong kiến nước ta được tổ chức hoàn chỉnh dưới triều vua nào?',opts:['Lý Thái Tổ.','Trần Thánh Tông.','Lê Thái Tông.','Lê Thánh Tông.'],ans:3},
+  {id:16,topic:'caiCach',q:'Trong lịch sử nước ta nối tiếp sự nghiệp của nhà Hồ (1400 – 1407) là triều đại phong kiến nào?',opts:['Nhà Mạc.','Tiền Lê.','Lê Sơ.','Lê Trung Hưng.'],ans:2},
+  {id:17,topic:'caiCach',q:'Nội dung nào không phản ánh đúng về bối cảnh thực hiện cuộc cải cách của vua Minh Mạng (nửa đầu thế kỉ XIX)?',opts:['Tình trạng lạm quyền của quan lại địa phương.','Mâu thuẫn xã hội diễn ra gay gắt.','Bộ máy nhà nước chưa hoàn chỉnh.','Chế độ quân chủ đang trong thời kì thịnh trị.'],ans:3},
+  {id:18,topic:'caiCach',q:'Để củng cố thể chế quân chủ chuyên chế, vào nửa đầu thế kỉ XIX nhà Nguyễn đã',opts:['thực hiện chính sách đóng cửa.','ban hành chính sách kinh tế mới.','tiến hành cải cách đất nước.','tiến hành đổi mới đất nước.'],ans:2},
+  {id:19,topic:'caiCach',q:'Vào nửa đầu thế kỉ XIX, vị vua nào của triều Nguyễn đã thực hiện công cuộc cải cách?',opts:['Gia Long.','Minh Mạng.','Thiệu Trị.','Tự Đức.'],ans:1},
+  {id:20,topic:'caiCach',q:'Về kinh tế, năm 1836, vua Minh Mạng đã thực hiện biện pháp nào sau đây?',opts:['Giảm tô, giảm thuế.','Khôi phục ruộng đất công.','Tiến hành tăng gia sản xuất','Ban hành tiền giấy.'],ans:1},
+  {id:21,topic:'caiCach',q:'Để tăng cường tính thống nhất của quốc gia, vua Minh Mạng (nửa đầu thế kỉ XIX) đã chia cả nước thành',opts:['22 đạo thừa tuyên và một phủ Thừa Thiên.','30 tỉnh và phủ Thừa Thiên.','lộ (trấn) do An phủ sứ quản lí.','63 tỉnh thành.'],ans:1},
+  {id:22,topic:'caiCach',q:'Dưới thời vua Minh Mạng (nửa đầu thế kỉ XIX) đã thi hành biện pháp quân sự nào sau đây?',opts:['Triển khai cải cách hành chính địa phương trên quy mô cả nước.','Quy định lại chính sách thuế với thuyền buôn nước ngoài đến buôn bán.','Tiến hành độc tôn Nho giáo, hạn chế Phật giáo và cấm đạo Thiên Chúa giáo.','Quân đội được tổ chức theo mô hình và phiên chế của phương Tây.'],ans:3},
+  {id:23,topic:'caiCach',q:'Một trong những nội dung cải cách kinh tế của vua Minh Mạng (nửa đầu thế kỉ XIX) là',opts:['cải cách thuế đinh và tô ruộng.','quy định lại chính sách thuế với thuyền buôn nước ngoài.','quy định thể lệ thuế khóa theo hạng.','cho phép thương nhân nước ngoài được tự do buôn bán.'],ans:1},
+  {id:24,topic:'caiCach',q:'Công cuộc cải cách của vua Minh Mạng (nửa đầu thế kỉ XIX) đã thực hiện nhiệm vụ nào sau đây?',opts:['Tiến hành đổi mới đất nước.','Thống nhất đất nước về mặt lãnh thổ.','Thống nhất đất nước về mặt nhà nước.','Đấu tranh giành chính quyền'],ans:2},
+  {id:25,topic:'bienDao',q:'Biển Đông là biển thuộc khu vực nào sau đây?',opts:['Ấn Độ Dương.','Thái Bình Dương.','Đại Tây Dương.','Địa Trung Hải.'],ans:1},
+  {id:26,topic:'bienDao',q:'Eo biển nào sau đây không nằm trong khu vực Biển Đông?',opts:['Eo Đài Loan.','Eo Magenllan.','Eo Ma-lắc-ca.','Eo Ba-si.'],ans:1},
+  {id:27,topic:'bienDao',q:'Biển Đông có vị trí chiến lược quan trọng ở khu vực châu Á- Thái Bình Dương về lĩnh vực nào sau đây?',opts:['Văn hóa - Thể thao.','Giáo dục - Y tế.','Quốc phòng - an ninh.','Văn hóa - giáo dục.'],ans:2},
+  {id:28,topic:'bienDao',q:'Biển Đông có ảnh hưởng trực tiếp tới cuộc sống của người dân ở một số nước thuộc khu vực nào sau đây?',opts:['Châu Phi.','Châu Mĩ.','Châu Âu.','Châu Á- Thái Bình Dương.'],ans:3},
+  {id:29,topic:'bienDao',q:'Nước nào sau đây ở khu vực Biển Đông có sản lượng đánh bắt và nuôi trồng hải sản đứng hàng đầu thế giới?',opts:['Thái Lan.','Lào.','Na Uy.','Phần Lan.'],ans:0},
+  {id:30,topic:'bienDao',q:'Các cảng biển lớn trên Biển Đông có vai trò như thế nào?',opts:['Điểm trung chuyển của tàu thuyền.','Nơi giao lưu kinh tế, văn hóa.','Điểm tập trung phát triển du lịch.','Nơi giải quyết các vấn đề xã hội.'],ans:0},
+  {id:31,topic:'bienDao',q:'Theo Tổ chức Lương thực và nông nghiệp Liên hợp quốc (FAO), Biển Đông là vùng biển có sản lượng nào sau đây lớn nhất thế giới?',opts:['Nông nghiệp.','Lương thực.','Chăn nuôi.','Đánh bắt hải sản.'],ans:3},
+  {id:32,topic:'bienDao',q:'Các nước Đông Nam Á ven biển đang được hưởng lợi ích trực tiếp từ Biển Đông trong vấn đề phát triển nào sau đây?',opts:['Chính trị.','Quân sự.','Kinh tế.','Văn hóa.'],ans:2},
+  {id:33,topic:'caiCach',q:'Sau khi lên ngôi và lập ra nhà Hồ, Hồ Quý Ly đã tiếp tục',opts:['tổ chức kháng chiến chống quân Xiêm.','tổ chức kháng chiến chống quân Thanh','mở rộng lãnh thổ về phía Nam.','tiến hành cuộc cải cách sâu rộng.'],ans:3},
+  {id:34,topic:'caiCach',q:'Cuộc cải cách của Hồ Quý Ly tiến hành trong bối cảnh lịch sử nào sau đây?',opts:['Nước Đại Việt lâm vào khủng hoảng trầm trọng.','Nhà Trần đang trong giai đoạn phát triển thịnh đạt.','Chế độ phong kiến Việt Nam phát triển đỉnh cao.','Đất nước đứng trước nguy cơ xâm lược từ nhà Thanh.'],ans:0},
+  {id:35,topic:'caiCach',q:'Về kinh tế - xã hội, nhằm hạn chế sự phát triển của chế độ sở hữu ruộng đất lớn trong các điền trang, thái ấp của quý tộc, Hồ Quý Ly đã',opts:['cho phát hành tiền giấy.','ban hành chính sách hạn điền.','cải cách chế độ giáo dục.','thống nhất đơn vị đo lường.'],ans:1},
+  {id:36,topic:'caiCach',q:'Cuộc cải cách của vua Lê Thánh Tông được tiến hành trong bối cảnh lịch sử nào sau đây?',opts:['Nội bộ triều đình có nhiều mâu thuẫn, biến động.','Nền kinh tế sa sút, nạn đói diễn ra thường xuyên','Đất nước đứng trước nguy cơ bị nhà Minh xâm lược','Chế độ phong kiến lâm vào khủng hoảng trầm trọng'],ans:0},
+  {id:37,topic:'caiCach',q:'Công cuộc cải cách của Lê Thánh Tông được tiến hành trên mọi lĩnh vực, nhưng tập trung chủ yếu vào lĩnh vực',opts:['kinh tế.','giáo dục.','hành chính.','văn hóa.'],ans:2},
+  {id:38,topic:'caiCach',q:'Để quản lý đất nước, vua Lê Thánh Tông đã cho ban hành bộ luật nào sau đây?',opts:['Hình thư','Quốc triều hình luật.','Hình luật.','Hoàng Việt luật lệ.'],ans:1},
+  {id:39,topic:'caiCach',q:'Cuộc cải cách của vua Minh Mạng (nửa đầu thế kỉ XIX) được thực hiện trong bối cảnh lịch sử nào sau đây?',opts:['Chế độ quân chủ chuyên chế đang trong thời kì thịnh trị.','Phương thức sản xuất tư bản chủ nghĩa phát triển mạnh','Bộ máy chính quyền nhà nước chưa hoàn thiện, đồng bộ','Đất nước đứng trước nguy cơ xâm lược từ nhà Thanh'],ans:2},
+  {id:40,topic:'caiCach',q:'Cuộc cải cách của vua Minh Mạng (nửa đầu thế kỉ XIX) nhằm thực hiện một trong những mục đích nào sau đây?',opts:['Tập trung quyền lực vào tay vua','Thúc đẩy kinh tế tư bản chủ nghĩa','Ngăn ngừa nguy cơ giặc ngoại xâm','Khôi phục nền giáo dục Nho học.'],ans:0},
+  {id:41,topic:'caiCach',q:'Để hoàn thiện bộ máy chính quyền Trung ương, vua Minh Mạng đã cho thành lập một số cơ quan mới có tên là',opts:['Lục bộ, Lục khoa, Lục tự, Nội các','Đô ty, Thừa ty, Hiến ty','Đô sát viện, Cơ mật viện','Thông chính ty, Quốc Tử Giám'],ans:2},
+  {id:42,topic:'bienDao',q:'Bờ biển nước ta dài khoảng 3260 km, kéo dài từ',opts:['tỉnh Quảng Ninh đến tỉnh Kiên Giang.','tỉnh Quảng Ninh đến tỉnh An Giang','tỉnh Thái Bình đến tỉnh Cà Mau.','tỉnh Nam định đến tỉnh Bình Thuận.'],ans:0},
+  {id:43,topic:'bienDao',q:'Một trong những bãi biển nổi tiếng của nước ta ở miền Trung, là địa điểm thu hút khách du lịch trong và ngoài nước là',opts:['Hạ Long','Đà Nẵng','Phú Quốc','Cát Bà'],ans:1},
+  {id:44,topic:'bienDao',q:'Chủ trương nhất quán của nước Cộng hòa xã hội chủ nghĩa Việt Nam trong việc giải quyết các tranh chấp ở Biển Đông hiện nay là',opts:['đấu tranh hòa bình','bạo lực cách mạng để kiên quyết giành chủ quyền','chiến tranh cách mạng.','bãi công, bãi khóa và tất cá các hình thức hợp pháp'],ans:0},
+];
+
+// Đúng/Sai 6 câu
+const DS = [
+  {id:'ds1',topic:'ds',
+   context:'Năm 1397, Hồ Quý Ly cho xây thành Tây Đô (còn gọi là thành Nhà Hồ, thuộc Thanh Hóa ngày nay) rồi ép vua Trần dời đô về đây. Phía ngoài thành là hệ thống hào quy mô lớn kết hợp lũy tre gai dày đặc. Năm 1402, nhà Hồ đắp sửa đường sá từ thành Tây Đô đến Hóa Châu (Thừa Thiên Huế và phía Bắc Quảng Nam ngày nay). Năm 1405, nhà Hồ cho quân đóng cọc gỗ lớn ở cửa biển và những nơi xung yếu trên sông để phòng giặc, xây dựng hệ thống phòng thủ dài hàng trăm ki-lô-mét.',
+   subs:[
+     {q:'(a) Đoạn trích đề cập đến một số hoạt động của nhà Hồ nhằm chấn chỉnh quốc phòng',ans:true},
+     {q:'(b) Việc xây thành Tây Đô, đắp sửa đường sá của Hồ Quý Ly nhằm mục đích duy nhất là bảo vệ quyền lợi vương triều Hồ',ans:false},
+     {q:'(c) Đoạn trích chủ yếu nhằm phê phán sự lộng quyền của Hồ Quý Ly về mặt quân đội, quốc phòng',ans:false},
+     {q:'(d) Việc xây thành Tây Đô, đắp sửa đường sá, đóng cọc gỗ lớn ở cửa biển của Hồ Quý Ly xuất phát từ thực trạng đất nước đứng trước nguy cơ ngoại xâm',ans:true},
+   ]},
+  {id:'ds2',topic:'ds',
+   context:'"Năm 1471, nhằm tăng cường sự kiểm soát chỉ đạo của vua đối với các triều thần, tăng cường tính hiệu lực và hiệu quả của bộ máy quan lại, Lê Thánh Tông đã bãi bỏ một số chức quan đại thần có công nhưng không có học thức, thay vào đó bằng các văn quan được tuyển chọn qua thi cử nhằm hạn chế chia bè, kéo cánh trong triều đình, hạn chế sự thao túng quyền lực của các công thần. Việc ông trực tiếp quản lí các bộ đã hạn chế sự cồng kềnh, quan liêu của bộ máy hành chính".',
+   subs:[
+     {q:'(a) Đoạn trích cung cấp thông tin về một số biện pháp cải cách của vua Lê Thánh Tông trên lĩnh vực chính trị, quân sự',ans:false},
+     {q:'(b) Một số quan lại đương chức nhưng không có học thức đã bị Lê Thánh Tông bãi bỏ, thay thế vào đó là những người được tuyển chọn qua hình thức khoa cử',ans:true},
+     {q:'(c) Năm 1471, vua Lê Thánh Tông đã thực hiện một số biện pháp thể hiện sự trọng dụng đặc biệt đối với bộ phận công thần trong triều',ans:false},
+     {q:'(d) Những cải cách của Lê Thánh Tông năm 1471 đã khiến quyền lực được tập trung cao độ vào trong tay nhà vua',ans:true},
+   ]},
+  {id:'ds3',topic:'ds',
+   context:'"Tiền giấy chẳng qua chỉ là mảnh giấy vuông, phí tổn chỉ đáng năm ba đồng tiền, mà đem đổi lấy vật đáng 5 - 6 trăm đồng của người ta, cố nhiên không phải là cái đạo đúng mức. Vả lại, người có tiền giấy cất giữ cũng dễ rách nát, mà kẻ làm giả mạo sinh ra không cùng, thực không phải là cách bình ổn vật giá mà lưu thông của cải của dân vậy. Quý Ly không xem xét kĩ đến cái gốc lợi hại, chỉ ham chuộng hư danh sáng chế, để cho tiền của hàng hoá thường vẫn lưu thông tức là sinh ra ứ đọng, khiến dân nghe thấy đã sợ, thêm mối xôn xao, thể có phải là chế độ bình trị đâu".',
+   subs:[
+     {q:'(a) Tiền giấy "Thông bảo hội" mà Hồ Quý Ly ban hành dễ bị làm giả và khó cất giữ',ans:true},
+     {q:'(b) Việc sử dụng tiền giấy thay tiền đồng không ảnh hưởng đến sự phát triển kinh tế hàng hóa lúc bấy giờ',ans:false},
+     {q:'(c) Đoạn trích phê phán việc thay tiền đồng bằng tiền giấy của Hồ Quý Ly',ans:true},
+     {q:'(d) Một trong những nhược điểm của việc sử dụng tiền giấy lúc bấy giờ là dễ bị làm giả',ans:true},
+   ]},
+  {id:'ds4',topic:'ds',
+   context:'"Năm 1477, vua Lê Thánh Tông ban hành chính sách lộc điền và quân điền. Với chế độ quân điền, người dân đều được cấp cho ruộng đất công để cày cấy. Thể lệ thuế khóa (thuế đinh, thuế ruộng, thuế đất bãi trồng dâu) được nhà nước quy định theo hạng. Việc canh nông được khuyến khích. Nhà nước đặt Hà đê quan và Khuyến nông quan để quản lý việc đê điều, nông nghiệp; đặt Đồn điền quan để khuyến khích việc khẩn hoang, mở rộng diện tích"',
+   subs:[
+     {q:'(a) Chính sách quân điền và chính sách lộc điền được ban hành năm 1477 là một trong những cải cách của vua Lê Thánh Tông trên lĩnh vực chính trị, hành chính.',ans:false},
+     {q:'(b) Người dân được nhận ruộng đất theo chế độ lộc điền phải thực hiện một số nghĩa vụ đối với Nhà nước.',ans:false},
+     {q:'(c) Hà đê quan, Khuyến nông quan, Đồn điền quan là những chức quan phụ trách quản lý và phát triển nông nghiệp.',ans:true},
+     {q:'(d) Thể lệ thuế khóa đối với người dân được cấp ruộng đất để cày cấy thu theo từng hạng đất chứ không thu cào bằng.',ans:true},
+   ]},
+  {id:'ds5',topic:'ds',
+   context:'Dưới thời vua Minh Mạng, đứng đầu tỉnh là Tổng đốc (phụ trách một tỉnh lớn và một tỉnh nhỏ liền kề) hoặc Tuần phủ (phụ trách một tỉnh nhỏ). Hai cơ quan giúp việc cho Tổng đốc và Tuần phủ là Bố chính ty (do Bố chính sứ đứng đầu) và Án sát ty (do Án sát sứ đứng đầu). Bố chính ty phụ trách thuế khóa, đinh điền, hộ tịch. Án sát ty phụ trách hình án.',
+   subs:[
+     {q:'(a) Đoạn trích phản ánh bộ máy chính quyền dưới thời vua Minh Mạng ở cấp trung ương.',ans:false},
+     {q:'(b) Một trong những cải cách hành chính của vua Minh Mạng là chia nước ta ra thành các tỉnh.',ans:true},
+     {q:'(c) Dưới thời vua Minh Mạng, Bố chính ty và Án sát ty là hai cơ quan giúp việc cho người đứng đầu cấp tỉnh.',ans:true},
+     {q:'(d) Tổng đốc thường là người phụ trách hai tỉnh, trực tiếp cai trị một tỉnh. Tỉnh còn lại do Tuần phủ đứng đầu, đặt dưới sự kiêm quản của Tổng đốc.',ans:true},
+   ]},
+  {id:'ds6',topic:'ds',
+   context:'Đảo Trường Sa thuộc quần đảo Trường Sa (huyện Trường Sa, tỉnh Khánh Hòa) là một trong những đảo lớn, quan trọng (cùng với đảo Song Tử Đông, Song Tử Tây, đảo Thị Tứ, đảo Loại Ta, đảo Ba Bình, đảo Nam Yết...ở quần đảo Trường Sa). Hiện nay, trên đảo Trường Sa và một số đảo khác thuộc quần đảo đã thành lập xã đảo thuộc huyện Trường Sa, tỉnh Khánh Hòa. Nhiều công trình dân sinh như sân bay, cột cờ và đài tưởng niệm, trường học, bệnh xá, chùa, cột thu tiếp sóng viễn thông....đã được xây dựng góp phần cải thiện và nâng cao đời sống của bộ đội và nhân dân trên huyện đảo, đồng thời góp phần củng cố và tăng cường cho công cuộc bảo vệ, thực thi chủ quyền của Tổ quốc trên quần đảo Trường Sa.',
+   subs:[
+     {q:'(a) Đảo Trường Sa là đảo lớn và quan trọng duy nhất thuộc quần đảo Trường Sa.',ans:false},
+     {q:'(b) Trên đảo Trường Sa hiện nay, nhà nước ta đã thành lập được xã đảo và xây dựng được nhiều công trình phục vụ đời sống nhân dân.',ans:true},
+     {q:'(c) Việc thành lập các xã đảo và huyện đảo Trường Sa là một biện pháp thực thi chủ quyền biển đảo của Đảng và Nhà nước ta.',ans:true},
+     {q:'(d) Việc xây dựng sân bay, trường học, bệnh viện....trên quần đảo Trường Sa nhằm mục đích duy nhất là cải thiện và nâng cao đời sống nhân dân.',ans:false},
+   ]},
+];
+
+// ═══ STATE ═══
+let mode = 'full';
+let questions = [];
+let answers = {};
+let timerInt = null;
+let elapsed = 0;
+let submitted = false;
+
+const KEYS = ['A','B','C','D'];
+
+function showView(v) {
+  document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
+  document.getElementById('view-' + v).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function goHome() {
+  clearInterval(timerInt);
+  if (typeof window._goLanding === 'function') window._goLanding();
+  else {
+    document.querySelectorAll('.subject-page').forEach(p => p.classList.remove('active'));
+    const ld = document.getElementById('landing');
+    if (ld) ld.style.display = 'flex';
+    window.scrollTo(0, 0);
+  }
+}
+
+function selectMode(m) {
+  mode = m;
+  document.querySelectorAll('.mode-card').forEach(el => el.classList.remove('selected'));
+  document.getElementById('mode-' + m).classList.add('selected');
+}
+
+function startExam() {
+  submitted = false;
+  answers = {};
+  elapsed = 0;
+
+  if (mode === 'full') questions = [...TN, ...DS];
+  else if (mode === 'tn') questions = [...TN];
+  else questions = [...DS];
+
+  // Shuffle: TN trước, DS sau
+  if (mode === 'full') {
+    const tnPart = questions.filter(q => !q.subs);
+    const dsPart = questions.filter(q => q.subs);
+    // Shuffle TN
+    for (let i = tnPart.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [tnPart[i], tnPart[j]] = [tnPart[j], tnPart[i]];
+    }
+    // Shuffle DS
+    for (let i = dsPart.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [dsPart[i], dsPart[j]] = [dsPart[j], dsPart[i]];
+    }
+    questions = [...tnPart, ...dsPart];
+  } else {
+    for (let i = questions.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [questions[i], questions[j]] = [questions[j], questions[i]];
+    }
+  }
+
+  buildExam();
+  showView('exam');
+  document.getElementById('back-home-btn').style.display = 'flex';
+
+  if (mode === 'full') {
+    document.getElementById('timer').style.display = 'block';
+    startTimer();
+  }
+}
+
+function startTimer() {
+  updateTimer();
+  timerInt = setInterval(() => {
+    elapsed++;
+    updateTimer();
+    if (elapsed >= 50 * 60) {
+      clearInterval(timerInt);
+      if (!submitted) submitExam();
+    }
+  }, 1000);
+}
+
+function updateTimer() {
+  const remain = 50 * 60 - elapsed;
+  const m = Math.floor(remain / 60);
+  const s = remain % 60;
+  const el = document.getElementById('timer');
+  el.textContent = String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+  if (remain <= 300) el.classList.add('warning');
+  else el.classList.remove('warning');
+}
+
+function buildExam() {
+  const total = questions.length;
+  document.getElementById('total-count').textContent = total;
+
+  const dotsEl = document.getElementById('q-dots');
+  dotsEl.innerHTML = '<div class="dots-label">ĐIỀU HƯỚNG NHANH – Click vào số câu để nhảy đến:</div>';
+  questions.forEach((q, i) => {
+    const d = document.createElement('button');
+    d.className = 'q-dot';
+    d.id = 'dot-' + q.id;
+    d.textContent = i + 1;
+    d.onclick = () => scrollToQ(q.id);
+    dotsEl.appendChild(d);
+  });
+
+  const container = document.getElementById('questions-container');
+  container.innerHTML = '';
+  questions.forEach((q, i) => {
+    const isDS = q.subs !== undefined;
+    const div = document.createElement('div');
+    div.className = 'q-card' + (isDS ? ' ds-card' : '');
+    div.id = 'qcard-' + q.id;
+    div.innerHTML = buildQHTML(q, i);
+    container.appendChild(div);
+  });
+
+  updateProgress();
+}
+
+function buildQHTML(q, i) {
+  const isDS = q.subs !== undefined;
+  const topic = TOPICS[q.topic];
+  const typeLabel = isDS ? 'Đúng / Sai' : 'Trắc nghiệm';
+  const typeClass = isDS ? 'ds' : 'mc';
+  const num = i + 1;
+
+  let html = `<div class="q-meta">
+    <span class="q-num">Câu ${num}</span>
+    <span class="q-topic" style="border-color:${topic.color}33;color:${topic.color}">${topic.label}</span>
+    <span class="q-type ${typeClass}">${typeLabel}</span>
+  </div>`;
+
+  if (isDS) {
+    html += `<div class="q-context">${escHtml(q.context)}</div>`;
+    html += '<div class="opts">';
+    q.subs.forEach((sub, si) => {
+      html += `<div class="tf-item" id="tfi-${q.id}-${si}">
+        <div class="tf-text">${escHtml(sub.q)}</div>
+        <div class="tf-label">Chọn đáp án:</div>
+        <div class="tf-opts">
+          <button class="tf-btn" id="tfb-${q.id}-${si}-true" onclick="selectTF('${q.id}',${si},true)">✔ Đúng</button>
+          <button class="tf-btn" id="tfb-${q.id}-${si}-false" onclick="selectTF('${q.id}',${si},false)">✗ Sai</button>
+        </div>
+      </div>`;
+    });
+    html += '</div>';
+  } else {
+    html += `<div class="q-text">${escHtml(q.q)}</div><div class="opts">`;
+    q.opts.forEach((opt, oi) => {
+      html += `<button class="opt" id="opt-${q.id}-${oi}" onclick="selectOpt('${q.id}',${oi})">
+        <span class="opt-key">${KEYS[oi]}</span>
+        <span>${escHtml(opt)}</span>
+      </button>`;
+    });
+    html += '</div>';
+  }
+  return html;
+}
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function selectOpt(qid, oi) {
+  if (submitted) return;
+  const q = questions.find(x => String(x.id) === String(qid));
+  if (!q) return;
+
+  q.opts.forEach((_, i) => {
+    const btn = document.getElementById(`opt-${qid}-${i}`);
+    if (btn) btn.classList.remove('selected');
+  });
+
+  const btn = document.getElementById(`opt-${qid}-${oi}`);
+  if (btn) btn.classList.add('selected');
+  answers[qid] = oi;
+
+  // Nếu chế độ chỉ TN hoặc DS, reveal ngay
+  if (mode === 'tn' || mode === 'ds') {
+    revealAnswer(q);
+  }
+
+  updateProgress();
+  updateDot(qid);
+}
+
+function selectTF(qid, si, val) {
+  if (submitted) return;
+  if (!answers[qid]) answers[qid] = {};
+  answers[qid][si] = val;
+
+  const tBtn = document.getElementById(`tfb-${qid}-${si}-true`);
+  const fBtn = document.getElementById(`tfb-${qid}-${si}-false`);
+  if (tBtn) tBtn.className = 'tf-btn' + (val === true ? ' selected-true' : '');
+  if (fBtn) fBtn.className = 'tf-btn' + (val === false ? ' selected-false' : '');
+
+  // Nếu chế độ chỉ DS, reveal từng ý khi chọn
+  if (mode === 'ds') {
+    const q = questions.find(x => String(x.id) === String(qid));
+    if (q) revealTFSub(q, si);
+  }
+
+  updateProgress();
+  updateDot(qid);
+}
+
+function revealAnswer(q) {
+  q.opts.forEach((_, i) => {
+    const btn = document.getElementById(`opt-${q.id}-${i}`);
+    if (!btn) return;
+    btn.classList.add('disabled');
+    btn.onclick = null;
+    if (i === q.ans) btn.classList.add(answers[q.id] === i ? 'correct' : 'show-correct');
+    else if (answers[q.id] === i) btn.classList.add('wrong');
+  });
+}
+
+function revealTFSub(q, si) {
+  const correct = q.subs[si].ans;
+  const userAns = answers[q.id]?.[si];
+  const tBtn = document.getElementById(`tfb-${q.id}-${si}-true`);
+  const fBtn = document.getElementById(`tfb-${q.id}-${si}-false`);
+  if (!tBtn || !fBtn) return;
+  tBtn.classList.add('disabled'); tBtn.onclick = null;
+  fBtn.classList.add('disabled'); fBtn.onclick = null;
+  if (correct === true) tBtn.classList.add('reveal-correct');
+  else fBtn.classList.add('reveal-correct');
+  if (userAns !== undefined && userAns !== correct) {
+    const wrongBtn = userAns === true ? tBtn : fBtn;
+    wrongBtn.className = wrongBtn.className.replace('reveal-correct','') + ' reveal-wrong';
+  }
+}
+
+function countAnswered() {
+  return questions.filter(q => {
+    if (q.subs) return answers[q.id] && Object.keys(answers[q.id]).length === q.subs.length;
+    return answers[q.id] !== undefined;
+  }).length;
+}
+
+function updateProgress() {
+  const total = questions.length;
+  const done = countAnswered();
+  document.getElementById('ep-text').textContent = `${total} câu hỏi`;
+  document.getElementById('ep-ans').textContent = `Đã trả lời: ${done}/${total}`;
+  document.getElementById('ep-fill').style.width = (done / total * 100) + '%';
+  document.getElementById('ans-count').textContent = done;
+}
+
+function updateDot(qid) {
+  const q = questions.find(x => String(x.id) === String(qid));
+  const dot = document.getElementById('dot-' + qid);
+  if (!dot || !q) return;
+  if (q.subs) {
+    const ans = answers[qid] || {};
+    const filled = Object.keys(ans).length;
+    dot.className = 'q-dot' + (filled === q.subs.length ? ' answered' : filled > 0 ? ' skipped' : '');
+  } else {
+    dot.className = 'q-dot' + (answers[qid] !== undefined ? ' answered' : '');
+  }
+}
+
+function scrollToQ(qid) {
+  const el = document.getElementById('qcard-' + qid);
+  if (el) el.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function submitExam() {
+  if (submitted) return;
+  submitted = true;
+  clearInterval(timerInt);
+  document.getElementById('timer').style.display = 'none';
+
+  document.querySelectorAll('.opt').forEach(el => { el.classList.add('disabled'); el.onclick = null; });
+  document.querySelectorAll('.tf-btn').forEach(el => { el.classList.add('disabled'); el.onclick = null; });
+
+  buildResult();
+  showView('result');
+}
+
+function buildResult() {
+  let tnCorrect = 0, tnTotal = 0, dsCorrect = 0, dsTotal = 0, dsSubTotal = 0, dsSubCorrect = 0;
+
+  questions.forEach(q => {
+    if (q.subs) {
+      dsTotal++;
+      let subOk = 0;
+      q.subs.forEach((sub, si) => {
+        dsSubTotal++;
+        const ua = answers[q.id]?.[si];
+        if (ua === sub.ans) { dsSubCorrect++; subOk++; }
+      });
+      if (subOk === q.subs.length) dsCorrect++;
+    } else {
+      tnTotal++;
+      if (answers[q.id] === q.ans) tnCorrect++;
+    }
+  });
+
+  let score = 0;
+  if (tnTotal > 0) score += (tnCorrect / tnTotal) * 7.5;
+  if (dsTotal > 0) score += (dsSubCorrect / dsSubTotal) * 2.5;
+  if (tnTotal === 0) score = (dsSubCorrect / dsSubTotal) * 10;
+  score = Math.round(score * 10) / 10;
+
+  const pct = Math.round(score * 10);
+  const color = pct >= 80 ? 'var(--accent3)' : pct >= 60 ? 'var(--accent4)' : 'var(--accent5)';
+  const [emoji, title] = pct >= 80 ? ['🎆','Xuất sắc!'] : pct >= 65 ? ['🎉','Khá tốt!'] : pct >= 50 ? ['📚','Cần cố lên!'] : ['📢','Hãy ôn thêm!'];
+  const timeStr = `${Math.floor(elapsed/60)}p ${elapsed%60}s`;
+
+  document.getElementById('r-emoji').textContent = emoji;
+  document.getElementById('r-title').textContent = title;
+  document.getElementById('r-sub').textContent = mode === 'full' ? `Thời gian làm bài: ${timeStr}` : 'Chế độ luyện tập';
+  document.getElementById('r-score').textContent = score;
+  document.getElementById('r-den').textContent = '/ 10';
+
+  const sc = document.getElementById('score-circle');
+  sc.style.setProperty('--sc-color', color);
+  sc.style.setProperty('--sc-pct', pct + '%');
+  sc.style.borderColor = color;
+
+  const stats = [
+    {n: tnCorrect + '/' + tnTotal, l: 'TN đúng', c: 'var(--accent3)'},
+    {n: dsCorrect + '/' + dsTotal, l: 'Đ/S đúng', c: 'var(--accent4)'},
+    {n: score, l: 'Điểm số', c: color},
+    {n: pct + '%', l: 'Tỉ lệ đúng', c: color},
+  ].filter(s => {
+    if (tnTotal === 0 && s.l === 'TN đúng') return false;
+    if (dsTotal === 0 && s.l === 'Đ/S đúng') return false;
+    return true;
+  });
+
+  document.getElementById('r-stats').innerHTML = stats.map(s =>
+    `<div class="rs-card"><div class="rs-n" style="color:${s.c}">${s.n}</div><div class="rs-l">${s.l}</div></div>`
+  ).join('');
+
+  const rl = document.getElementById('review-list');
+  rl.innerHTML = '';
+  questions.forEach((q, i) => {
+    const isDS = q.subs !== undefined;
+    let status, statusLabel;
+
+    if (isDS) {
+      const userAns = answers[q.id] || {};
+      const allRight = q.subs.every((s, si) => userAns[si] === s.ans);
+      const anyRight = q.subs.some((s, si) => userAns[si] === s.ans);
+      const anyAns = Object.keys(userAns).length > 0;
+      if (!anyAns) { status = 'skip'; statusLabel = 'Bỏ qua'; }
+      else if (allRight) { status = 'ok'; statusLabel = 'Đúng hết'; }
+      else if (anyRight) { status = 'partial'; statusLabel = 'Đúng 1 phần'; }
+      else { status = 'wrong'; statusLabel = 'Sai'; }
+    } else {
+      const ua = answers[q.id];
+      if (ua === undefined) { status = 'skip'; statusLabel = 'Bỏ qua'; }
+      else if (ua === q.ans) { status = 'ok'; statusLabel = 'Đúng'; }
+      else { status = 'wrong'; statusLabel = 'Sai'; }
+    }
+
+    const card = document.createElement('div');
+    card.className = 'review-card';
+    const shortQ = isDS ? `[Tình huống ${i+1}] ${q.context.substring(0,80)}...` : q.q.substring(0,100) + (q.q.length > 100 ? '...' : '');
+
+    let bodyHtml = '';
+    if (isDS) {
+      q.subs.forEach((sub, si) => {
+        const ua = answers[q.id]?.[si];
+        const correct = sub.ans;
+        const isRight = ua === correct;
+        bodyHtml += `<div class="rv-answer">
+          <span class="dot" style="background:${isRight ? 'var(--accent3)' : 'var(--accent5)'}"></span>
+          <span>${escHtml(sub.q)}<br>
+          <span style="color:var(--text3);font-size:12px">
+            Bạn chọn: <strong style="color:${ua===undefined?'var(--text3)':isRight?'var(--accent3)':'var(--accent5)'}">${ua===undefined?'Chưa trả lời':ua?'Đúng':'Sai'}</strong>
+            &nbsp;·&nbsp; Đáp án: <strong style="color:var(--accent3)">${correct?'Đúng':'Sai'}</strong>
+          </span></span></div>`;
+      });
+    } else {
+      const ua = answers[q.id];
+      const correct = q.ans;
+      bodyHtml = `<div class="rv-answer">
+        <span class="dot" style="background:var(--accent5)"></span>
+        <span>Bạn chọn: <strong style="color:var(--accent5)">${ua !== undefined ? KEYS[ua] + '. ' + escHtml(q.opts[ua]) : 'Chưa trả lời'}</strong></span>
+      </div>
+      <div class="rv-answer">
+        <span class="dot" style="background:var(--accent3)"></span>
+        <span>Đáp án đúng: <strong style="color:var(--accent3)">${KEYS[correct]}. ${escHtml(q.opts[correct])}</strong></span>
+      </div>`;
+    }
+
+    card.innerHTML = `
+      <div class="review-header" onclick="toggleReview(this)">
+        <span class="rv-badge ${status}">${statusLabel}</span>
+        <span class="rv-q">Câu ${i+1}: ${escHtml(shortQ)}</span>
+        <span class="rv-arrow">▼</span>
+      </div>
+      <div class="review-body">${bodyHtml}</div>`;
+    rl.appendChild(card);
+  });
+}
+
+function toggleReview(header) {
+  const body = header.nextElementSibling;
+  const arrow = header.querySelector('.rv-arrow');
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  arrow.style.transform = isOpen ? '' : 'rotate(180deg)';
+}
+
+function retakeExam() { startExam(); }
+
+window.addEventListener('scroll', () => {
+  const st = window.scrollY;
+  const dh = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+  const bar = document.getElementById('sp');
+  if (bar) bar.style.width = (dh > 0 ? st/dh*100 : 0) + '%';
+  const btt = document.getElementById('btt');
+  if (btt) btt.classList.toggle('show', st > 300);
+}, {passive:true});
+</script>

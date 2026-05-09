@@ -148,12 +148,12 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
         <div class="sc-desc">Luyện đề HK2<br>50 TN + 5 Đ/S</div>
       </div>
       <div class="subject-card"
-        style="--sc-c:rgba(255,209,102,.55);--sc-sh:rgba(255,209,102,.18);--sc-bg:linear-gradient(135deg,rgba(255,209,102,.18),rgba(247,127,0,.1))"
+        style="--sc-c:rgba(255,209,102,.55);--sc-sh:rgba(255,209,102,.22);--sc-bg:linear-gradient(135deg,rgba(255,209,102,.18),rgba(247,127,0,.12))"
         onclick="openSubject('su')">
-        <span class="sc-badge soon">Sắp có</span>
+        <span class="sc-badge ready">Sẵn sàng</span>
         <div class="sc-icon-wrap">📜</div>
         <div class="sc-name">Lịch sử</div>
-        <div class="sc-desc">Việt Nam · Thế giới<br>Đang cập nhật</div>
+        <div class="sc-desc">Luyện đề HK2<br>44 TN + 6 Đ/S</div>
       </div>
       <div class="subject-card"
         style="--sc-c:rgba(46,204,113,.55);--sc-sh:rgba(46,204,113,.22);--sc-bg:linear-gradient(135deg,rgba(46,204,113,.18),rgba(39,174,96,.12))"
@@ -185,7 +185,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
 <!-- ═══ SUBJECT PAGES ═══ -->
 <div class="subject-page" id="page-hoa">
   <div class="back-bar">
-    <button class="back-btn" onclick="goHome()">← Trang chủ</button>
+    <button class="back-btn" onclick="handleSubjectBack()">← Trở lại</button>
     <div class="back-bar-title">⚗️ &nbsp;Hóa Học Lớp 11 — Master Guide by KaiTr</div>
   </div>
   <div id="hoa-content">
@@ -196,7 +196,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
 
 <div class="subject-page" id="page-tin">
   <div class="back-bar">
-    <button class="back-btn" onclick="goHome()">← Trang chủ</button>
+    <button class="back-btn" onclick="handleSubjectBack()">← Trở lại</button>
     <div class="back-bar-title">💻 &nbsp;Tin Học — Luyện đề HK2</div>
   </div>
   <div id="tin-content">
@@ -207,20 +207,18 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
 
 <div class="subject-page" id="page-su">
   <div class="back-bar">
-    <button class="back-btn" onclick="goHome()">← Trang chủ</button>
-    <div class="back-bar-title">📜 &nbsp;Lịch Sử</div>
+    <button class="back-btn" onclick="handleSubjectBack()">← Trở lại</button>
+    <div class="back-bar-title">📜 &nbsp;Lịch Sử 11 HK2 — Đề cương ôn tập</div>
   </div>
-  <div class="coming-soon">
-    <div class="cs-icon">📜</div>
-    <div class="cs-title">Lịch sử</div>
-    <p class="cs-desc">Nội dung đang được xây dựng kỹ lưỡng. Sẽ có sớm — hãy quay lại sau nhé!</p>
-    <button class="back-btn" onclick="goHome()" style="margin-top:8px">← Quay về trang chủ</button>
+  <div id="su-content">
+    <div class="loader-spinner"></div>
+    <div class="loader-text">Đang tải nội dung Lịch sử...</div>
   </div>
 </div>
 
 <div class="subject-page" id="page-sinh">
   <div class="back-bar">
-    <button class="back-btn" onclick="goHome()">← Trang chủ</button>
+    <button class="back-btn" onclick="handleSubjectBack()">← Trở lại</button>
     <div class="back-bar-title">🧬 &nbsp;Sinh Học 11 HK2 — Ngân hàng câu hỏi</div>
   </div>
   <div id="sinh-content">
@@ -231,7 +229,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
 
 <div class="subject-page" id="page-anh">
   <div class="back-bar">
-    <button class="back-btn" onclick="goHome()">← Trang chủ</button>
+    <button class="back-btn" onclick="handleSubjectBack()">← Trở lại</button>
     <div class="back-bar-title">📖 &nbsp;Tiếng Anh 11 HK2 — Đề cương ôn tập</div>
   </div>
   <div id="anh-content">
@@ -350,7 +348,14 @@ async function loadSubject(id){
     console.error(e);
   }
 }
-
+function handleSubjectBack() {
+  // Nếu đang ở exam (do file môn báo) và có hàm quay về home thì gọi
+  if (window._subjectView === 'exam' && typeof window.backToSubjectHome === 'function') {
+    window.backToSubjectHome();
+  } else {
+    goHome(); // Ngược lại về landing
+  }
+}
 </script>
 </body>
 </html>
