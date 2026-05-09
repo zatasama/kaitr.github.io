@@ -163,6 +163,14 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
         <div class="sc-name">Sinh học</div>
         <div class="sc-desc">Ôn tập HK2<br>30 TN + 6 Đ/S + TL</div>
       </div>
+            <div class="subject-card"
+        style="--sc-c:rgba(239,71,111,.55);--sc-sh:rgba(239,71,111,.22);--sc-bg:linear-gradient(135deg,rgba(239,71,111,.18),rgba(247,127,0,.12))"
+        onclick="openSubject('anh')">
+        <span class="sc-badge ready">Sẵn sàng</span>
+        <div class="sc-icon-wrap">📖</div>
+        <div class="sc-name">Tiếng Anh</div>
+        <div class="sc-desc">Luyện đề HK2<br>89 câu trắc nghiệm</div>
+      </div>
     </div>
     <button class="enter-btn" onclick="openSubject('hoa')">
       Vào học Hóa ngay &nbsp;<span class="arr">→</span>
@@ -218,6 +226,17 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
   <div id="sinh-content">
     <div class="loader-spinner"></div>
     <div class="loader-text">Đang tải nội dung Sinh học...</div>
+  </div>
+</div>
+
+<div class="subject-page" id="page-anh">
+  <div class="back-bar">
+    <button class="back-btn" onclick="goHome()">← Trang chủ</button>
+    <div class="back-bar-title">📖 &nbsp;Tiếng Anh 11 HK2 — Đề cương ôn tập</div>
+  </div>
+  <div id="anh-content">
+    <div class="loader-spinner"></div>
+    <div class="loader-text">Đang tải nội dung Tiếng Anh...</div>
   </div>
 </div>
 

@@ -1,0 +1,653 @@
+<style>
+:root{
+  --bg:#06090f;--bg2:#0d1222;--bg3:#121830;
+  --card:#14203a;--card2:#1a2848;
+  --border:rgba(100,140,255,0.15);--border2:rgba(100,140,255,0.3);
+  --accent:#5b8fff;--accent2:#7c3aed;--accent3:#06d6a0;
+  --accent4:#ffd166;--accent5:#ef476f;--accent6:#f77f00;
+  --text:#e4ecff;--text2:#8fa4c8;--text3:#3d4f6e;
+  --r:12px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:var(--accent2);border-radius:2px}
+
+/* ── SCROLL PROGRESS ── */
+#sp{position:fixed;top:0;left:0;z-index:9999;height:3px;width:0%;background:linear-gradient(90deg,var(--accent),var(--accent2),var(--accent3));transition:width .1s linear}
+
+/* ── BACK TO TOP ── */
+#btt{position:fixed;bottom:24px;right:24px;z-index:9998;width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;color:#fff;box-shadow:0 4px 16px rgba(91,143,255,.4);opacity:0;transform:translateY(10px);transition:all .3s;pointer-events:none}
+#btt.show{opacity:1;transform:translateY(0);pointer-events:auto}
+#btt:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(91,143,255,.5)}
+
+/* ── HEADER ── */
+.hdr{background:linear-gradient(135deg,rgba(14,22,50,0.98),rgba(20,32,64,0.98));border-bottom:1px solid var(--border);padding:18px 24px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:500;backdrop-filter:blur(16px)}
+.hdr-icon{width:42px;height:42px;border-radius:10px;background:linear-gradient(135deg,var(--accent5),var(--accent4));display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.hdr-title{font-family:'Playfair Display',serif;font-size:18px;font-weight:700}
+.hdr-sub{font-size:12px;color:var(--text3);margin-top:1px}
+.hdr-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.timer-badge{font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600;color:var(--accent4);background:rgba(255,209,102,.1);border:1px solid rgba(255,209,102,.25);padding:5px 14px;border-radius:20px;min-width:80px;text-align:center}
+.timer-badge.warning{color:var(--accent5);background:rgba(239,71,111,.1);border-color:rgba(239,71,111,.3);animation:pulse .8s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
+
+/* ── CHEAT SHEET TOGGLE ── */
+#cheat-toggle{background:rgba(239,71,111,.15);border:1px solid var(--accent5);color:var(--accent5);padding:6px 14px;border-radius:8px;font-weight:600;font-size:13px;cursor:pointer;margin-bottom:16px;transition:all .2s}
+#cheat-toggle:hover{background:rgba(239,71,111,.2)}
+.cheatsheet{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:20px;margin-bottom:24px;display:none}
+.cheatsheet.show{display:block}
+.cheatsheet h3{font-family:'Playfair Display',serif;margin-bottom:12px;color:var(--accent4)}
+.cheatsheet ul{margin-left:18px;color:var(--text2);line-height:1.7}
+.cheatsheet li{margin-bottom:6px}
+.cheatsheet code{background:rgba(255,255,255,.06);padding:2px 6px;border-radius:4px;font-size:13px}
+
+/* ── VIEWS ── */
+.view{display:none}
+.view.active{display:block}
+
+/* ── HOME VIEW ── */
+.home-wrap{max-width:760px;margin:0 auto;padding:48px 20px}
+.home-hero{text-align:center;margin-bottom:40px}
+.home-badge{display:inline-flex;align-items:center;gap:7px;background:rgba(239,71,111,.1);border:1px solid rgba(239,71,111,.3);border-radius:20px;padding:5px 16px;font-size:12px;color:var(--accent5);margin-bottom:20px;letter-spacing:.8px;text-transform:uppercase}
+.home-title{font-family:'Playfair Display',serif;font-size:clamp(26px,5vw,46px);font-weight:900;line-height:1.1;margin-bottom:10px;background:linear-gradient(140deg,#fff 0%,#ff8099 50%,#ef476f 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.home-desc{font-size:14.5px;color:var(--text2);line-height:1.7;max-width:500px;margin:0 auto 32px}
+
+.info-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:32px}
+.info-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:18px 16px;text-align:center}
+.info-card .ic-n{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:var(--accent4);line-height:1}
+.info-card .ic-l{font-size:11px;color:var(--text3);letter-spacing:.6px;text-transform:uppercase;margin-top:5px}
+
+.topic-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-bottom:32px}
+.topic-item{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;display:flex;align-items:center;gap:10px;font-size:13.5px}
+.topic-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.topic-n{font-size:11px;color:var(--text3);margin-left:auto;font-family:'JetBrains Mono',monospace}
+
+.mode-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-bottom:28px}
+.mode-card{background:var(--card);border:2px solid var(--border);border-radius:14px;padding:22px 18px;cursor:pointer;transition:all .25s;text-align:center}
+.mode-card:hover{border-color:var(--mc-c);transform:translateY(-3px);box-shadow:0 10px 30px var(--mc-sh)}
+.mode-card.selected{border-color:var(--mc-c);background:rgba(239,71,111,.05);box-shadow:0 4px 20px var(--mc-sh)}
+.mode-icon{font-size:32px;margin-bottom:10px}
+.mode-name{font-size:15px;font-weight:700;margin-bottom:5px}
+.mode-desc{font-size:12px;color:var(--text2);line-height:1.5}
+
+.start-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:15px;border-radius:50px;background:linear-gradient(135deg,var(--accent5),var(--accent4));color:#fff;font-size:16px;font-weight:700;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .25s;box-shadow:0 4px 24px rgba(239,71,111,.35)}
+.start-btn:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(239,71,111,.5)}
+.start-btn .arr{transition:transform .25s}
+.start-btn:hover .arr{transform:translateX(5px)}
+
+/* ── EXAM VIEW ── */
+.exam-wrap{max-width:860px;margin:0 auto;padding:28px 20px 60px}
+.ep-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:13px;color:var(--text2)}
+.ep-bar{height:6px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden}
+.ep-fill{height:100%;background:linear-gradient(90deg,var(--accent5),var(--accent4));border-radius:3px;transition:width .4s ease}
+.q-dots{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:20px;padding:14px;background:var(--card);border:1px solid var(--border);border-radius:var(--r)}
+.q-dot{width:28px;height:28px;border-radius:6px;border:1.5px solid var(--border);background:transparent;color:var(--text3);font-size:11px;font-weight:600;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace}
+.q-dot:hover{border-color:var(--accent5);color:var(--accent5)}
+.q-dot.answered{background:rgba(6,214,160,.15);border-color:var(--accent3);color:var(--accent3)}
+.q-dot.current{background:var(--accent5);border-color:var(--accent5);color:#fff}
+.q-dot.skipped{background:rgba(255,209,102,.1);border-color:var(--accent4);color:var(--accent4)}
+.dots-label{font-size:11px;color:var(--text3);margin-bottom:8px;width:100%;letter-spacing:.5px}
+.q-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:26px;margin-bottom:16px;transition:border-color .2s}
+.q-card.ds-card{border-left:3px solid var(--accent5)}
+.q-meta{display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.q-num{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;color:var(--accent5);background:rgba(239,71,111,.1);border:1px solid rgba(239,71,111,.2);padding:3px 10px;border-radius:8px}
+.q-topic{font-size:11px;color:var(--text3);background:rgba(255,255,255,.04);padding:3px 10px;border-radius:8px;border:1px solid var(--border)}
+.q-type{font-size:11px;font-weight:700;padding:3px 10px;border-radius:8px}
+.q-type.mc{background:rgba(239,71,111,.12);color:var(--accent5)}
+.q-type.conv{background:rgba(255,209,102,.12);color:var(--accent4)}
+.q-type.re{background:rgba(6,214,160,.12);color:var(--accent3)}
+.q-text{font-size:15.5px;font-weight:600;line-height:1.6;color:var(--text);margin-bottom:20px}
+.q-context{font-size:13.5px;color:var(--text2);background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:8px;padding:12px 14px;margin-bottom:16px;line-height:1.7;font-style:italic}
+.opts{display:flex;flex-direction:column;gap:9px}
+.opt{display:flex;align-items:flex-start;gap:12px;padding:13px 16px;border-radius:10px;border:1.5px solid var(--border);background:rgba(255,255,255,.02);cursor:pointer;transition:all .18s;text-align:left;font-family:'DM Sans',sans-serif;color:var(--text);font-size:14px;line-height:1.5;position:relative}
+.opt:hover:not(.disabled){border-color:var(--accent5);background:rgba(239,71,111,.06)}
+.opt-key{width:28px;height:28px;border-radius:7px;background:rgba(255,255,255,.06);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:11.5px;font-weight:700;font-family:'JetBrains Mono',monospace;flex-shrink:0;margin-top:1px;transition:all .18s;color:var(--text2)}
+.opt:hover:not(.disabled) .opt-key{background:var(--accent5);border-color:var(--accent5);color:#fff}
+.opt.selected{border-color:var(--accent5);background:rgba(239,71,111,.08)}
+.opt.selected .opt-key{background:var(--accent5);border-color:var(--accent5);color:#fff}
+.opt.disabled{cursor:default}
+.opt.correct{border-color:var(--accent3)!important;background:rgba(6,214,160,.08)!important}
+.opt.correct .opt-key{background:var(--accent3)!important;border-color:var(--accent3)!important;color:#fff!important}
+.opt.wrong{border-color:var(--accent5)!important;background:rgba(239,71,111,.08)!important}
+.opt.wrong .opt-key{background:var(--accent5)!important;border-color:var(--accent5)!important;color:#fff!important}
+.opt.show-correct{border-color:var(--accent3)!important;background:rgba(6,214,160,.04)!important}
+.opt.show-correct .opt-key{background:rgba(6,214,160,.2)!important;border-color:var(--accent3)!important;color:var(--accent3)!important}
+
+.q-nav{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+.btn{padding:10px 22px;border-radius:9px;border:none;font-size:13.5px;font-weight:600;cursor:pointer;transition:all .18s;font-family:'DM Sans',sans-serif;display:inline-flex;align-items:center;gap:7px}
+.btn-primary{background:linear-gradient(135deg,var(--accent5),var(--accent4));color:#fff}
+.btn-primary:hover{opacity:.9;transform:translateY(-1px)}
+.btn-ghost{background:transparent;border:1.5px solid var(--border);color:var(--text2)}
+.btn-ghost:hover{border-color:var(--accent5);color:var(--accent5)}
+.submit-zone{margin-top:32px;padding:24px;background:var(--card);border:2px solid rgba(239,71,111,.2);border-radius:14px;text-align:center}
+.submit-zone p{font-size:13.5px;color:var(--text2);margin-bottom:16px;line-height:1.6}
+.submit-btn{display:inline-flex;align-items:center;gap:10px;padding:14px 40px;border-radius:50px;background:linear-gradient(135deg,var(--accent5),var(--accent4));color:#fff;font-size:15px;font-weight:700;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .25s;box-shadow:0 4px 20px rgba(239,71,111,.35)}
+.submit-btn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(239,71,111,.5)}
+
+/* ── RESULT VIEW ── */
+.result-wrap{max-width:860px;margin:0 auto;padding:40px 20px}
+.result-hero{text-align:center;margin-bottom:40px}
+.result-emoji{font-size:72px;margin-bottom:16px;animation:pop .5s cubic-bezier(.34,1.56,.64,1)}
+@keyframes pop{from{transform:scale(0)}to{transform:scale(1)}}
+.result-title{font-family:'Playfair Display',serif;font-size:36px;font-weight:900;margin-bottom:8px}
+.result-sub{font-size:15px;color:var(--text2)}
+.score-circle{width:140px;height:140px;border-radius:50%;margin:24px auto;display:flex;flex-direction:column;align-items:center;justify-content:center;border:4px solid;position:relative}
+.score-circle::before{content:'';position:absolute;inset:-6px;border-radius:50%;background:conic-gradient(var(--sc-color) var(--sc-pct),rgba(255,255,255,.05) 0);z-index:-1}
+.score-num{font-family:'Playfair Display',serif;font-size:38px;font-weight:900;line-height:1}
+.score-den{font-size:13px;color:var(--text3);margin-top:2px}
+.result-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-bottom:32px}
+.rs-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:16px;text-align:center}
+.rs-n{font-family:'Playfair Display',serif;font-size:26px;font-weight:700;line-height:1}
+.rs-l{font-size:11px;color:var(--text3);letter-spacing:.5px;margin-top:4px}
+.review-section{margin-bottom:28px}
+.review-title{font-size:16px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.review-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);margin-bottom:10px;overflow:hidden}
+.review-header{padding:12px 16px;display:flex;align-items:flex-start;gap:10px;cursor:pointer;transition:background .18s}
+.review-header:hover{background:rgba(255,255,255,.02)}
+.rv-badge{font-size:11px;font-weight:700;padding:2px 9px;border-radius:7px;flex-shrink:0;margin-top:1px}
+.rv-badge.ok{background:rgba(6,214,160,.15);color:var(--accent3)}
+.rv-badge.wrong{background:rgba(239,71,111,.15);color:var(--accent5)}
+.rv-badge.skip{background:rgba(255,255,255,.07);color:var(--text3)}
+.rv-q{font-size:13.5px;color:var(--text);flex:1;line-height:1.5}
+.rv-arrow{color:var(--text3);font-size:14px;margin-left:auto;flex-shrink:0;transition:transform .25s}
+.review-body{display:none;padding:14px 16px;border-top:1px solid var(--border);font-size:13px;color:var(--text2);line-height:1.75}
+.review-body.open{display:block}
+.rv-answer{margin:4px 0;display:flex;align-items:flex-start;gap:6px}
+.rv-answer .dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:6px}
+.result-actions{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:32px}
+
+/* ── UTILS ── */
+.wm{position:fixed;left:14px;bottom:18px;z-index:9997;font-family:'Playfair Display',serif;font-size:11px;font-weight:700;letter-spacing:2px;color:rgba(239,71,111,.25);text-transform:uppercase;writing-mode:vertical-rl;transform:rotate(180deg);pointer-events:none;user-select:none}
+@media(max-width:600px){
+  .mode-cards{grid-template-columns:1fr}
+  .info-cards{grid-template-columns:repeat(2,1fr)}
+  .result-stats{grid-template-columns:repeat(2,1fr)}
+  .hdr-title{font-size:15px}
+}
+</style>
+
+<div id="sp"></div>
+<div class="wm">KaiTr</div>
+<button id="btt" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<!-- HEADER -->
+<div class="hdr">
+  <div class="hdr-icon">📖</div>
+  <div>
+    <div class="hdr-title">Luyện đề Tiếng Anh 11</div>
+    <div class="hdr-sub">Đề cương ôn tập HK2 · KaiTr Study Hub</div>
+  </div>
+  <div class="hdr-right">
+    <div class="timer-badge" id="timer" style="display:none">00:00</div>
+    <button class="btn btn-ghost" id="back-home-btn" onclick="goHome()" style="display:none;font-size:13px;padding:7px 14px">← Trang chủ</button>
+  </div>
+</div>
+
+<!-- HOME VIEW -->
+<div class="view active" id="view-home">
+  <div class="home-wrap">
+    <div class="home-hero">
+      <div class="home-badge">📖 Tiếng Anh · Lớp 11 · HK2</div>
+      <div class="home-title">Luyện đề<br>Tiếng Anh</div>
+      <p class="home-desc">Ôn tập toàn bộ đề cương HK2 với hệ thống làm bài như Azota – trắc nghiệm, sắp xếp hội thoại & viết lại câu.</p>
+    </div>
+
+    <div class="info-cards">
+      <div class="info-card"><div class="ic-n">89</div><div class="ic-l">Câu hỏi</div></div>
+      <div class="info-card"><div class="ic-n">3</div><div class="ic-l">Chế độ</div></div>
+      <div class="info-card"><div class="ic-n">60</div><div class="ic-l">Phút (chế độ đầy đủ)</div></div>
+    </div>
+
+    <div class="topic-list">
+      <div class="topic-item"><span class="topic-dot" style="background:#ef476f"></span><span>Multiple choice (Vocab & Grammar)</span><span class="topic-n">56 câu</span></div>
+      <div class="topic-item"><span class="topic-dot" style="background:#ffd166"></span><span>Conversation arrangement</span><span class="topic-n">10 câu</span></div>
+      <div class="topic-item"><span class="topic-dot" style="background:#06d6a0"></span><span>Sentence transformation</span><span class="topic-n">13 câu</span></div>
+      <div class="topic-item"><span class="topic-dot" style="background:#7c3aed"></span><span>Sentence completion</span><span class="topic-n">10 câu</span></div>
+    </div>
+
+    <p style="font-size:13px;color:var(--text3);margin-bottom:14px;font-weight:600;letter-spacing:.5px;text-transform:uppercase">Chọn chế độ làm bài:</p>
+    <div class="mode-cards">
+      <div class="mode-card selected" id="mode-full" style="--mc-c:rgba(239,71,111,.6);--mc-sh:rgba(239,71,111,.2)" onclick="selectMode('full')">
+        <div class="mode-icon">📝</div>
+        <div class="mode-name">Luyện đề đầy đủ</div>
+        <div class="mode-desc">56 TN + 10 Sắp xếp + 13 Viết lại + 10 Hoàn thành câu · 60 phút</div>
+      </div>
+      <div class="mode-card" id="mode-mc" style="--mc-c:rgba(239,71,111,.6);--mc-sh:rgba(239,71,111,.15)" onclick="selectMode('mc')">
+        <div class="mode-icon">✅</div>
+        <div class="mode-name">Chỉ trắc nghiệm</div>
+        <div class="mode-desc">56 câu Multiple choice + 10 Conversation</div>
+      </div>
+      <div class="mode-card" id="mode-wr" style="--mc-c:rgba(6,214,160,.6);--mc-sh:rgba(6,214,160,.15)" onclick="selectMode('wr')">
+        <div class="mode-icon">✍️</div>
+        <div class="mode-name">Chỉ viết lại câu</div>
+        <div class="mode-desc">13 Sentence transformation + 10 Sentence completion</div>
+      </div>
+    </div>
+
+    <button class="start-btn" onclick="startExam()">
+      Bắt đầu làm bài <span class="arr">→</span>
+    </button>
+    <button id="cheat-toggle" onclick="document.querySelector('.cheatsheet').classList.toggle('show')" style="margin-top:16px;">🧠 Xem Cheat Sheet</button>
+    <div class="cheatsheet">
+      <h3>🧠 CHEAT SHEET TỔNG HỢP</h3>
+      <ul>
+        <li><b>To-infinitive</b>: the first/last/only + <code>to V</code> (mục đích).</li>
+        <li><b>V-ing</b>: sau giới từ. <b>Having + V3</b>: hành động trước.</li>
+        <li><b>It is/was ... that/who</b>: câu chẻ nhấn mạnh.</li>
+        <li><b>Because + S+V</b> ≠ <b>Because of + N</b>. <b>Although</b> ≠ <b>In spite of + N</b>.</li>
+        <li><b>Mệnh đề quan hệ</b>: who (người), which (vật).</li>
+        <li>Cấu trúc: <code>manage to do</code>, <code>accused of having V3</code>, <code>deny having V3</code>, <code>remember having V3</code>, <code>get into the habit of V-ing</code>.</li>
+        <li>Từ vựng theo cụm: make an appointment, manage money, lead to, come up with, make use of, carry out.</li>
+        <li>Conversation: Greeting → Question → Answer → Explain → Opinion.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- EXAM VIEW -->
+<div class="view" id="view-exam">
+  <div class="exam-wrap">
+    <div class="exam-progress">
+      <div class="ep-row">
+        <span id="ep-text">Câu 1 / 89</span>
+        <span id="ep-ans">Đã trả lời: 0</span>
+      </div>
+      <div class="ep-bar"><div class="ep-fill" id="ep-fill" style="width:0%"></div></div>
+    </div>
+
+    <div class="q-dots" id="q-dots">
+      <div class="dots-label">ĐIỀU HƯỚNG NHANH – Click vào số để nhảy đến:</div>
+    </div>
+
+    <div id="questions-container"></div>
+
+    <div class="submit-zone" id="submit-zone">
+      <p id="submit-msg">Bạn đã trả lời <strong id="ans-count">0</strong> / <strong id="total-count">0</strong> câu hỏi.<br>Hãy kiểm tra lại trước khi nộp bài!</p>
+      <button class="submit-btn" onclick="submitExam()">📨 Nộp bài &amp; Xem kết quả</button>
+    </div>
+  </div>
+</div>
+
+<!-- RESULT VIEW -->
+<div class="view" id="view-result">
+  <div class="result-wrap">
+    <div class="result-hero">
+      <div class="result-emoji" id="r-emoji">🎉</div>
+      <div class="result-title" id="r-title">Hoàn thành!</div>
+      <div class="result-sub" id="r-sub"></div>
+      <div class="score-circle" id="score-circle" style="--sc-color:var(--accent3);--sc-pct:0%;border-color:var(--accent3)">
+        <div class="score-num" id="r-score">0</div>
+        <div class="score-den" id="r-den">/ 10</div>
+      </div>
+    </div>
+
+    <div class="result-stats" id="r-stats"></div>
+
+    <div class="review-section">
+      <div class="review-title">📋 Chi tiết từng câu</div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;font-size:12px">
+        <span style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:3px;background:rgba(6,214,160,.3);display:inline-block"></span>Đúng</span>
+        <span style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:3px;background:rgba(239,71,111,.3);display:inline-block"></span>Sai</span>
+        <span style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:3px;background:rgba(255,255,255,.07);display:inline-block"></span>Bỏ qua</span>
+      </div>
+      <div id="review-list"></div>
+    </div>
+
+    <div class="result-actions">
+      <button class="btn btn-primary" onclick="retakeExam()">🔄 Làm lại</button>
+      <button class="btn btn-ghost" onclick="goHome()">← Về trang chủ</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══ DATA: 56 MC + 10 Conversation + 13 Rewrite + 10 Sentence completion ═══
+const TOPICS = {
+  mc: {label:'Multiple choice', color:'#ef476f'},
+  conv: {label:'Conversation arrangement', color:'#ffd166'},
+  re: {label:'Sentence transformation', color:'#06d6a0'},
+  wr: {label:'Sentence completion', color:'#7c3aed'},
+};
+
+// 1. Multiple choice (56 câu)
+const MC = [
+  {id:1,topic:'mc',q:'A mixed heritage site is a site that has both ______ and cultural importance.',opts:['historic','natural','economic','admirable'],ans:1},
+  {id:2,topic:'mc',q:'Phong Nha – Ke Bang is one of Vietnam\'s UNESCO natural world ______.',opts:['caves','heritage','landscapes','organisations'],ans:1},
+  {id:3,topic:'mc',q:'They want to ______ the castle to its former glory.',opts:['return','restore','preserve','gain'],ans:1},
+  {id:4,topic:'mc',q:'The remains of the Roman fort are well ______.',opts:['preserved','kept','treated','healed'],ans:0},
+  {id:5,topic:'mc',q:'We can go on a tour by boat, see areas of natural ______, and listen to folk music.',opts:['beauty','beauties','beautiful','beautifully'],ans:0},
+  {id:6,topic:'mc',q:'His ______ novels are based on events that happened in the early 19th century.',opts:['history','historical','historic','historically'],ans:1},
+  {id:7,topic:'mc',q:'Marie Curie was the first woman ______ two Nobel prizes.',opts:['awarded','to be awarded','awarding','to be warding'],ans:1},
+  {id:8,topic:'mc',q:'The captain is the last person ______ the sinking ship.',opts:['to leave','to leaving','left','leave'],ans:0},
+  {id:9,topic:'mc',q:'It is the hardest problem ______.',opts:['to be solving','to solve','to solving','to solved'],ans:1},
+  {id:10,topic:'mc',q:'These ingredients are the best ______ the meal.',opts:['to cook','cooking','to be cooking','to be cooked'],ans:0},
+  {id:11,topic:'mc',q:'The travel agency offers a lot of destinations for tourists ______ from.',opts:['to choosing','chosen','to be choosing','to choose'],ans:3},
+  {id:12,topic:'mc',q:'At 16, Mary left school ______ of her younger brothers.',opts:['take care','taking care','to take care','to be taken care'],ans:2},
+  {id:13,topic:'mc',q:'They are considering the problem of rising unemployment among ______.',opts:['school-leavers','school goers','schoolmates','schoolkids'],ans:0},
+  {id:14,topic:'mc',q:'You have to gain ______ experience before you become a lawyer.',opts:['compulsory','mechanical','practical','formal'],ans:2},
+  {id:15,topic:'mc',q:'A small group would receive intensive ______, and then would train others.',opts:['trade','degree','training','campus'],ans:2},
+  {id:16,topic:'mc',q:'Despite their financial difficulties, my parents ______ to pay for my university education.',opts:['managed','approved','disagreed','refused'],ans:0},
+  {id:17,topic:'mc',q:'______ education is a popular option for school-leavers who don\'t go to university.',opts:['Vocational','Academic','Secondary','Formal'],ans:0},
+  {id:18,topic:'mc',q:'He completed a ______ cooking course at this vocational school before he became a restaurant cook.',opts:['responsible','professional','business','formal'],ans:1},
+  {id:19,topic:'mc',q:'They don\'t forget ______ a short vacation in Cuc Phuong National Park last year.',opts:['to spend','having spent','being spent','spent'],ans:1},
+  {id:20,topic:'mc',q:'______ for only three hours, I can hardly focus on my work.',opts:['Having slept','was slept','slept','sleeping'],ans:0},
+  {id:21,topic:'mc',q:'______ this movie last week, I still wanted to see it again.',opts:['Having seen','Had seen','Was seen','Seeing'],ans:0},
+  {id:22,topic:'mc',q:'Tom was accused ______ some top secret document.',opts:['to steal','of having stolen','for stealing','to have stolen'],ans:1},
+  {id:23,topic:'mc',q:'Even when arrested, he denied ______ cut down that tree.',opts:['has','having','have','have had'],ans:1},
+  {id:24,topic:'mc',q:'I remembered having ______ off the lights before leaving home.',opts:['switched','switch','switching','switches'],ans:0},
+  {id:25,topic:'mc',q:'Their son is at home. He can cook, clean the house and do the laundry! He is very ______.',opts:['dependent','independent','dependence','independence'],ans:1},
+  {id:26,topic:'mc',q:'When teenagers do some part-time jobs, they get to know how to ______ their money.',opts:['manage','management','manager','manageable'],ans:0},
+  {id:27,topic:'mc',q:'I want to ______ the time-management app to plan my weekly schedule.',opts:['installment','installing','installed','install'],ans:3},
+  {id:28,topic:'mc',q:'The ______ of living alone is the freedom to do what you like.',opts:['trust','practical','advantage','disadvantage'],ans:2},
+  {id:29,topic:'mc',q:'Once you have made your choice, you must create a plan of ______ steps to move forward.',opts:['separate','specific','common','detailed'],ans:1},
+  {id:30,topic:'mc',q:'Distance learning can only be successful if you are a ______ individual.',opts:['self-motivated','self-study','decisive','obstacle'],ans:0},
+  {id:31,topic:'mc',q:'It is ______ parents help their children understand the risks and responsibilities that come with using money.',opts:['when','where','which','who'],ans:3},
+  {id:32,topic:'mc',q:'It was last year ______ his teachers taught him to better accomplish the goals he set for himself.',opts:['that','where','which','who'],ans:0},
+  {id:33,topic:'mc',q:'It\'s my parents ______ taught me how to be responsible with money.',opts:['that','whom','what','where'],ans:0},
+  {id:34,topic:'mc',q:'It\'s my mum ______ still thinks I don\'t have the skills to be independent.',opts:['whom','which','when','who'],ans:3},
+  {id:35,topic:'mc',q:'______ my friend came to see me late.',opts:['It was last night that','It was last night which','It was last night when','It was last night whom'],ans:0},
+  {id:36,topic:'mc',q:'______ my parents gave me a new computer.',opts:['It was on my birthday when','It was my birthday on that','It was my birthday that','It was on my birthday that'],ans:3},
+  {id:37,topic:'mc',q:'In many cases, peer pressure can ______ to depression, low self-confidence…',opts:['make','cause','result','lead'],ans:3},
+  {id:38,topic:'mc',q:'Medical advances have helped to increase ______ expectancy.',opts:['live','life','living','lives'],ans:1},
+  {id:39,topic:'mc',q:'There is often a ______ gap in extended families.',opts:['generation','generational','education','educational'],ans:1},
+  {id:40,topic:'mc',q:'An ______ family has several generations in the same house.',opts:['nuclear','extended','basic','common'],ans:1},
+  {id:41,topic:'mc',q:'Many students want to apply to ______ schools to study skills for jobs after secondary schools.',opts:['boarding','specialist','vocational','language'],ans:2},
+  {id:42,topic:'mc',q:'To talk to the career advisor, you should ______ an appointment first.',opts:['make','take','do','have'],ans:0},
+  {id:43,topic:'mc',q:'Independent thinkers aren\'t afraid to ______ unique opinions in discussions.',opts:['carry out','get around','come up with','deal with'],ans:2},
+  {id:44,topic:'mc',q:'Emily ______ online resources to research and learn new things.',opts:['makes use of','makes ends meet','makes up with','makes around'],ans:0},
+  {id:45,topic:'mc',q:'Sarah ______ the habit of tidying up her room before going to bed each night.',opts:['gets into','drives into','goes into','brings into'],ans:0},
+  {id:46,topic:'mc',q:'Lisa ______ her duty of helping with household chores such as washing dishes.',opts:['takes on','gives off','gives voice to','carries out'],ans:3},
+  {id:47,topic:'mc',q:'People mustn\'t drive after drinking ______. It\'s dangerous!',opts:['water','fruit juice','alcohol','milk'],ans:2},
+  {id:48,topic:'mc',q:'Many children live in ______. They often stop going to school and work.',opts:['poverty','wealth','tiredness','happiness'],ans:0},
+  {id:49,topic:'mc',q:'The boy does not want to go to school because he is afraid of being ______.',opts:['bully','bullied','bullying','to bully'],ans:1},
+  {id:50,topic:'mc',q:'We are going to start a campaign to raise ______ of animal rights.',opts:['aware','unaware','unawareness','awareness'],ans:3},
+  {id:51,topic:'mc',q:'He promised to be on time. ______, he arrived late to the meeting.',opts:['Although','However','Besides','Because'],ans:1},
+  {id:52,topic:'mc',q:'______ it was raining heavily, we decided to stay indoors for the entire day.',opts:['Since','In addition to','Because of','Therefore'],ans:0},
+  {id:53,topic:'mc',q:'Sarah left her umbrella at home. ______, she got soaked in the rain.',opts:['Because','As a consequence','By contrast','However'],ans:1},
+  {id:54,topic:'mc',q:'The weather was hot and sunny. ______, we decided to go to the beach.',opts:['However','Moreover','Since','Therefore'],ans:3},
+  {id:55,topic:'mc',q:'The restaurant not only serves delicious food but has excellent customer service. ______, it offers a cozy ambiance.',opts:['Moreover','In addition to','However','Because'],ans:0},
+  {id:56,topic:'mc',q:'He agrees ______ me that there are major teen problems today but many don\'t feel comfortable talking about them.',opts:['about','in','for','with'],ans:3},
+];
+
+// 2. Conversation arrangement (10 câu) – chuyển thành trắc nghiệm chọn thứ tự đúng
+const CONV = [
+  {id:'c1',topic:'conv',q:'Arrange the conversation:',opts:['c-a-b','b-c-a','c-b-a','a-c-b'],ans:3,context:'a. Nam: Hi, Mark! Long time no see. You look so good!\nb. Nam: Yes, I have. I exercise every morning and eat more healthy food.\nc. Mark: Hi, Nam! Thanks. You look so fit, too. Have you worked out a lot lately?'},
+  {id:'c2',topic:'conv',q:'Arrange the conversation:',opts:['c-b-a-e-d','c-e-d-b-a','d-b-a-e-c','d-e-a-b-c'],ans:0,context:'a. Alex: Why online classes?\nb. Sue: I\'m going to try online classes.\nc. Alex: How are you going to improve your English?\nd. Alex: I think online classes are too expensive. I don\'t think I\'ll try them.\ne. Sue: They improve our communication skills, and they have flexible schedules.'},
+  {id:'c3',topic:'conv',q:'Arrange the conversation:',opts:['d-b-a-e-c','c-b-d-e-a','c-e-d-b-a','d-e-a-b-c'],ans:1,context:'a. Jack: I think self-study is too difficult. I don\'t have enough discipline.\nb. Linda: I\'m going to try self-study courses.\nc. Jack: How are you planning to improve your skills?\nd. Jack: Why self-study courses?\ne. Linda: They help improve time management, and I can learn at my own pace.'},
+  {id:'c4',topic:'conv',q:'Arrange the conversation:',opts:['c-a-b','b-c-a','b-a-c','c-b-a'],ans:2,context:'a. Mark: Hi, Nam! Thanks. You look really focused, too. Have you been studying a lot recently?\nb. Nam: Hi, Mark! It\'s been such a long time. You look so smart!\nc. Nam: Yes, I have. I study every evening and make sure to read more books.'},
+  {id:'c5',topic:'conv',q:'Arrange the conversation:',opts:['c-b-a-e-d','c-e-d-b-a','d-b-a-e-c','d-e-a-b-c'],ans:0,context:'a. Emma: Why do you want to join a cooking class?\nb. Jack: I\'m planning to try a cooking class.\nc. Emma: How do you plan to improve your cooking skills?\nd. Emma: I think cooking classes are too expensive. I don\'t think I\'ll try them.\ne. Jack: They teach you new recipes, and you get to practice with experts.'},
+  {id:'c6',topic:'conv',q:'Arrange the conversation:',opts:['c-a-b','b-c-a','a-c-b','c-b-a'],ans:2,context:'a. Anna: Hi, John! You look so cheerful these days!\nb. John: Thanks, Anna! I\'ve been learning some new skills and getting more sleep.\nc. Anna: Hi, John! You look great too. Have you been doing anything special lately?'},
+  {id:'c7',topic:'conv',q:'Arrange the text:',opts:['a-d-c-f-b-e','a-d-f-c-b-e','a-b-f-c-d-e','a-b-d-c-f-e'],ans:0,context:'a. Teenagers may want to work part-time while still in school. Let\'s look at the pros and cons of teens having part-time jobs.\nb. So, if teenagers fail to balance work and study, they may not be able to get good grades or may even drop out of school.\nc. Secondly, they can learn to manage their time better.\nd. First, a part-time job provides extra pocket money.\ne. In conclusion, teenagers should be aware of both the pros and cons of working part-time.\nf. On the other hand, working teens may become tired and stressed as they will have less time to rest and study.'},
+  {id:'c8',topic:'conv',q:'Arrange the conversation:',opts:['a-c-b','b-a-c','c-b-a','a-b-c'],ans:0,context:'a. Laura: Hi! How\'s everything going with you lately?\nb. Laura: That sounds nice! I\'ve been good, just keeping busy with some new projects.\nc. Ben: Hello! I\'ve been doing well, thanks. Just got back from a short vacation. And you?'},
+  {id:'c9',topic:'conv',q:'Arrange the conversation:',opts:['e-c-d-a-b','e-b-d-a-c','b-d-a-e-c','b-e-a-d-c'],ans:2,context:'a. Jane: I feel more flexible, but some poses are still difficult.\nb. Jane: I\'ve been practising yoga for a month.\nc. Jane: Not yet, but I will consider it.\nd. Rachel: That\'s awesome! Have you noticed any differences so far?\ne. Rachel: Why don\'t you join a class?'},
+  {id:'c10',topic:'conv',q:'Arrange the conversation:',opts:['c-b-a','c-a-b','a-c-b','b-c-a'],ans:2,context:'a. Kevin: I aced the math exam with the highest score in class!\nb. Kevin: Thanks! I couldn\'t have done it without your encouragement!\nc. Tom: That\'s amazing, Kevin!'},
+];
+
+// 3. Sentence transformation (13 câu) – đã có đáp án trong đề cương, ta biến thành trắc nghiệm chọn câu đúng
+const REWRITE = [
+  {id:'r1',topic:'re',q:'Minh left the show very early. He was the first person who did so. → Minh ______.',opts:['was the first person leaving the show very early.','was the first person to leave the show very early.','was the first person left the show very early.','was the first person had left the show very early.'],ans:1},
+  {id:'r2',topic:'re',q:'We went to Hoi An last month. We wanted to visit the ancient buildings there. → We ______.',opts:['went to Hoi An last month for visiting the ancient buildings there.','went to Hoi An last month to visit the ancient buildings there.','went to Hoi An last month visiting the ancient buildings there.','went to Hoi An last month to visiting the ancient buildings there.'],ans:1},
+  {id:'r3',topic:'re',q:'Anna joined the school trip. She was the last person who did so. → Anna ______.',opts:['was the last person to join the school trip.','was the last person joining the school trip.','was the last person who join the school trip.','was the last person joined the school trip.'],ans:0},
+  {id:'r4',topic:'re',q:'We switched off the lights before we went to bed. (HAVING) → ______.',opts:['Switching off the lights, we went to bed.','Having switched off the lights, we went to bed.','Have switched off the lights, we went to bed.','Switched off the lights, we went to bed.'],ans:1},
+  {id:'r5',topic:'re',q:'As he had drunk too much, he didn\'t drive home himself. (HAVING) → ______.',opts:['Having drunk too much, he didn\'t drive home himself.','Have drunk too much, he didn\'t drive home himself.','Drinking too much, he didn\'t drive home himself.','Drunk too much, he didn\'t drive home himself.'],ans:0},
+  {id:'r6',topic:'re',q:'After Jack had sent the CV online, he realized that he had forgotten to fill in his phone number. (HAVING) → ______.',opts:['Sending the CV online, Jack realized that he had forgotten to fill in his phone number.','Have sent the CV online, Jack realized that he had forgotten to fill in his phone number.','Sent the CV online, Jack realized that he had forgotten to fill in his phone number.','Having sent the CV online, Jack realized that he had forgotten to fill in his phone number.'],ans:3},
+  {id:'r7',topic:'re',q:'The loud noise from the construction site disturbed our peaceful afternoon. → It ______.',opts:['was the loud noise from the construction site that disturbed our peaceful afternoon.','is the loud noise from the construction site that disturbed our peaceful afternoon.','was the loud noise from the construction site which disturbed our peaceful afternoon.','was the loud noise from the construction site disturbed our peaceful afternoon.'],ans:0},
+  {id:'r8',topic:'re',q:'I found the book I had been looking for in the library. → It ______.',opts:['is the book I had been looking for that I found in the library.','was the book I had been looking for that I found in the library.','was the book I had been looking for which I found in the library.','was the book I had been looking for I found in the library.'],ans:1},
+  {id:'r9',topic:'re',q:'The teacher\'s dedication inspires her students to do their best. → It ______.',opts:['is the teacher\'s dedication that inspires her students to do their best.','was the teacher\'s dedication that inspires her students to do their best.','is the teacher\'s dedication which inspires her students to do their best.','is the teacher\'s dedication inspires her students to do their best.'],ans:0},
+  {id:'r10',topic:'re',q:'They had a flat tire. They managed to reach their destination on time. → Although ______.',opts:['they had a flat tire, but they managed to reach their destination on time.','having a flat tire, they managed to reach their destination on time.','they had a flat tire, they managed to reach their destination on time.','the flat tire, they managed to reach their destination on time.'],ans:2},  // Lưu ý: câu đúng là "Although they had a flat tire, they managed..."
+  {id:'r11',topic:'re',q:'Jane studied diligently for the exam. She scored an A+. → Because of ______.',opts:['Jane\'s diligent study for the exam, she scored an A+.','Jane studied diligently, she scored an A+.','the diligent study, she scored an A+.','Jane\'s diligently studying for the exam, she scored an A+.'],ans:0},
+  {id:'r12',topic:'re',q:'It rained heavily. The soccer match continued as scheduled. → In spite of ______.',opts:['the heavy rain, the soccer match continued as scheduled.','it rained heavily, the soccer match continued as scheduled.','the heavy rain but the soccer match continued as scheduled.','raining heavily, the soccer match continued as scheduled.'],ans:0},
+  {id:'r13',topic:'re',q:'Because the construction site was noisy, they couldn\'t concentrate on their work. → Because of ______.',opts:['the noise from the construction site, they couldn\'t concentrate on their work.','the construction site noisy, they couldn\'t concentrate on their work.','the construction site being noisy, they couldn\'t concentrate on their work.','noisy construction site, they couldn\'t concentrate on their work.'],ans:0},
+];
+
+// 4. Sentence completion (10 câu) – từ các câu Write meaningful sentences, nhưng chuyển thành chọn câu đúng
+const MAKE_SENT = [
+  {id:'m1',topic:'wr',q:'I would like/ know/ how long/ course/ beginners/ last. →',opts:['I would like to know how long the course for beginners lasts.','I would like knowing how long the course for beginners lasts.','I would like to know how long course for beginners last.','I would like to know how long does the course for beginners last.'],ans:0},
+  {id:'m2',topic:'wr',q:'Locate/ on a bridge/ the Thu Bon River, Cau Pagoda/ one of/ most interesting/ places/ visit/ Hoi An. →',opts:['Located on a bridge over the Thu Bon River, Cau Pagoda is one of the most interesting places to visit in Hoi An.','Locate on a bridge over the Thu Bon River, Cau Pagoda is one of the most interesting places to visit in Hoi An.','Located on a bridge the Thu Bon River, Cau Pagoda is one of most interesting places to visit Hoi An.','Locating on a bridge over Thu Bon River, Cau Pagoda is one of most interesting place to visit in Hoi An.'],ans:0},
+  // Các câu còn lại (m3-m10) tương tự, ta thêm vào cho đủ 10 câu
+  {id:'m3',topic:'wr',q:'Could/ send/ me/ information/ address/ given above? →',opts:['Could you send me the information to the address given above?','Could you sending me the information to the address given above?','Could you to send me the information to the address given above?','Could you send me information to the address given above?'],ans:0},
+  {id:'m4',topic:'wr',q:'I/ not prepared/ well/ presentation/, so/ not get/ good mark/ it. →',opts:['I had not prepared well for the presentation, so I did not get a good mark on it.','I not prepared well for the presentation, so I didn\'t get a good mark on it.','I have not prepared well for the presentation, so I not get a good mark on it.','I didn\'t prepare well for the presentation, so I don\'t get a good mark on it.'],ans:0},
+  {id:'m5',topic:'wr',q:'Nam/ work/ mechanic\'s apprentice/ learn/ useful job skills. →',opts:['Nam worked as a mechanic\'s apprentice and learnt useful job skills.','Nam works as a mechanic\'s apprentice and learnt useful job skills.','Nam worked as a mechanic apprentice and learn useful job skills.','Nam working as a mechanic\'s apprentice and learned useful job skills.'],ans:0},
+  {id:'m6',topic:'wr',q:'Working students/ keep/ mind/ studying/ always/ come first. →',opts:['Working students should keep in mind that studying should always come first.','Working students keep mind that studying always comes first.','Working students keeping in mind that studying always come first.','Working students should keep in mind studying always comes first.'],ans:0},
+  {id:'m7',topic:'wr',q:'Teenagers/ work/ study/ same time/ may/ get enough sleep. →',opts:['Teenagers who work and study at the same time may not get enough sleep.','Teenagers work and study at same time may not get enough sleep.','Teenagers who works and studies at the same time may not get enough sleep.','Teenagers working and studying at same time may not get enough sleep.'],ans:0},
+  {id:'m8',topic:'wr',q:'Not/ ask/ anyone/ advice/, she/ make/ wrong decision/ education. →',opts:['Not having asked anyone for advice, she made the wrong decision about education.','Not asking anyone for advice, she made the wrong decision about education.','Not have asked anyone for advice, she made the wrong decision about education.','Not asked anyone for advice, she made wrong decision about education.'],ans:0},
+  {id:'m9',topic:'wr',q:'The government/ encourage/ local people/ do/ green jobs/ protect/ forest. →',opts:['The government encourages local people to do green jobs to protect the forest.','The government encourage local people doing green jobs to protect forest.','The government encouraging local people to do green jobs protect the forest.','The government encourages local people do green jobs to protect the forest.'],ans:0},
+  {id:'m10',topic:'wr',q:'It/ through/ time/ money management/ we/ form/ independence. →',opts:['It is through time and money management that we form independence.','It is through time and money management which we form independence.','It is through time and money management we form independence.','It through time and money management that we form independence.'],ans:0},
+];
+
+// ═══ STATE & LOGIC (giống tin.html) ═══
+let mode = 'full';
+let questions = [];
+let answers = {};
+let timerInt = null;
+let elapsed = 0;
+let submitted = false;
+
+const KEYS = ['A','B','C','D'];
+
+function showView(v) {
+  document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
+  document.getElementById('view-' + v).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function goHome() {
+  clearInterval(timerInt);
+  if (typeof window._goLanding === 'function') window._goLanding();
+  else {
+    document.querySelectorAll('.subject-page').forEach(p => p.classList.remove('active'));
+    const ld = document.getElementById('landing');
+    if (ld) ld.style.display = 'flex';
+    window.scrollTo(0, 0);
+  }
+}
+
+function selectMode(m) {
+  mode = m;
+  document.querySelectorAll('.mode-card').forEach(el => el.classList.remove('selected'));
+  document.getElementById('mode-' + m).classList.add('selected');
+}
+
+function startExam() {
+  submitted = false;
+  answers = {};
+  elapsed = 0;
+  if (mode === 'full') questions = [...MC, ...CONV, ...REWRITE, ...MAKE_SENT];
+  else if (mode === 'mc') questions = [...MC, ...CONV];
+  else if (mode === 'wr') questions = [...REWRITE, ...MAKE_SENT];
+  // Shuffle
+  for (let i = questions.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [questions[i], questions[j]] = [questions[j], questions[i]];
+  }
+  buildExam();
+  showView('exam');
+  document.getElementById('back-home-btn').style.display = 'flex';
+  if (mode === 'full') {
+    document.getElementById('timer').style.display = 'block';
+    startTimer();
+  }
+}
+
+function startTimer() {
+  updateTimer();
+  timerInt = setInterval(() => {
+    elapsed++;
+    updateTimer();
+    if (elapsed >= 60 * 60) { clearInterval(timerInt); if (!submitted) submitExam(); }
+  }, 1000);
+}
+
+function updateTimer() {
+  const remain = 60 * 60 - elapsed;
+  const m = Math.floor(remain / 60);
+  const s = remain % 60;
+  const el = document.getElementById('timer');
+  el.textContent = String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+  if (remain <= 300) el.classList.add('warning');
+  else el.classList.remove('warning');
+}
+
+function buildExam() {
+  const total = questions.length;
+  document.getElementById('total-count').textContent = total;
+  const dotsEl = document.getElementById('q-dots');
+  dotsEl.innerHTML = '<div class="dots-label">ĐIỀU HƯỚNG NHANH – Click vào số câu để nhảy đến:</div>';
+  questions.forEach((q, i) => {
+    const d = document.createElement('button');
+    d.className = 'q-dot';
+    d.id = 'dot-' + q.id;
+    d.textContent = i + 1;
+    d.onclick = () => scrollToQ(q.id);
+    dotsEl.appendChild(d);
+  });
+  const container = document.getElementById('questions-container');
+  container.innerHTML = '';
+  questions.forEach((q, i) => {
+    const div = document.createElement('div');
+    div.className = 'q-card';
+    div.id = 'qcard-' + q.id;
+    div.innerHTML = buildQHTML(q, i);
+    container.appendChild(div);
+  });
+  updateProgress();
+}
+
+function buildQHTML(q, i) {
+  const topic = TOPICS[q.topic];
+  const typeClass = q.topic === 'mc' ? 'mc' : (q.topic === 'conv' ? 'conv' : 're');
+  const typeLabel = q.topic === 'mc' ? 'Multiple choice' : (q.topic === 'conv' ? 'Conversation' : (q.topic === 're' ? 'Transformation' : 'Completion'));
+  let html = `<div class="q-meta">
+    <span class="q-num">Câu ${i+1}</span>
+    <span class="q-topic" style="border-color:${topic.color}33;color:${topic.color}">${topic.label}</span>
+    <span class="q-type ${typeClass}">${typeLabel}</span>
+  </div>`;
+  if (q.context) html += `<div class="q-context">${q.context.replace(/\n/g,'<br>')}</div>`;
+  html += `<div class="q-text">${q.q}</div><div class="opts">`;
+  q.opts.forEach((opt, oi) => {
+    html += `<button class="opt" id="opt-${q.id}-${oi}" onclick="selectOpt('${q.id}',${oi})">
+      <span class="opt-key">${KEYS[oi]}</span>
+      <span>${opt}</span>
+    </button>`;
+  });
+  html += '</div>';
+  return html;
+}
+
+function selectOpt(qid, oi) {
+  if (submitted) return;
+  const q = questions.find(x => String(x.id) === String(qid));
+  if (!q) return;
+  q.opts.forEach((_, i) => {
+    const btn = document.getElementById(`opt-${qid}-${i}`);
+    if (btn) btn.classList.remove('selected');
+  });
+  const btn = document.getElementById(`opt-${qid}-${oi}`);
+  if (btn) btn.classList.add('selected');
+  answers[qid] = oi;
+  updateProgress();
+  updateDot(qid);
+}
+
+function updateProgress() {
+  const total = questions.length;
+  const done = questions.filter(q => answers[q.id] !== undefined).length;
+  document.getElementById('ep-text').textContent = `${total} câu hỏi`;
+  document.getElementById('ep-ans').textContent = `Đã trả lời: ${done}/${total}`;
+  document.getElementById('ep-fill').style.width = (done / total * 100) + '%';
+  document.getElementById('ans-count').textContent = done;
+}
+
+function updateDot(qid) {
+  const dot = document.getElementById('dot-' + qid);
+  if (dot) dot.className = 'q-dot' + (answers[qid] !== undefined ? ' answered' : '');
+}
+
+function scrollToQ(qid) {
+  const el = document.getElementById('qcard-' + qid);
+  if (el) el.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function submitExam() {
+  if (submitted) return;
+  submitted = true;
+  clearInterval(timerInt);
+  document.getElementById('timer').style.display = 'none';
+  document.querySelectorAll('.opt').forEach(el => { el.classList.add('disabled'); el.onclick = null; });
+  buildResult();
+  showView('result');
+}
+
+function buildResult() {
+  let correct = 0;
+  questions.forEach(q => {
+    if (answers[q.id] === q.ans) correct++;
+    // Reveal answer for each question
+    q.opts.forEach((_, oi) => {
+      const btn = document.getElementById(`opt-${q.id}-${oi}`);
+      if (!btn) return;
+      if (oi === q.ans) btn.classList.add(answers[q.id] === oi ? 'correct' : 'show-correct');
+      else if (answers[q.id] === oi) btn.classList.add('wrong');
+    });
+  });
+  const total = questions.length;
+  const score = total > 0 ? Math.round((correct / total) * 10 * 10) / 10 : 0;
+  const pct = Math.round(score * 10);
+  const color = pct >= 80 ? 'var(--accent3)' : pct >= 60 ? 'var(--accent4)' : 'var(--accent5)';
+  const [emoji, title] = pct >= 80 ? ['🎆','Xuất sắc!'] : pct >= 65 ? ['🎉','Khá tốt!'] : pct >= 50 ? ['📚','Cần cố lên!'] : ['📢','Hãy ôn thêm!'];
+  const timeStr = `${Math.floor(elapsed/60)}p ${elapsed%60}s`;
+  document.getElementById('r-emoji').textContent = emoji;
+  document.getElementById('r-title').textContent = title;
+  document.getElementById('r-sub').textContent = mode === 'full' ? `Thời gian: ${timeStr}` : 'Chế độ luyện tập';
+  document.getElementById('r-score').textContent = score;
+  document.getElementById('r-den').textContent = '/ 10';
+  const sc = document.getElementById('score-circle');
+  sc.style.setProperty('--sc-color', color);
+  sc.style.setProperty('--sc-pct', pct + '%');
+  sc.style.borderColor = color;
+  document.getElementById('r-stats').innerHTML = [
+    `<div class="rs-card"><div class="rs-n" style="color:var(--accent3)">${correct}/${total}</div><div class="rs-l">Số câu đúng</div></div>`,
+    `<div class="rs-card"><div class="rs-n" style="color:${color}">${score}</div><div class="rs-l">Điểm</div></div>`,
+    `<div class="rs-card"><div class="rs-n" style="color:${color}">${pct}%</div><div class="rs-l">Tỉ lệ</div></div>`
+  ].join('');
+  const rl = document.getElementById('review-list');
+  rl.innerHTML = '';
+  questions.forEach((q, i) => {
+    const ua = answers[q.id];
+    const isCorrect = ua === q.ans;
+    const status = ua === undefined ? 'skip' : (isCorrect ? 'ok' : 'wrong');
+    const statusLabel = ua === undefined ? 'Bỏ qua' : (isCorrect ? 'Đúng' : 'Sai');
+    const shortQ = q.q.length > 90 ? q.q.substring(0,87)+'...' : q.q;
+    const card = document.createElement('div');
+    card.className = 'review-card';
+    card.innerHTML = `
+      <div class="review-header" onclick="toggleReview(this)">
+        <span class="rv-badge ${status}">${statusLabel}</span>
+        <span class="rv-q">Câu ${i+1}: ${shortQ}</span>
+        <span class="rv-arrow">▼</span>
+      </div>
+      <div class="review-body">
+        <div class="rv-answer"><span class="dot" style="background:${ua!==undefined?'var(--accent5)':'var(--text3)'}"></span>Bạn chọn: <strong>${ua!==undefined ? KEYS[ua]+'. '+q.opts[ua] : 'Chưa trả lời'}</strong></div>
+        <div class="rv-answer"><span class="dot" style="background:var(--accent3)"></span>Đáp án: <strong>${KEYS[q.ans]}. ${q.opts[q.ans]}</strong></div>
+      </div>`;
+    rl.appendChild(card);
+  });
+}
+
+function toggleReview(header) {
+  const body = header.nextElementSibling;
+  body.classList.toggle('open');
+  header.querySelector('.rv-arrow').style.transform = body.classList.contains('open') ? 'rotate(180deg)' : '';
+}
+
+function retakeExam() { startExam(); }
+
+window.addEventListener('scroll', () => {
+  const st = window.scrollY;
+  const dh = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+  const bar = document.getElementById('sp');
+  if (bar) bar.style.width = (dh > 0 ? st/dh*100 : 0) + '%';
+  const btt = document.getElementById('btt');
+  if (btt) btt.classList.toggle('show', st > 300);
+}, {passive:true});
+</script>
